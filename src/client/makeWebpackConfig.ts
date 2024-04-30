@@ -1,3 +1,4 @@
+import '../checkNodeVersion'
 import { Configuration, container } from 'webpack'
 import AssetsPlugin from 'assets-webpack-plugin'
 import path from 'path'
