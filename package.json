@@ -1,0 +1,46 @@
+{
+  "name": "@jcoreio/clarity-feature-toolkit",
+  "version": "0.0.0-development",
+  "description": "development and deploy CLI for custom Clarity features",
+  "keywords": [],
+  "author": "Andy Edwards",
+  "license": "MIT",
+  "devDependencies": {
+    "@jcoreio/eslint-plugin-implicit-dependencies": "^1.1.1",
+    "@jcoreio/toolchain": "^4.0.1",
+    "@jcoreio/toolchain-circle": "^4.0.1",
+    "@jcoreio/toolchain-esnext": "^4.0.1",
+    "@jcoreio/toolchain-react": "^4.0.1",
+    "@jcoreio/toolchain-semantic-release": "^4.0.1",
+    "@jcoreio/toolchain-typescript": "^4.0.1",
+    "@typescript-eslint/eslint-plugin": "^7.6.0",
+    "@typescript-eslint/parser": "^7.6.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.32.2",
+    "typescript": "^5.1.0"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "tc": "toolchain",
+    "toolchain": "toolchain",
+    "test": "toolchain test",
+    "prepublishOnly": "echo This package is meant to be published by semantic-release from the dist build directory. && exit 1"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "packageManager": "pnpm@8.11.0",
+  "dependencies": {
+    "@babel/runtime": "^7.18.6"
+  }
+}
