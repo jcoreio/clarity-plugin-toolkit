@@ -22,6 +22,7 @@ export async function handler(): Promise<void> {
   if (!packageJsonFile) {
     throw new Error(`failed to find project package.json file`)
   }
+  const packageJson = await fs.readJson(packageJsonFile)
 
   const projectDir = path.dirname(packageJsonFile)
 
@@ -34,8 +35,10 @@ export async function handler(): Promise<void> {
   )
 
   archive.append(fs.createReadStream(packageJsonFile), { name: 'package.json' })
-  const allAssets = assets[''] || {}
-  for (const asset of Object.values(allAssets).flat() as string[]) {
+  for (const asset of [
+    ...Object.values(assets[packageJson.name] || {}),
+    ...Object.values(assets[''] || {}),
+  ].flat() as string[]) {
     const name = asset.startsWith(
       customFeatureAssetPath.format({ filename: '' })
     )
@@ -61,8 +64,8 @@ export async function handler(): Promise<void> {
     archive.finalize(),
   ])
   if (!uploadResponse.ok) {
-    console.log('TEST')
     const body = await uploadResponse.text()
+    // eslint-disable-next-line no-console
     console.error(body)
   }
 }
