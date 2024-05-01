@@ -3,13 +3,12 @@ import { Configuration, container } from 'webpack'
 import AssetsPlugin from 'assets-webpack-plugin'
 import path from 'path'
 import fs from 'fs-extra'
-import {
-  clientEntrypointFile,
-  customFeatureAssetPath,
-  emptyEntryFile,
-} from '../constants'
+import { clientEntrypointFile, emptyEntryFile } from '../constants'
 import { createFeatureEntrypoint } from './createFeatureEntrypoint'
-import { ContributesSchema } from '../ContributesSchema'
+import {
+  ContributesSchema,
+  customFeatureAssetRoute,
+} from '@jcoreio/clarity-feature-api'
 import findUp from 'find-up'
 const { ModuleFederationPlugin } = container
 
@@ -45,7 +44,7 @@ export async function makeWebpackConfig(
       path: outputPath,
       // this has to match the route that the webapp will serve the generated
       // assets from
-      publicPath: customFeatureAssetPath.format({ filename: '' }),
+      publicPath: customFeatureAssetRoute.format({ filename: '' }),
       filename: `${baseFilename}_[id]_[hash].js`,
     },
     resolve: {

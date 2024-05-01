@@ -7,12 +7,14 @@ import path from 'path'
 import fs from 'fs-extra'
 import archiver from 'archiver'
 import { createGzip } from 'zlib'
-import { customFeatureAssetPath } from '../../constants'
+import { customFeatureAssetRoute } from '@jcoreio/clarity-feature-api'
 
 export const command = 'deploy'
 export const description = `deploy to Clarity`
 
-type Options = {}
+type Options = {
+  // empty for now
+}
 
 export const builder = (yargs: yargs.Argv<Options>): any =>
   yargs.usage('$0 deploy')
@@ -40,9 +42,9 @@ export async function handler(): Promise<void> {
     ...Object.values(assets[''] || {}),
   ].flat() as string[]) {
     const name = asset.startsWith(
-      customFeatureAssetPath.format({ filename: '' })
+      customFeatureAssetRoute.format({ filename: '' })
     )
-      ? asset.substring(customFeatureAssetPath.format({ filename: '' }).length)
+      ? asset.substring(customFeatureAssetRoute.format({ filename: '' }).length)
       : asset
     archive.append(
       fs.createReadStream(path.resolve(projectDir, 'dist', 'client', name)),
