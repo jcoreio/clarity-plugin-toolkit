@@ -1,12 +1,10 @@
 import semver from 'semver'
+import packageJson from './ownPackageJson'
 
-// @ts-expect-error ignore this
-import { engines } from '@jcoreio/clarity-feature-toolkit/package.json'
-
-if (!semver.satisfies(process.version, engines.node)) {
+if (!semver.satisfies(process.version, packageJson.engines.node)) {
   // eslint-disable-next-line no-console
   console.error(
-    `@jcoreio/clarity-feature-toolkit requires Node ${engines.node}`
+    `@jcoreio/clarity-feature-toolkit requires Node ${packageJson.engines.node}`
   )
   process.exit(1)
 }
