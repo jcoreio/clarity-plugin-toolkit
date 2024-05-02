@@ -8,10 +8,7 @@ import {
   emptyEntryFile,
 } from '../constants'
 import { createFeatureEntrypoint } from './createFeatureEntrypoint'
-import {
-  ContributesSchema,
-  customFeatureAssetRoute,
-} from '@jcoreio/clarity-feature-api'
+import { customFeatureAssetRoute } from '@jcoreio/clarity-feature-api'
 import { AssetsSchema } from '../AssetsSchema'
 import getProject from '../getProject'
 const { ModuleFederationPlugin } = container
@@ -24,7 +21,6 @@ export async function makeWebpackConfig(
   const { projectDir, packageJson } = await getProject()
 
   const context = projectDir
-  ContributesSchema.parse(packageJson.contributes)
 
   const reactVersion = packageJson.dependencies?.react
   const clarityFeatureApiVersion =

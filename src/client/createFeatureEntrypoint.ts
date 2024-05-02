@@ -1,10 +1,10 @@
 import fs from 'fs-extra'
 import path from 'node:path'
-import { ContributesSchema } from '@jcoreio/clarity-feature-api'
 import util from 'node:util'
 import { clientEntrypointFile } from '../constants'
 import dedent from 'dedent-js'
 import { mapValues } from 'lodash'
+import getProject from '../getProject'
 
 const print = (jsonish: any) =>
   util.inspect(jsonish, { depth: null, colors: false })
@@ -22,9 +22,8 @@ export async function createFeatureEntrypoint({
 }: {
   rootDir: string
 }): Promise<void> {
-  const packageJson = await fs.readJson(path.join(rootDir, 'package.json'))
-  const { client: { dashboardWidgets, ...rest } = {} } =
-    ContributesSchema.parse(packageJson.contributes)
+  const { packageJson } = await getProject()
+  const { client: { dashboardWidgets, ...rest } = {} } = packageJson.contributes
   await fs.mkdirs(path.resolve(rootDir, path.dirname(clientEntrypointFile)))
 
   const importFile = (file: string) =>
