@@ -2,7 +2,6 @@
 import yargs from 'yargs'
 import { getClarityUrl } from '../../getClarityUrl'
 import { getClarityApiToken } from '../../getClarityApiToken'
-import findUp from 'find-up'
 import path from 'path'
 import fs from 'fs-extra'
 import archiver from 'archiver'
@@ -11,9 +10,12 @@ import { clientAssetsFile } from '../../constants'
 import { AssetsSchema } from '../../AssetsSchema'
 import z from 'zod'
 import prompt from 'prompts'
+import getProject from '../../getProject'
+import * as build from './build'
+import shouldBuild from '../../shouldBuild'
 
 export const command = 'deploy'
-export const description = `deploy to Clarity`
+export const description = `build (if necessary) and deploy to Clarity`
 
 type Options = {
   // empty for now
@@ -27,13 +29,8 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
   yargs.usage('$0 deploy')
 
 export async function handler(): Promise<void> {
-  const packageJsonFile = await findUp('package.json', { type: 'file' })
-  if (!packageJsonFile) {
-    throw new Error(`failed to find project package.json file`)
-  }
-  const packageJson = await fs.readJson(packageJsonFile)
-
-  const projectDir = path.dirname(packageJsonFile)
+  const { projectDir, packageJson } = await getProject()
+  if (await shouldBuild()) await build.handler()
 
   const clarityUrl = await getClarityUrl()
   const token = await getClarityApiToken()

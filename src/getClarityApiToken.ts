@@ -1,23 +1,18 @@
 import { once } from 'lodash'
 import { getClarityUrl } from './getClarityUrl'
-import findUp from 'find-up'
 import path from 'path'
 import fs from 'fs-extra'
 import prompt from 'prompts'
 import z from 'zod'
 import { clarityApiTokenFile } from './constants'
+import getProject from './getProject'
 
 const required = (s: string | undefined) => (s?.trim() ? true : 'required')
 
 export const getClarityApiToken = once(async (): Promise<string> => {
   const clarityUrl = await getClarityUrl()
+  const { projectDir } = await getProject()
 
-  const packageJsonFile = await findUp('package.json', { type: 'file' })
-  if (!packageJsonFile) {
-    throw new Error(`failed to find project package.json file`)
-  }
-
-  const projectDir = path.dirname(packageJsonFile)
   if (await fs.pathExists(path.resolve(projectDir, clarityApiTokenFile))) {
     const token = (
       await fs.readFile(path.resolve(projectDir, clarityApiTokenFile), 'utf8')

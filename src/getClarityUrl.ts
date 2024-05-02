@@ -1,16 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import findUp from 'find-up'
 import fs from 'fs-extra'
 import { once } from 'lodash'
 import path from 'path'
 import prompt from 'prompts'
+import getProject from './getProject'
 
 export const getClarityUrl = once(async (): Promise<string> => {
-  const packageJsonFile = await findUp('package.json', { type: 'file' })
-  if (!packageJsonFile) {
-    throw new Error(`failed to find project package.json file`)
-  }
-  const packageJson = await fs.readJson(packageJsonFile)
+  const { packageJsonFile, packageJson } = await getProject()
 
   if (!packageJson.clarity?.url) {
     const { clarityUrl } = await prompt({

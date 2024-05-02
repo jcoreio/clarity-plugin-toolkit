@@ -12,8 +12,8 @@ import {
   ContributesSchema,
   customFeatureAssetRoute,
 } from '@jcoreio/clarity-feature-api'
-import findUp from 'find-up'
 import { AssetsSchema } from '../AssetsSchema'
+import getProject from '../getProject'
 const { ModuleFederationPlugin } = container
 
 export async function makeWebpackConfig(
@@ -21,12 +21,9 @@ export async function makeWebpackConfig(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   argv: Record<string, unknown>
 ): Promise<Configuration> {
-  const packageJsonFile = await findUp('package.json', { type: 'file' })
-  if (!packageJsonFile) {
-    throw new Error(`failed to find project package.json file`)
-  }
-  const context = path.dirname(packageJsonFile)
-  const packageJson = await fs.readJson(packageJsonFile)
+  const { projectDir, packageJson } = await getProject()
+
+  const context = projectDir
   ContributesSchema.parse(packageJson.contributes)
 
   const reactVersion = packageJson.dependencies?.react
@@ -47,6 +44,7 @@ export async function makeWebpackConfig(
     context,
     mode: env.production ? 'production' : 'development',
     output: {
+      clean: true,
       path: outputPath,
       // this has to match the route that the webapp will serve the generated
       // assets from
