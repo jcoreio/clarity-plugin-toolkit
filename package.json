@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@jcoreio/eslint-plugin-implicit-dependencies": "^1.1.1",
+    "@jcoreio/clarity-feature-api": "^1.1.0",
     "@jcoreio/toolchain": "^4.0.1",
     "@jcoreio/toolchain-circle": "^4.0.1",
     "@jcoreio/toolchain-esnext": "^4.0.1",
@@ -53,12 +54,14 @@
     "node": ">=20"
   },
   "packageManager": "pnpm@8.11.0",
+  "peerDependencies": {
+    "@jcoreio/clarity-feature-api": "^1.1.0"
+  },
   "dependencies": {
     "@babel/preset-env": "^7.24.5",
     "@babel/preset-react": "^7.24.1",
     "@babel/preset-typescript": "^7.24.1",
     "@babel/runtime": "^7.18.6",
-    "@jcoreio/clarity-feature-api": "^1.1.0",
     "@types/assets-webpack-plugin": "^7.1.5",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.0",
