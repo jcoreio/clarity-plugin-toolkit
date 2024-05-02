@@ -35,6 +35,10 @@ export async function makeWebpackConfig(
 
   const outputPath = path.resolve(context, 'dist', 'client')
 
+  const containerName = packageJson.name
+    .replace(/^@([^/]+)\//, '_$1_')
+    .replace(/[^_a-z0-9]+/g, '_')
+
   const presetEnv = ['@babel/preset-env', { targets: '> 0.25%, not dead' }]
   return {
     // use a nonexistent entry to avoid making unnecessary chunks;
@@ -145,10 +149,10 @@ export async function makeWebpackConfig(
           compiler.hooks.afterEmit.tapAsync(
             { name: 'writeFeatureAssets' },
             async (compilation: Compilation, callback) => {
-              const entrypoint = compilation.entrypoints.get(packageJson.name)
+              const entrypoint = compilation.entrypoints.get(containerName)
               if (!entrypoint)
                 throw new Error(
-                  `failed to get webpack entrypoint for ${packageJson.name}`
+                  `failed to get webpack entrypoint for ${containerName}`
                 )
               const entryChunks = entrypoint.chunks
               const chunks = [
@@ -188,7 +192,7 @@ export async function makeWebpackConfig(
       },
       new ModuleFederationPlugin({
         // when the entry script is run it will set window[name] to the module federation container
-        name: packageJson.name,
+        name: containerName,
         filename: `entry.js`,
         // this allows the app code to get the custom feature module out of the container
         exposes: {
