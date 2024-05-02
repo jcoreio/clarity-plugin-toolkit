@@ -29,8 +29,6 @@ export async function makeWebpackConfig(
   const packageJson = await fs.readJson(packageJsonFile)
   ContributesSchema.parse(packageJson.contributes)
 
-  const baseFilename = packageJson.name.replace(/^@/, '').replace(/\//g, '__')
-
   const reactVersion = packageJson.dependencies?.react
   const clarityFeatureApiVersion =
     packageJson.dependencies?.['@jcoreio/clarity-feature-api']
@@ -48,8 +46,15 @@ export async function makeWebpackConfig(
       path: outputPath,
       // this has to match the route that the webapp will serve the generated
       // assets from
-      publicPath: customFeatureAssetRoute.format({ filename: '' }),
-      filename: `${baseFilename}_[id]_[hash].js`,
+      publicPath: customFeatureAssetRoute
+        .format({
+          feature: packageJson.name,
+          version: packageJson.version,
+          environment: 'client',
+          filename: 'f',
+        })
+        .replace(/f$/, ''),
+      filename: `[id]_[hash].js`,
     },
     resolve: {
       fallback: {
@@ -140,10 +145,10 @@ export async function makeWebpackConfig(
           compiler.hooks.afterEmit.tapAsync(
             { name: 'writeFeatureAssets' },
             async (compilation: Compilation, callback) => {
-              const entrypoint = compilation.entrypoints.get(baseFilename)
+              const entrypoint = compilation.entrypoints.get(packageJson.name)
               if (!entrypoint)
                 throw new Error(
-                  `failed to get webpack entrypoint for ${baseFilename}`
+                  `failed to get webpack entrypoint for ${packageJson.name}`
                 )
               const entryChunks = entrypoint.chunks
               const chunks = [
@@ -183,8 +188,8 @@ export async function makeWebpackConfig(
       },
       new ModuleFederationPlugin({
         // when the entry script is run it will set window[name] to the module federation container
-        name: baseFilename,
-        filename: `${baseFilename}_entry_[hash].js`,
+        name: packageJson.name,
+        filename: `entry.js`,
         // this allows the app code to get the custom feature module out of the container
         exposes: {
           '.': clientEntrypointFile,

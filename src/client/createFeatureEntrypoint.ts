@@ -23,9 +23,8 @@ export async function createFeatureEntrypoint({
   rootDir: string
 }): Promise<void> {
   const packageJson = await fs.readJson(path.join(rootDir, 'package.json'))
-  const {
-    client: { dashboardWidgets, ...rest },
-  } = ContributesSchema.parse(packageJson.contributes)
+  const { client: { dashboardWidgets, ...rest } = {} } =
+    ContributesSchema.parse(packageJson.contributes)
   await fs.mkdirs(path.resolve(rootDir, path.dirname(clientEntrypointFile)))
 
   const importFile = (file: string) =>

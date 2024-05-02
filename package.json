@@ -24,8 +24,8 @@
     }
   },
   "devDependencies": {
+    "@jcoreio/clarity-feature-api": "^2.0.0",
     "@jcoreio/eslint-plugin-implicit-dependencies": "^1.1.1",
-    "@jcoreio/clarity-feature-api": "^1.1.0",
     "@jcoreio/toolchain": "^4.0.1",
     "@jcoreio/toolchain-circle": "^4.0.1",
     "@jcoreio/toolchain-esnext": "^4.0.1",
@@ -55,7 +55,7 @@
   },
   "packageManager": "pnpm@8.11.0",
   "peerDependencies": {
-    "@jcoreio/clarity-feature-api": "^1.1.0"
+    "@jcoreio/clarity-feature-api": "^2.0.0"
   },
   "dependencies": {
     "@babel/preset-env": "^7.24.5",

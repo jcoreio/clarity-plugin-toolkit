@@ -83,8 +83,8 @@ dependencies:
 
 devDependencies:
   '@jcoreio/clarity-feature-api':
-    specifier: ^1.1.0
-    version: 1.1.0(@types/node@20.12.7)
+    specifier: ^2.0.0
+    version: 2.0.0(@types/node@20.12.7)
   '@jcoreio/eslint-plugin-implicit-dependencies':
     specifier: ^1.1.1
     version: 1.1.1
@@ -1462,15 +1462,17 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /@jcoreio/clarity-feature-api@1.1.0(@types/node@20.12.7):
-    resolution: {integrity: sha512-2Hia/oQY0P5lbjjAl37XjCqOeYLU7CzkQWPV4baAj1H7TJtUEMEuxzdiN1OaIOnC/uLXqWHECTaDPCCWhLveCA==}
+  /@jcoreio/clarity-feature-api@2.0.0(@types/node@20.12.7):
+    resolution: {integrity: sha512-NbgkVMNUjykkjwpxAb97ADKOuWr8573u3Sp6sbphkQDJjglPx2h55AObnjeN05aTWM6cWfrXXMgx0sUU+CpG9g==}
     engines: {node: '>=16'}
     dependencies:
       '@babel/runtime': 7.24.5
       '@types/react': 18.3.1
       '@types/react-dnd': 3.0.2(@types/node@20.12.7)(@types/react@18.3.1)(react@18.3.1)
+      '@types/semver': 7.5.8
       react: 18.3.1
       react-dnd: 14.0.5(@types/node@20.12.7)(@types/react@18.3.1)(react@18.3.1)
+      semver: 7.6.0
       zod: 3.23.5
       zod-route-schemas: 1.0.0
     transitivePeerDependencies:
