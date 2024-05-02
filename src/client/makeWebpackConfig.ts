@@ -1,15 +1,19 @@
 import '../checkNodeVersion'
-import { Configuration, container } from 'webpack'
-import AssetsPlugin from 'assets-webpack-plugin'
+import { Compilation, Configuration, container } from 'webpack'
 import path from 'path'
 import fs from 'fs-extra'
-import { clientEntrypointFile, emptyEntryFile } from '../constants'
+import {
+  clientAssetsFile,
+  clientEntrypointFile,
+  emptyEntryFile,
+} from '../constants'
 import { createFeatureEntrypoint } from './createFeatureEntrypoint'
 import {
   ContributesSchema,
   customFeatureAssetRoute,
 } from '@jcoreio/clarity-feature-api'
 import findUp from 'find-up'
+import { AssetsSchema } from '../AssetsSchema'
 const { ModuleFederationPlugin } = container
 
 export async function makeWebpackConfig(
@@ -133,12 +137,50 @@ export async function makeWebpackConfig(
               await createFeatureEntrypoint({ rootDir: context })
             }
           )
+          compiler.hooks.afterEmit.tapAsync(
+            { name: 'writeFeatureAssets' },
+            async (compilation: Compilation, callback) => {
+              const entrypoint = compilation.entrypoints.get(baseFilename)
+              if (!entrypoint)
+                throw new Error(
+                  `failed to get webpack entrypoint for ${baseFilename}`
+                )
+              const entryChunks = entrypoint.chunks
+              const chunks = [
+                ...new Set(
+                  entryChunks.flatMap((c) => [...c.getAllReferencedChunks()])
+                ),
+              ]
+              const { outputPath } = compilation
+                .getStats()
+                .toJson({ outputPath: true })
+              if (!outputPath)
+                throw new Error(`failed to get webpack outputPath`)
+
+              const entrypoints = new Set(
+                entryChunks.flatMap((chunk) => [...chunk.files])
+              )
+              const otherAssets = [
+                ...chunks.flatMap((chunk) => [...chunk.files]),
+              ].filter((file) => !entrypoints.has(file))
+
+              await fs.writeJson(
+                path.resolve(context, clientAssetsFile),
+                AssetsSchema.parse({
+                  outputPath: path.relative(
+                    path.dirname(path.resolve(context, clientAssetsFile)),
+                    outputPath
+                  ),
+                  entrypoints: [...entrypoints],
+                  otherAssets: [...otherAssets],
+                }),
+                { spaces: 2 }
+              )
+              callback()
+            }
+          )
         },
       },
-      new AssetsPlugin({
-        useCompilerPath: true,
-        filename: 'assets.json',
-      }),
       new ModuleFederationPlugin({
         // when the entry script is run it will set window[name] to the module federation container
         name: baseFilename,

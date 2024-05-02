@@ -7,7 +7,8 @@ import path from 'path'
 import fs from 'fs-extra'
 import archiver from 'archiver'
 import { createGzip } from 'zlib'
-import { customFeatureAssetRoute } from '@jcoreio/clarity-feature-api'
+import { clientAssetsFile } from '../../constants'
+import { AssetsSchema } from '../../AssetsSchema'
 
 export const command = 'deploy'
 export const description = `deploy to Clarity`
@@ -32,24 +33,20 @@ export async function handler(): Promise<void> {
   const token = await getClarityApiToken()
 
   const archive = archiver('tar')
-  const assets = await fs.readJson(
-    path.resolve(projectDir, 'dist', 'client', 'assets.json')
+  const assets = AssetsSchema.parse(
+    await fs.readJson(path.resolve(projectDir, clientAssetsFile))
+  )
+  const { outputPath, entrypoints, otherAssets } = assets
+  const assetDir = path.resolve(
+    path.dirname(path.resolve(projectDir, clientAssetsFile)),
+    outputPath
   )
 
-  archive.append(fs.createReadStream(packageJsonFile), { name: 'package.json' })
-  for (const asset of [
-    ...Object.values(assets[packageJson.name] || {}),
-    ...Object.values(assets[''] || {}),
-  ].flat() as string[]) {
-    const name = asset.startsWith(
-      customFeatureAssetRoute.format({ filename: '' })
-    )
-      ? asset.substring(customFeatureAssetRoute.format({ filename: '' }).length)
-      : asset
-    archive.append(
-      fs.createReadStream(path.resolve(projectDir, 'dist', 'client', name)),
-      { name }
-    )
+  archive.append(JSON.stringify({ ...packageJson, entrypoints }, null, 2), {
+    name: 'package.json',
+  })
+  for (const name of [...entrypoints, ...otherAssets]) {
+    archive.append(fs.createReadStream(path.resolve(assetDir, name)), { name })
   }
 
   const [uploadResponse] = await Promise.all([
