@@ -33,20 +33,36 @@ export async function handler(): Promise<void> {
   const token = await getClarityApiToken()
 
   const archive = archiver('tar')
-  const assets = AssetsSchema.parse(
+  const clientAssets = AssetsSchema.parse(
     await fs.readJson(path.resolve(projectDir, clientAssetsFile))
   )
-  const { outputPath, entrypoints, otherAssets } = assets
-  const assetDir = path.resolve(
+  const clientAssetsDir = path.resolve(
     path.dirname(path.resolve(projectDir, clientAssetsFile)),
-    outputPath
+    clientAssets.outputPath
   )
 
-  archive.append(JSON.stringify({ ...packageJson, entrypoints }, null, 2), {
-    name: 'package.json',
-  })
-  for (const name of [...entrypoints, ...otherAssets]) {
-    archive.append(fs.createReadStream(path.resolve(assetDir, name)), { name })
+  archive.append(
+    JSON.stringify(
+      {
+        ...packageJson,
+        client: {
+          entrypoints: clientAssets.entrypoints.map((name) => `client/${name}`),
+        },
+      },
+      null,
+      2
+    ),
+    {
+      name: 'package.json',
+    }
+  )
+  for (const name of [
+    ...clientAssets.entrypoints,
+    ...clientAssets.otherAssets,
+  ]) {
+    archive.append(fs.createReadStream(path.resolve(clientAssetsDir, name)), {
+      name: `client/${name}`,
+    })
   }
 
   const [uploadResponse] = await Promise.all([
