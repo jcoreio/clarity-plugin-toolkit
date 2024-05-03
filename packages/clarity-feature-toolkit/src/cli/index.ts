@@ -5,7 +5,7 @@ import '../checkNodeVersion'
 import yargs from 'yargs/yargs'
 
 yargs(process.argv.slice(2))
-  .scriptName('clarity-feature')
+  .scriptName('clarity-feature-toolkit')
   .commandDir('commands')
   .strict()
   .demandCommand()
