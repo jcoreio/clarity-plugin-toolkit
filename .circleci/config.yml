@@ -27,7 +27,7 @@ jobs:
       - run:
           name: Release
           command: |
-            [[ $(netstat -tnlp | grep -F 'circleci-agent') ]] || pnpm run -r tc release
+            [[ $(netstat -tnlp | grep -F 'circleci-agent') ]] || pnpm -r --workspace-concurrency=1 exec -- tc release --dry-run
 
 workflows:
   build:
