@@ -4,17 +4,51 @@ import fs from 'fs-extra'
 import crypto from 'crypto'
 import { signingKeyFile } from './constants'
 import getProject from './getProject'
+import prompt from 'prompts'
+import { getClarityUrl } from './getClarityUrl'
+import dedent from 'dedent-js'
+import open from 'open'
+import setSigningKey from './setSigningKey'
 
 export const getSigningKey = once(
   async (): Promise<{ id: number; privateKey: crypto.KeyObject }> => {
     const { projectDir } = await getProject()
+    const clarityUrl = await getClarityUrl()
+    const signingUrl = new URL('login', clarityUrl)
+    signingUrl.searchParams.set(
+      'nextLocation',
+      '/superadmin/signingKeys?create=true'
+    )
 
     if (await fs.pathExists(path.resolve(projectDir, signingKeyFile))) {
       return parseSigningKey(
         await fs.readFile(path.resolve(projectDir, signingKeyFile), 'utf8')
       )
     }
-    throw new Error(`key generation flow not implemented yet`)
+    // eslint-disable-next-line no-console
+    console.error(dedent`
+
+      To deploy, you will need to create a signing key in Clarity.
+      Press enter to open ${signingUrl} in your default browser;
+      Once you have created and copied a signing key, come back here
+      to paste it.
+
+      Note: you need superadmin permission to create a signing key.
+      If you don't have superadmin permission, you will need to have
+      someone who does create the signing key for you.
+
+    `)
+    const { go } = await prompt({
+      name: 'go',
+      type: 'confirm',
+      initial: true,
+      message: `Open ${signingUrl}?`,
+    })
+    if (!go) throw new Error('process canceled')
+    await open(signingUrl.toString(), { wait: false }).then((child) =>
+      child.unref()
+    )
+    return await setSigningKey()
   }
 )
 
