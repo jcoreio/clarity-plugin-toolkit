@@ -1,8 +1,12 @@
 {
   "name": "@jcoreio/clarity-feature-toolkit",
   "version": "0.0.0-development",
-  "description": "development and deploy CLI for custom Clarity features",
-  "keywords": [],
+  "description": "CLI to develop and deploy custom features for Clarity",
+  "keywords": [
+    "jcore systems",
+    "jcore.io",
+    "clarity"
+  ],
   "author": "Andy Edwards",
   "license": "MIT",
   "bin": {

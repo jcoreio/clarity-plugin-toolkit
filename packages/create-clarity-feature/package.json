@@ -1,7 +1,7 @@
 {
   "name": "create-clarity-feature",
   "version": "0.0.0-development",
-  "description": "creates a new Clarity custom feature project",
+  "description": "Create a new Clarity custom feature project",
   "bin": "./dist/cli/index.js",
   "scripts": {
     "tc": "toolchain",
@@ -10,6 +10,11 @@
     "prepublishOnly": "echo This package is meant to be published by semantic-release from the dist build directory. && exit 1"
   },
   "author": "Andy Edwards",
+  "keywords": [
+    "jcore systems",
+    "jcore.io",
+    "clarity"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@jcoreio/eslint-plugin-implicit-dependencies": "^1.1.1",
