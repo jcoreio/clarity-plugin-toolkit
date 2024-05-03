@@ -1,4 +1,5 @@
 /* eslint-env node, es2018 */
+
 module.exports = {
   cjsBabelEnv: { forceAllTransforms: true },
   // esmBabelEnv: { targets: { node: 16 } },
@@ -8,6 +9,10 @@ module.exports = {
     'build:smoke-test': {
       description: 'no-op',
       run: () => {},
+    },
+    release: {
+      description: 'run automated release',
+      run: require('../../release.cjs'),
     },
   },
 }
