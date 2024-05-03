@@ -4,7 +4,6 @@ module.exports = async (args = []) => {
   await execa('pnpm', [
     'install',
     '-D',
-    '--no-optional',
     '@semantic-release/commit-analyzer@^12.0.0',
     '@semantic-release/github@^10.0.3',
     '@semantic-release/npm@^12.0.0',
