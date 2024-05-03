@@ -10,9 +10,5 @@ module.exports = {
       description: 'no-op',
       run: () => {},
     },
-    release: {
-      description: 'run automated release',
-      run: require('../../release.cjs'),
-    },
   },
 }
