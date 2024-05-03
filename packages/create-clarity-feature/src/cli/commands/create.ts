@@ -7,6 +7,7 @@ import fs from 'fs-extra'
 import dedent from 'dedent-js'
 import chalk from 'chalk'
 import validateNpmPackageName from 'validate-npm-package-name'
+import { getPackageManager } from '../../getPackageManager'
 
 export const command = '$0'
 export const description = `create a new Clarity feature project`
@@ -154,7 +155,7 @@ export async function handler(): Promise<void> {
     })
   )
 
-  const packageManager = 'pnpm'
+  const packageManager = getPackageManager()
 
   // eslint-disable-next-line no-console
   console.error(dedent`
