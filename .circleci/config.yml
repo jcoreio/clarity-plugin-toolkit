@@ -19,7 +19,7 @@ jobs:
           command: sudo corepack enable
       - run:
           name: Install Dependencies
-          command: pnpm install
+          command: pnpm install --no-frozen-lockfile
       - run:
           name: Prepublish
           command: |
