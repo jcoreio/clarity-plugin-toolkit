@@ -29,6 +29,7 @@ export const PackageJsonSchema = z
     clarity: z
       .object({
         url: z.string().optional(),
+        signatureVerificationKeyId: z.number().optional(),
       })
       .optional(),
   })

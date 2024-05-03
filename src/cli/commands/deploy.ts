@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import yargs from 'yargs'
 import { getClarityUrl } from '../../getClarityUrl'
-import { getClarityApiToken } from '../../getClarityApiToken'
 import path from 'path'
 import fs from 'fs-extra'
 import archiver from 'archiver'
@@ -11,8 +10,12 @@ import { AssetsSchema } from '../../AssetsSchema'
 import z from 'zod'
 import prompt from 'prompts'
 import getProject from '../../getProject'
+import crypto from 'crypto'
 import * as build from './build'
 import shouldBuild from '../../shouldBuild'
+import { getSigningKey } from '../../getSigningKey'
+import { pipeline } from 'stream/promises'
+import { Readable } from 'stream'
 
 export const command = 'deploy'
 export const description = `build (if necessary) and deploy to Clarity`
@@ -33,7 +36,7 @@ export async function handler(): Promise<void> {
   if (await shouldBuild()) await build.handler()
 
   const clarityUrl = await getClarityUrl()
-  const token = await getClarityApiToken()
+  const signingKey = await getSigningKey()
 
   // eslint-disable-next-line no-console
   console.error(
@@ -52,23 +55,31 @@ export async function handler(): Promise<void> {
       clientAssets.outputPath
     )
 
-    archive.append(
-      JSON.stringify(
-        {
-          ...packageJson,
-          client: {
-            entrypoints: clientAssets.entrypoints.map(
-              (name) => `client/${name}`
-            ),
-          },
-        },
-        null,
-        2
-      ),
+    const packageJsonStr = JSON.stringify(
       {
-        name: 'package.json',
-      }
+        ...packageJson,
+        clarity: {
+          signatureVerificationKeyId: signingKey.id,
+        },
+        client: {
+          entrypoints: clientAssets.entrypoints.map((name) => `client/${name}`),
+        },
+      },
+      null,
+      2
     )
+
+    const sign = async (
+      content: string | Buffer | Readable
+    ): Promise<Buffer> => {
+      const signer = crypto.createSign('SHA256')
+      await pipeline(content, signer)
+      return signer.sign(signingKey.privateKey)
+    }
+
+    archive.append(packageJsonStr, { name: 'package.json' })
+    archive.append(await sign(packageJsonStr), { name: 'package.json.sig' })
+
     for (const name of [
       ...clientAssets.entrypoints,
       ...clientAssets.otherAssets,
@@ -76,18 +87,21 @@ export async function handler(): Promise<void> {
       archive.append(fs.createReadStream(path.resolve(clientAssetsDir, name)), {
         name: `client/${name}`,
       })
+      archive.append(
+        await sign(fs.createReadStream(path.resolve(clientAssetsDir, name))),
+        { name: `client/${name}.sig` }
+      )
     }
     const url = new URL('/api/customFeatures/upload', clarityUrl)
     if (overwrite) url.searchParams.set('overwrite', 'true')
 
     const [uploadResponse] = await Promise.all([
       fetch(url, {
+        method: 'POST',
         headers: {
-          Authorization: `bearer ${token}`,
           'Content-Type': 'application/x-tar',
           'Content-Encoding': 'gzip',
         },
-        method: 'POST',
         body: archive.pipe(createGzip()),
         duplex: 'half',
       }),
