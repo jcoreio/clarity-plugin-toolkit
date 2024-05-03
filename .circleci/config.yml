@@ -23,11 +23,11 @@ jobs:
       - run:
           name: Prepublish
           command: |
-            [[ $(netstat -tnlp | grep -F 'circleci-agent') ]] || pnpm run tc prepublish
+            [[ $(netstat -tnlp | grep -F 'circleci-agent') ]] || pnpm run -r tc prepublish
       - run:
           name: Release
           command: |
-            [[ $(netstat -tnlp | grep -F 'circleci-agent') ]] || pnpm run tc release
+            [[ $(netstat -tnlp | grep -F 'circleci-agent') ]] || pnpm run -r tc release
 
 workflows:
   build:

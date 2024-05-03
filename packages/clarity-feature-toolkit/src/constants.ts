@@ -1,4 +1,4 @@
-export const clarityFeatureToolkitDir = './.clarity-feature-toolkit'
+export const clarityFeatureToolkitDir = '.clarity-feature-toolkit'
 export const emptyEntryFile = `${clarityFeatureToolkitDir}/empty.js`
 export const distDir = `${clarityFeatureToolkitDir}/dist`
 export const clientEntrypointFile = `${clarityFeatureToolkitDir}/client.js`

@@ -3,7 +3,6 @@ import { Compilation, Configuration, container } from 'webpack'
 import path from 'path'
 import fs from 'fs-extra'
 import {
-  clarityFeatureToolkitDir,
   clientAssetsFile,
   clientEntrypointFile,
   distDir,
