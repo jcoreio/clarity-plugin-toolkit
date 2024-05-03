@@ -3,8 +3,10 @@ import { Compilation, Configuration, container } from 'webpack'
 import path from 'path'
 import fs from 'fs-extra'
 import {
+  clarityFeatureToolkitDir,
   clientAssetsFile,
   clientEntrypointFile,
+  distDir,
   emptyEntryFile,
 } from '../constants'
 import { createFeatureEntrypoint } from './createFeatureEntrypoint'
@@ -26,7 +28,7 @@ export async function makeWebpackConfig(
   const clarityFeatureApiVersion =
     packageJson.dependencies?.['@jcoreio/clarity-feature-api']
 
-  const outputPath = path.resolve(context, 'dist', 'client')
+  const outputPath = path.resolve(context, distDir, 'client')
 
   const containerName = packageJson.name
     .replace(/^@([^/]+)\//, '_$1_')
