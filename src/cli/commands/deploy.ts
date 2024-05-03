@@ -15,7 +15,7 @@ import * as build from './build'
 import shouldBuild from '../../shouldBuild'
 import { getSigningKey } from '../../getSigningKey'
 import { pipeline } from 'stream/promises'
-import { Readable } from 'stream'
+import { PassThrough, Readable } from 'stream'
 
 export const command = 'deploy'
 export const description = `build (if necessary) and deploy to Clarity`
@@ -69,29 +69,35 @@ export async function handler(): Promise<void> {
       2
     )
 
-    const sign = async (
-      content: string | Buffer | Readable
-    ): Promise<Buffer> => {
-      const signer = crypto.createSign('SHA256')
-      await pipeline(content, signer)
-      return signer.sign(signingKey.privateKey)
-    }
+    const addFileAndSignature = async (
+      content: string | Buffer | Readable,
+      {
+        name,
+      }: {
+        name: string
+      }
+    ) => {
+      archive.append(content, { name })
+      const signature = new PassThrough()
+      archive.append(signature, { name: `${name}.sig` })
 
-    archive.append(packageJsonStr, { name: 'package.json' })
-    archive.append(await sign(packageJsonStr), { name: 'package.json.sig' })
-
-    for (const name of [
-      ...clientAssets.entrypoints,
-      ...clientAssets.otherAssets,
-    ]) {
-      archive.append(fs.createReadStream(path.resolve(clientAssetsDir, name)), {
-        name: `client/${name}`,
-      })
-      archive.append(
-        await sign(fs.createReadStream(path.resolve(clientAssetsDir, name))),
-        { name: `client/${name}.sig` }
+      const environment = name.startsWith('client/') ? 'client' : 'server'
+      const input = new PassThrough()
+      input.write(
+        JSON.stringify({
+          feature: packageJson.name,
+          version: packageJson.version,
+          environment,
+          filename: name.replace(/^(client|server)\//, ''),
+        })
       )
+      if (content instanceof Readable) content.pipe(input)
+      else input.end(content)
+      const signer = crypto.createSign('SHA256')
+      await pipeline(input, signer)
+      signature.end(signer.sign(signingKey.privateKey))
     }
+
     const url = new URL('/api/customFeatures/upload', clarityUrl)
     if (overwrite) url.searchParams.set('overwrite', 'true')
 
@@ -105,8 +111,17 @@ export async function handler(): Promise<void> {
         body: archive.pipe(createGzip()),
         duplex: 'half',
       }),
+      addFileAndSignature(packageJsonStr, { name: 'package.json' }),
+      ...[...clientAssets.entrypoints, ...clientAssets.otherAssets].map(
+        (name) =>
+          addFileAndSignature(
+            fs.createReadStream(path.resolve(clientAssetsDir, name)),
+            { name: `client/${name}` }
+          )
+      ),
       archive.finalize(),
     ])
+
     if (uploadResponse.ok) {
       // eslint-disable-next-line no-console
       console.error(`Deployed ${packageJson.name}@${packageJson.version}!`)

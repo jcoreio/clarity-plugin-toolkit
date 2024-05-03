@@ -10,19 +10,28 @@ export const getSigningKey = once(
     const { projectDir } = await getProject()
 
     if (await fs.pathExists(path.resolve(projectDir, signingKeyFile))) {
-      const base64 = (
+      return parseSigningKey(
         await fs.readFile(path.resolve(projectDir, signingKeyFile), 'utf8')
-      ).replace(/\s+/gm, '')
-      const buffer = Buffer.from(base64, 'base64')
-      return {
-        id: buffer.readUint32BE(0),
-        privateKey: crypto.createPrivateKey({
-          key: buffer.subarray(4),
-          type: 'pkcs8',
-          format: 'der',
-        }),
-      }
+      )
     }
     throw new Error(`key generation flow not implemented yet`)
   }
 )
+
+export function parseSigningKey(input: string | Buffer): {
+  id: number
+  privateKey: crypto.KeyObject
+} {
+  const buffer =
+    typeof input === 'string'
+      ? Buffer.from(input.replace(/\s+/gm, ''), 'base64')
+      : input
+  return {
+    id: buffer.readUint32BE(0),
+    privateKey: crypto.createPrivateKey({
+      key: buffer.subarray(4),
+      type: 'pkcs8',
+      format: 'der',
+    }),
+  }
+}
