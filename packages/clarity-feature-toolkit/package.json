@@ -5,7 +5,8 @@
   "keywords": [
     "jcore systems",
     "jcore.io",
-    "clarity"
+    "clarity",
+    "test"
   ],
   "author": "Andy Edwards",
   "license": "MIT",
@@ -42,9 +43,12 @@
     "@types/yargs": "^17.0.32",
     "@typescript-eslint/eslint-plugin": "^7.6.0",
     "@typescript-eslint/parser": "^7.6.0",
+    "conventional-changelog-conventionalcommits": "^7.0.2",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.32.2",
+    "glob": "^10.3.12",
     "react": "^18.2.0",
+    "semantic-release": "^23.0.8",
     "typescript": "^5.1.0"
   },
   "sideEffects": false,
@@ -78,7 +82,6 @@
     "find-up": "^5.0.0",
     "fs-extra": "^11.2.0",
     "gitignore-fs": "^2.2.2",
-    "glob": "^10.3.12",
     "json-loader": "^0.5.7",
     "lodash": "^4.17.21",
     "open": "^8.0.0",
