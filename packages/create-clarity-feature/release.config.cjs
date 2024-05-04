@@ -40,7 +40,7 @@ module.exports = {
             scope: '*create-clarity-feature*',
             release: 'patch',
           },
-          { release: false },
+          { scope: undefined, release: false },
         ],
       },
     ],

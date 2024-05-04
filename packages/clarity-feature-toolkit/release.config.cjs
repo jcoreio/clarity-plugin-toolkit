@@ -40,7 +40,7 @@ module.exports = {
             scope: '*@jcoreio/clarity-feature-toolkit*',
             release: 'patch',
           },
-          { release: false },
+          { scope: undefined, release: false },
         ],
       },
     ],
