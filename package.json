@@ -10,7 +10,8 @@
     "@jcoreio/eslint-plugin-implicit-dependencies": "^1.1.1",
     "@jcoreio/toolchain": "^4.1.0",
     "@jcoreio/toolchain-circle": "^4.1.0",
-    "eslint": "^8.56.0"
+    "eslint": "^8.56.0",
+    "glob": "^10.3.12"
   },
   "sideEffects": false,
   "scripts": {

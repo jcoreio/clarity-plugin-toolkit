@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import yargs from 'yargs'
+import * as yargs from 'yargs'
 import execa from 'execa'
 import getProject from '../../getProject'
 

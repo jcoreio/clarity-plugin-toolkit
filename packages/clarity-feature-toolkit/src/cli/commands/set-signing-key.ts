@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import yargs from 'yargs'
+import * as yargs from 'yargs'
 import setSigningKey from '../../setSigningKey'
 import { getSigningKey } from '../../getSigningKey'
 import fs from 'fs-extra'

@@ -25,7 +25,7 @@
     }
   },
   "devDependencies": {
-    "@jcoreio/clarity-feature-api": "^2.0.0",
+    "@jcoreio/clarity-feature-api": "workspace:*",
     "@jcoreio/eslint-plugin-implicit-dependencies": "^1.1.1",
     "@jcoreio/toolchain": "^4.0.1",
     "@jcoreio/toolchain-esnext": "^4.0.1",
@@ -46,7 +46,6 @@
     "conventional-changelog-conventionalcommits": "^7.0.2",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.32.2",
-    "glob": "^10.3.12",
     "react": "^18.2.0",
     "semantic-release": "^23.0.8",
     "typescript": "^5.1.0"
@@ -82,6 +81,7 @@
     "find-up": "^5.0.0",
     "fs-extra": "^11.2.0",
     "gitignore-fs": "^2.2.2",
+    "glob": "^10.3.12",
     "json-loader": "^0.5.7",
     "lodash": "^4.17.21",
     "open": "^8.0.0",
