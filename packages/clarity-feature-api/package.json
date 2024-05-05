@@ -18,7 +18,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jcoreio/clarity-feature-api.git",
+    "url": "https://github.com/jcoreio/clarity-feature-toolkit.git",
     "directory": "packages/clarity-feature-api"
   },
   "bugs": {
