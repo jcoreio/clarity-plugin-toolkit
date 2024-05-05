@@ -1,6 +1,7 @@
 /* eslint-env node, es2018 */
 const path = require('path')
-module.exports = function makeReleaseConfig(pkg) {
+module.exports = function makeReleaseConfig(pkgDir) {
+  const pkg = require(path.resolve(pkgDir, 'package.json')).name
   const otherPackages = require('glob')
     .sync('*/package.json', { cwd: __dirname })
     .map((f) => require(path.resolve(__dirname, f)).name)
@@ -65,7 +66,7 @@ module.exports = function makeReleaseConfig(pkg) {
       [
         require.resolve('@semantic-release/npm'),
         {
-          pkgRoot: path.join(__dirname, 'dist'),
+          pkgRoot: path.join(pkgDir, 'dist'),
         },
       ],
       require.resolve('@semantic-release/github'),
