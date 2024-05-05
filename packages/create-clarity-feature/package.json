@@ -10,12 +10,21 @@
     "prepublishOnly": "echo This package is meant to be published by semantic-release from the dist build directory. && exit 1"
   },
   "author": "Andy Edwards",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jcoreio/create-clarity-feature.git",
+    "directory": "packages/create-clarity-feature"
+  },
+  "bugs": {
+    "url": "https://github.com/jcoreio/clarity-feature-toolkit/issues"
+  },
+  "homepage": "https://github.com/jcoreio/clarity-feature-toolkit/tree/master/packages/create-clarity-feature",
   "keywords": [
     "jcore systems",
     "jcore.io",
     "clarity"
   ],
-  "license": "MIT",
   "devDependencies": {
     "@jcoreio/eslint-plugin-implicit-dependencies": "^1.1.1",
     "@jcoreio/toolchain": "^4.1.0",

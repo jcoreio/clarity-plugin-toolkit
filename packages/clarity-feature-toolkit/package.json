@@ -10,6 +10,15 @@
   ],
   "author": "Andy Edwards",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jcoreio/clarity-feature-toolkit.git",
+    "directory": "packages/clarity-feature-toolkit"
+  },
+  "bugs": {
+    "url": "https://github.com/jcoreio/clarity-feature-toolkit/issues"
+  },
+  "homepage": "https://github.com/jcoreio/clarity-feature-toolkit/tree/master/packages/clarity-feature-toolkit",
   "bin": {
     "clarity-feature-toolkit": "./dist/cli/index.js"
   },
