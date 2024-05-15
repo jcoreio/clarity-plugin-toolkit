@@ -68,10 +68,10 @@ export async function handler(): Promise<void> {
       client: {},
     },
     scripts: {
-      clean: 'clarity-feature clean',
-      build: 'clarity-feature build',
-      deploy: 'clarity-feature deploy',
-      'clarity-feature': 'clarity-feature',
+      clean: 'clarity-feature-toolkit clean',
+      build: 'clarity-feature-toolkit build',
+      deploy: 'clarity-feature-toolkit deploy',
+      'clarity-feature-toolkit': 'clarity-feature-toolkit',
     },
     dependencies: sortKeys({
       '@jcoreio/clarity-feature-api': '^2.0.0',
