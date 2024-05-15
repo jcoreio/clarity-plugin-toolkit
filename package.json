@@ -8,8 +8,8 @@
   "license": "MIT",
   "devDependencies": {
     "@jcoreio/eslint-plugin-implicit-dependencies": "^1.1.1",
-    "@jcoreio/toolchain": "^4.5.1",
-    "@jcoreio/toolchain-circle": "^4.5.1",
+    "@jcoreio/toolchain": "^4.5.2",
+    "@jcoreio/toolchain-circle": "^4.5.2",
     "eslint": "^8.56.0",
     "glob": "^10.3.12"
   },

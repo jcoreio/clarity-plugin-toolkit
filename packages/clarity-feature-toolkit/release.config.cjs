@@ -1,3 +1,6 @@
 /* eslint-env node, es2018 */
-const makeReleaseConfig = require('../../makeReleaseConfig.cjs')
-module.exports = makeReleaseConfig(__dirname)
+module.exports = {
+  extends: [
+    require.resolve('@jcoreio/toolchain-semantic-release/release.config.cjs'),
+  ],
+}
