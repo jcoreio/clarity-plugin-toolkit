@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  '@semantic-release/npm@12.0.0':
-    hash: ole6wtk46uicdesn5qyogbwpyy
-    path: patches/@semantic-release__npm@12.0.0.patch
-
 importers:
 
   .:
@@ -21,11 +16,11 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       '@jcoreio/toolchain':
-        specifier: ^4.1.0
-        version: 4.1.0
+        specifier: ^4.5.1
+        version: 4.5.1
       '@jcoreio/toolchain-circle':
-        specifier: ^4.1.0
-        version: 4.1.0
+        specifier: ^4.5.1
+        version: 4.5.1
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -64,11 +59,11 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       '@jcoreio/toolchain':
-        specifier: ^4.1.0
-        version: 4.1.0
+        specifier: ^4.5.1
+        version: 4.5.1
       '@jcoreio/toolchain-circle':
-        specifier: ^4.1.0
-        version: 4.1.0
+        specifier: ^4.5.1
+        version: 4.5.1
       '@jcoreio/toolchain-esnext':
         specifier: ^4.1.0
         version: 4.1.0
@@ -209,8 +204,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       '@jcoreio/toolchain':
-        specifier: ^4.1.0
-        version: 4.1.0
+        specifier: ^4.5.1
+        version: 4.5.1
       '@jcoreio/toolchain-esnext':
         specifier: ^4.1.0
         version: 4.1.0
@@ -225,7 +220,7 @@ importers:
         version: 4.1.0(eslint@8.57.0)(typescript@5.4.5)
       '@semantic-release/npm':
         specifier: 12.0.0
-        version: 12.0.0(patch_hash=ole6wtk46uicdesn5qyogbwpyy)(semantic-release@23.0.8)
+        version: 12.0.0(semantic-release@23.0.8)
       '@types/archiver':
         specifier: ^6.0.2
         version: 6.0.2
@@ -306,8 +301,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       '@jcoreio/toolchain':
-        specifier: ^4.1.0
-        version: 4.1.0
+        specifier: ^4.5.1
+        version: 4.5.1
       '@jcoreio/toolchain-esnext':
         specifier: ^4.1.0
         version: 4.1.0
@@ -317,9 +312,6 @@ importers:
       '@jcoreio/toolchain-typescript':
         specifier: ^4.1.0
         version: 4.1.0(eslint@8.57.0)(typescript@5.4.5)
-      '@semantic-release/npm':
-        specifier: 12.0.0
-        version: 12.0.0(patch_hash=ole6wtk46uicdesn5qyogbwpyy)(semantic-release@23.0.8)
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -347,9 +339,6 @@ importers:
       glob:
         specifier: ^10.3.12
         version: 10.3.12
-      semantic-release:
-        specifier: ^23.0.8
-        version: 23.0.8(typescript@5.4.5)
       typescript:
         specifier: ^5.1.0
         version: 5.4.5
@@ -1694,10 +1683,10 @@ packages:
       validate-npm-package-name: 5.0.0
     dev: true
 
-  /@jcoreio/toolchain-circle@4.1.0:
-    resolution: {integrity: sha512-n5OTbM/iSq82Cdxc6g5kvKAN1eIfzVmSdo4xSjMwzIXUR0xJZHfma2Lb13Ihp31K8wuT0IVqeujOT1/IdTNT1w==}
+  /@jcoreio/toolchain-circle@4.5.1:
+    resolution: {integrity: sha512-rw+WZz7wZhUGPybl586LporU/H6CnUeObgPBhNJ6z6ZY5kvVLejFjsSFQgO3bfMxaKKaBVD4sHViHeOYC/G9Ow==}
     dependencies:
-      '@jcoreio/toolchain': 4.1.0
+      '@jcoreio/toolchain': 4.5.1
       dedent-js: 1.0.1
       open: 8.4.2
       semver: 7.6.0
@@ -1817,6 +1806,32 @@ packages:
 
   /@jcoreio/toolchain@4.2.0:
     resolution: {integrity: sha512-CV3FXn/GBPPmrIwWK9CW+nMviJoFJ2ZIHKC8axjrAHz+zJHQjSzO57S9/b5e/nIOy8uJkS45Q5vVAc7F9nPqyg==}
+    dependencies:
+      '@jcoreio/eslint-plugin-implicit-dependencies': 1.1.1
+      chalk: 4.1.2
+      dedent-js: 1.0.1
+      eslint: 8.57.0
+      eslint-config-prettier: 8.10.0(eslint@8.57.0)
+      execa: 5.1.1
+      find-up: 5.0.0
+      fs-extra: 10.1.0
+      glob: 7.2.3
+      json5: 2.2.3
+      lint-staged: 15.2.2
+      open: 8.4.2
+      prettier: 2.8.8
+      prompts: 2.4.2
+      resolve-bin: 1.0.1
+      semver: 7.6.0
+      toposort: 2.0.2
+      yaml: 2.4.2
+      zod: 3.23.6
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@jcoreio/toolchain@4.5.1:
+    resolution: {integrity: sha512-iyte8PU7peovjb+JRtQdgVxomvqIyN2Wv4w8alsWBzmh3mwrI/KOLnFHvZ+zqYtqI/+ahWy0h7HLgIBcC/EhwQ==}
     dependencies:
       '@jcoreio/eslint-plugin-implicit-dependencies': 1.1.1
       chalk: 4.1.2
@@ -2090,7 +2105,7 @@ packages:
       - supports-color
     dev: true
 
-  /@semantic-release/npm@12.0.0(patch_hash=ole6wtk46uicdesn5qyogbwpyy)(semantic-release@23.0.8):
+  /@semantic-release/npm@12.0.0(semantic-release@23.0.8):
     resolution: {integrity: sha512-72TVYQCH9NvVsO/y13eF8vE4bNnfls518+4KcFwJUKi7AtA/ZXoNgSg9gTTfw5eMZMkiH0izUrpGXgZE/cSQhA==}
     engines: {node: '>=20.8.1'}
     peerDependencies:
@@ -2111,7 +2126,6 @@ packages:
       semver: 7.6.0
       tempy: 3.1.0
     dev: true
-    patched: true
 
   /@semantic-release/release-notes-generator@13.0.0(semantic-release@23.0.8):
     resolution: {integrity: sha512-LEeZWb340keMYuREMyxrODPXJJ0JOL8D/mCl74B4LdzbxhtXV2LrPN2QBEcGJrlQhoqLO0RhxQb6masHytKw+A==}
@@ -6405,7 +6419,7 @@ packages:
       '@semantic-release/commit-analyzer': 12.0.0(semantic-release@23.0.8)
       '@semantic-release/error': 4.0.0
       '@semantic-release/github': 10.0.3(semantic-release@23.0.8)
-      '@semantic-release/npm': 12.0.0(patch_hash=ole6wtk46uicdesn5qyogbwpyy)(semantic-release@23.0.8)
+      '@semantic-release/npm': 12.0.0(semantic-release@23.0.8)
       '@semantic-release/release-notes-generator': 13.0.0(semantic-release@23.0.8)
       aggregate-error: 5.0.0
       cosmiconfig: 9.0.0(typescript@5.4.5)
