@@ -191,11 +191,11 @@ importers:
         specifier: ^17.7.2
         version: 17.7.2
       zod:
-        specifier: ^3.23.5
+        specifier: ^3.25.7
         version: 3.25.7
       zod-route-schemas:
-        specifier: ^1.0.0
-        version: 1.3.0
+        specifier: ^2.0.0
+        version: 2.0.0
     devDependencies:
       '@jcoreio/clarity-feature-api':
         specifier: workspace:*
@@ -2794,11 +2794,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
-
-  /@babel/runtime@7.27.1:
-    resolution: {integrity: sha512-1x3D2xEk2fRo3PAhwQwu5UubzgiVWSXTBfWpVd2Mx2AzRqJuDJCsgaDVZ7HB5iGzDW1Hl1sWN2mFyKjmR9uAog==}
-    engines: {node: '>=6.9.0'}
-    dev: false
 
   /@babel/template@7.24.0:
     resolution: {integrity: sha512-Bkf2q8lMB0AFpX0NFEqSbx1OkTHf0f+0j82mkw+ZpzBnkk7e9Ql0891vlfgi+kHwOk8tQjiQHpqh4LaSa0fKEA==}
@@ -7608,14 +7603,6 @@ packages:
       archiver-utils: 5.0.2
       compress-commons: 6.0.2
       readable-stream: 4.5.2
-    dev: false
-
-  /zod-route-schemas@1.3.0:
-    resolution: {integrity: sha512-OU0h8PegCZTwd9AM/xtMpySt77deOseBx7LgELnDPaZerE9ju6whyce8YcKkQHAFVcDzaGmX63uOXWNhfFwI7w==}
-    engines: {node: '>=16'}
-    dependencies:
-      '@babel/runtime': 7.27.1
-      zod: 3.25.7
     dev: false
 
   /zod-route-schemas@2.0.0:
