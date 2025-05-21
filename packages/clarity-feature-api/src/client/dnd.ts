@@ -4,6 +4,7 @@ import {
   DropTargetHookSpec,
   FactoryOrInstance,
   ConnectDropTarget,
+  DropTargetMonitor,
 } from 'react-dnd'
 import { DND_ITEM } from './featureTestDnd'
 
@@ -47,13 +48,14 @@ function wrapSpec(
 > {
   return {
     accept: DND_ITEM,
-    canDrop: (item) => {
+    canDrop: (item: ClarityDragObject) => {
       return spec.canDrop?.(item) ?? true
     },
-    collect: (monitor) => ({
-      tag: (monitor.getItem() as ClarityDragObject | undefined)?.tag,
-      MetadataItem: (monitor.getItem() as ClarityDragObject | undefined)
-        ?.MetadataItem,
+    collect: (
+      monitor: DropTargetMonitor<ClarityDragObject, ClarityDropResult>
+    ) => ({
+      tag: monitor.getItem().tag,
+      MetadataItem: monitor.getItem().MetadataItem,
       canDrop: monitor.canDrop(),
       isOver: monitor.isOver(),
     }),

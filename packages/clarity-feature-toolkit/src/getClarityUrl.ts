@@ -18,7 +18,7 @@ export const getClarityUrl = once(async (): Promise<string> => {
       try {
         new URL(text)
         return true
-      } catch (error) {
+      } catch {
         return 'invalid URL'
       }
     },

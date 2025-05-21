@@ -9,8 +9,8 @@ export function useTagState(tag?: string | null): {
 } {
   const { state } = useFeatureTestState()
   return React.useMemo(() => {
-    return tag
-      ? state.tagStates[tag] || {
+    return tag ?
+        state.tagStates[tag] || {
           loading: false,
           error: new Error(`tag not found: ${tag}`),
         }

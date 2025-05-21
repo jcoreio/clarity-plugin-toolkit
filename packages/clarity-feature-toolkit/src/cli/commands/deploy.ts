@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as yargs from 'yargs'
 import { getClarityUrl } from '../../getClarityUrl'
 import path from 'path'

@@ -76,11 +76,9 @@ export function MyWidget({
 
   return (
     <div ref={connectDropTarget}>
-      {tag != null ? (
+      {tag != null ?
         <p>Drop to set tag to {tag}</p>
-      ) : (
-        <p>Tag: {config?.tag}</p>
-      )}
+      : <p>Tag: {config?.tag}</p>}
     </div>
   )
 }

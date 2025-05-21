@@ -19,7 +19,7 @@ export default async function setSigningKey(): Promise<{
       if (typeof value !== 'string') return 'is required'
       try {
         parseSigningKey(value)
-      } catch (error) {
+      } catch {
         return 'invalid signing key'
       }
       return true

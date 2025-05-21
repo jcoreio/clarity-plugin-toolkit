@@ -57,9 +57,9 @@ export function parseSigningKey(input: string | Buffer): {
   privateKey: crypto.KeyObject
 } {
   const buffer =
-    typeof input === 'string'
-      ? Buffer.from(input.replace(/\s+/gm, ''), 'base64')
-      : input
+    typeof input === 'string' ?
+      Buffer.from(input.replace(/\s+/gm, ''), 'base64')
+    : input
   return {
     id: buffer.readUint32BE(0),
     privateKey: crypto.createPrivateKey({

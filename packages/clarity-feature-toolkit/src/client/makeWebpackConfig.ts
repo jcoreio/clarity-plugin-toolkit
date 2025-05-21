@@ -23,9 +23,9 @@ export async function makeWebpackConfig(
 
   const context = projectDir
 
-  const reactVersion = packageJson.dependencies?.react
+  const reactVersion = packageJson.dependencies.react
   const clarityFeatureApiVersion =
-    packageJson.dependencies?.['@jcoreio/clarity-feature-api']
+    packageJson.dependencies['@jcoreio/clarity-feature-api']
 
   const outputPath = path.resolve(context, distDir, 'client')
 
@@ -143,6 +143,7 @@ export async function makeWebpackConfig(
           )
           compiler.hooks.afterEmit.tapAsync(
             { name: 'writeFeatureAssets' },
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             async (compilation: Compilation, callback) => {
               const entrypoint = compilation.entrypoints.get(containerName)
               if (!entrypoint)
@@ -195,22 +196,22 @@ export async function makeWebpackConfig(
         },
         shared: [
           {
-            ...(reactVersion
-              ? {
-                  react: {
-                    requiredVersion: reactVersion,
-                    singleton: true,
-                  },
-                }
-              : {}),
-            ...(clarityFeatureApiVersion
-              ? {
-                  '@jcoreio/clarity-feature-api/client': {
-                    requiredVersion: clarityFeatureApiVersion,
-                    singleton: true,
-                  },
-                }
-              : {}),
+            ...(reactVersion ?
+              {
+                react: {
+                  requiredVersion: reactVersion,
+                  singleton: true,
+                },
+              }
+            : {}),
+            ...(clarityFeatureApiVersion ?
+              {
+                '@jcoreio/clarity-feature-api/client': {
+                  requiredVersion: clarityFeatureApiVersion,
+                  singleton: true,
+                },
+              }
+            : {}),
           },
         ],
       }),
