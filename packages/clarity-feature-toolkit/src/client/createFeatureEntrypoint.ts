@@ -37,17 +37,17 @@ export async function createFeatureEntrypoint({
     ${dashboardWidgets ? `import * as React from 'react'` : ''}
     export default ${print({
       ...rest,
-      ...(dashboardWidgets
-        ? {
-            dashboardWidgets: mapValues(
-              dashboardWidgets,
-              ({ component, ...rest }) => ({
-                ...rest,
-                component: literal`React.lazy(() => ${importFile(component)})`,
-              })
-            ),
-          }
-        : {}),
+      ...(dashboardWidgets ?
+        {
+          dashboardWidgets: mapValues(
+            dashboardWidgets,
+            ({ component, ...rest }) => ({
+              ...rest,
+              component: literal`React.lazy(() => ${importFile(component)})`,
+            })
+          ),
+        }
+      : {}),
     })}
   `,
     'utf8'

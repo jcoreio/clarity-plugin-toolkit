@@ -2,7 +2,7 @@
 
 import yargs from 'yargs/yargs'
 
-yargs(process.argv.slice(2))
+void yargs(process.argv.slice(2))
   .scriptName('create-clarity-feature')
   .commandDir('commands')
   .strict()

@@ -5,11 +5,11 @@ function isValidIdentifier(elem: string | number): boolean {
 export default function stringifyPath(path: (string | number)[]): string {
   return path
     .map((elem, index) =>
-      isValidIdentifier(elem)
-        ? index === 0
-          ? elem
-          : `.${elem}`
-        : `[${JSON.stringify(elem)}]`
+      isValidIdentifier(elem) ?
+        index === 0 ?
+          elem
+        : `.${elem}`
+      : `[${JSON.stringify(elem)}]`
     )
     .join('')
 }

@@ -80,19 +80,19 @@ export async function handler(): Promise<void> {
     devDependencies: sortKeys({
       '@jcoreio/clarity-feature-toolkit': '^1.0.0',
       webpack: '^5',
-      ...(useTypescript
-        ? {
-            '@types/react': '^18.2.0',
-            '@types/node': `^20`,
-            typescript: '^5',
-          }
-        : {}),
-      ...(useEslint
-        ? {
-            eslint: '^8',
-            'eslint-config-next': '14.2.3',
-          }
-        : {}),
+      ...(useTypescript ?
+        {
+          '@types/react': '^18.2.0',
+          '@types/node': `^20`,
+          typescript: '^5',
+        }
+      : {}),
+      ...(useEslint ?
+        {
+          eslint: '^8',
+          'eslint-config-next': '14.2.3',
+        }
+      : {}),
     }),
   }
 
@@ -182,9 +182,9 @@ export async function handler(): Promise<void> {
 
       module.exports = (env, argv) => makeWebpackConfig(env, argv)
     `,
-    ...(useTypescript
-      ? {
-          'tsconfig.json': dedent`
+    ...(useTypescript ?
+      {
+        'tsconfig.json': dedent`
             {
               "compilerOptions": {
                 "lib": ["dom", "dom.iterable", "esnext"],
@@ -206,17 +206,17 @@ export async function handler(): Promise<void> {
               )}]
             }
           `,
-        }
-      : {}),
-    ...(useEslint
-      ? {
-          '.eslintrc.json': dedent`
+      }
+    : {}),
+    ...(useEslint ?
+      {
+        '.eslintrc.json': dedent`
             {
               "extends": "next/core-web-vitals"
             }
           `,
-        }
-      : {}),
+      }
+    : {}),
   }
   await Promise.all(
     Object.entries(files).map(async ([name, content]) => {

@@ -27,6 +27,7 @@ export function featureTestReducer(
   action: FeatureTestAction
 ): FeatureTestState {
   switch (action.type) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     case 'SetTagState':
       return {
         ...state,
