@@ -1,26 +1,25 @@
 import * as yargs from 'yargs'
 import setSigningKey from '../../setSigningKey'
-import { getSigningKey } from '../../getSigningKey'
-import fs from 'fs-extra'
-import path from 'path'
-import getProject from '../../getProject'
-import { signingKeyFile } from '../../constants'
+import promptAndSetSigningKey from '../../promptAndSetSigningKey'
 
-export const command = 'set-signing-key'
+export const command = 'set-signing-key [key]'
 export const description = `set the key for signing code`
 
 type Options = {
+  key?: string
   // empty for now
 }
 
 export const builder = (yargs: yargs.Argv<Options>): any =>
-  yargs.usage('$0 set-signing-key')
+  yargs.positional('key', {
+    describe: 'the key to set. If omitted, will prompt you to paste the key',
+    type: 'string',
+    demandOption: false,
+  })
 
-export async function handler(): Promise<void> {
-  const { projectDir } = await getProject()
-  if (await fs.pathExists(path.resolve(projectDir, signingKeyFile))) {
-    await setSigningKey()
-  } else {
-    await getSigningKey()
-  }
+export async function handler({
+  key,
+}: yargs.Arguments<Options>): Promise<void> {
+  if (key) await setSigningKey(key)
+  else await promptAndSetSigningKey()
 }

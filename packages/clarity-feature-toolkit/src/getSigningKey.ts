@@ -8,7 +8,7 @@ import prompt from 'prompts'
 import { getClarityUrl } from './getClarityUrl'
 import dedent from 'dedent-js'
 import open from 'open'
-import setSigningKey from './setSigningKey'
+import promptAndSetSigningKey from './promptAndSetSigningKey'
 
 export const getSigningKey = once(
   async (): Promise<{ id: number; privateKey: crypto.KeyObject }> => {
@@ -44,11 +44,12 @@ export const getSigningKey = once(
       initial: true,
       message: `Open ${signingUrl}?`,
     })
-    if (!go) throw new Error('process canceled')
-    await open(signingUrl.toString(), { wait: false }).then((child) =>
-      child.unref()
-    )
-    return await setSigningKey()
+    if (go) {
+      await open(signingUrl.toString(), { wait: false }).then((child) =>
+        child.unref()
+      )
+    }
+    return await promptAndSetSigningKey()
   }
 )
 
@@ -60,12 +61,19 @@ export function parseSigningKey(input: string | Buffer): {
     typeof input === 'string' ?
       Buffer.from(input.replace(/\s+/gm, ''), 'base64')
     : input
-  return {
-    id: buffer.readUint32BE(0),
-    privateKey: crypto.createPrivateKey({
-      key: buffer.subarray(4),
-      type: 'pkcs8',
-      format: 'der',
-    }),
+
+  try {
+    return {
+      id: buffer.readUint32BE(0),
+      privateKey: crypto.createPrivateKey({
+        key: buffer.subarray(4),
+        type: 'pkcs8',
+        format: 'der',
+      }),
+    }
+  } catch (error) {
+    throw new Error(
+      `invalid signing key: ${input}. ${error instanceof Error ? error.message : error}`
+    )
   }
 }
