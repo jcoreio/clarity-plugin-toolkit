@@ -129,7 +129,7 @@ importers:
         version: 7.27.1
       '@types/webpack':
         specifier: ^5.28.5
-        version: 5.28.5(webpack-cli@5.1.4)
+        version: 5.28.5
       archiver:
         specifier: ^7.0.1
         version: 7.0.1
@@ -347,8 +347,8 @@ importers:
         version: 18.3.1
     devDependencies:
       '@jcoreio/clarity-feature-toolkit':
-        specifier: ^1.0.0
-        version: 1.0.5(@babel/core@7.27.1)(@jcoreio/clarity-feature-api@2.0.3(@types/node@20.17.41)(zod@3.25.17))(react@18.3.1)(webpack-cli@5.1.4)(zod@3.25.17)
+        specifier: workspace:*
+        version: link:../clarity-feature-toolkit
       '@material-ui/core':
         specifier: ^4.12.4
         version: 4.12.4(@types/react@18.3.20)(react-dom@17.0.2(react@18.3.1))(react@18.3.1)
@@ -1067,15 +1067,6 @@ packages:
     resolution: {integrity: sha512-5I0sx7BpGL8t4Yj0DNUPRMzDwT3oMIdPrrBS/wgpVA592qXvv96hG2Yz/kE5M6eD+6lIZjki5obDYQSDu/uxmA==}
     engines: {node: '>=16'}
     peerDependencies:
-      zod: ^3.25.7
-
-  '@jcoreio/clarity-feature-toolkit@1.0.5':
-    resolution: {integrity: sha512-VtgI4o7jmPgzZewEdaXsXIPukP6I6JIaSN01Hg/GriUl05Qe+b7EqGoDHwZEbJ0ZZs8U8Tmw0rUTBHFG4cDKeA==}
-    engines: {node: '>=16'}
-    hasBin: true
-    peerDependencies:
-      '@jcoreio/clarity-feature-api': ^2.0.0
-      react: ^18.2.0
       zod: ^3.25.7
 
   '@jcoreio/eslint-plugin-implicit-dependencies@1.1.1':
@@ -5286,47 +5277,6 @@ snapshots:
       - '@types/hoist-non-react-statics'
       - '@types/node'
 
-  '@jcoreio/clarity-feature-toolkit@1.0.5(@babel/core@7.27.1)(@jcoreio/clarity-feature-api@2.0.3(@types/node@20.17.41)(zod@3.25.17))(react@18.3.1)(webpack-cli@5.1.4)(zod@3.25.17)':
-    dependencies:
-      '@babel/preset-env': 7.27.1(@babel/core@7.27.1)
-      '@babel/preset-react': 7.26.3(@babel/core@7.27.1)
-      '@babel/preset-typescript': 7.27.1(@babel/core@7.27.1)
-      '@babel/runtime': 7.27.1
-      '@jcoreio/clarity-feature-api': 2.0.3(@types/node@20.17.41)(zod@3.25.17)
-      '@types/webpack': 5.28.5(webpack-cli@5.1.4)
-      archiver: 7.0.1
-      assert: 2.1.0
-      babel-loader: 9.2.1(@babel/core@7.27.1)(webpack@5.99.6)
-      chalk: 4.1.2
-      css-loader: 7.1.2(webpack@5.99.6)
-      dedent-js: 1.0.1
-      execa: 5.1.1
-      find-up: 5.0.0
-      fs-extra: 11.3.0
-      gitignore-fs: 2.2.2
-      glob: 10.4.5
-      json-loader: 0.5.7
-      lodash: 4.17.21
-      open: 8.4.2
-      path-browserify: 1.0.1
-      process: 0.11.10
-      prompts: 2.4.2
-      react: 18.3.1
-      semver: 7.7.2
-      validate-npm-package-name: 5.0.1
-      webpack: 5.99.6(webpack-cli@5.1.4)
-      yargs: 17.7.2
-      zod: 3.25.17
-      zod-route-schemas: 2.0.1(zod@3.25.17)
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@rspack/core'
-      - '@swc/core'
-      - esbuild
-      - supports-color
-      - uglify-js
-      - webpack-cli
-
   '@jcoreio/eslint-plugin-implicit-dependencies@1.1.1':
     dependencies:
       '@babel/runtime': 7.27.1
@@ -5682,7 +5632,7 @@ snapshots:
 
   '@types/validate-npm-package-name@4.0.2': {}
 
-  '@types/webpack@5.28.5(webpack-cli@5.1.4)':
+  '@types/webpack@5.28.5':
     dependencies:
       '@types/node': 20.17.41
       tapable: 2.2.1
@@ -6784,7 +6734,7 @@ snapshots:
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(eslint@8.57.1))(eslint@8.57.1)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@7.2.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@7.2.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.57.1)
       eslint-plugin-react: 7.37.5(eslint@8.57.1)
       eslint-plugin-react-hooks: 5.0.0-canary-7118f5dd7-20230705(eslint@8.57.1)
@@ -6818,7 +6768,7 @@ snapshots:
       tinyglobby: 0.2.14
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@7.2.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@7.2.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -6833,7 +6783,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.2.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.2.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9

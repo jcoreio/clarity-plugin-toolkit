@@ -23,7 +23,7 @@
     "react": "^18.2.0"
   },
   "devDependencies": {
-    "@jcoreio/clarity-feature-toolkit": "^1.0.0",
+    "@jcoreio/clarity-feature-toolkit": "workspace:*",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@types/node": "^20",
@@ -34,5 +34,8 @@
     "webpack": "^5",
     "webpack-cli": "^5.1.4",
     "zod": "^3.23.5"
+  },
+  "clarity": {
+    "url": "http://localhost:4000"
   }
 }
