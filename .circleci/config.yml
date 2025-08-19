@@ -26,12 +26,12 @@ jobs:
       - run:
           name: Prepublish
           command: |
-            [[ $(netstat -tnlp | grep -F 'circleci-agent') ]] || pnpm run -r tc prepublish
+            [[ $(netstat -tnlp | grep -F 'circleci-agent') ]] || pnpm run -r --if-present tc prepublish
       - codecov/upload
       - run:
           name: Release
           command: |
-            [[ $(netstat -tnlp | grep -F 'circleci-agent') ]] || pnpm -r --workspace-concurrency=1 exec -- tc release
+            [[ $(netstat -tnlp | grep -F 'circleci-agent') ]] || pnpm -r --workspace-concurrency=1 run --if-present -- tc release
 
 workflows:
   build:
