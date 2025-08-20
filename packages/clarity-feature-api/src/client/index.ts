@@ -1,4 +1,5 @@
 export * from './TagState'
 export * from './CustomDashboardWidgetProps'
+export * from './ClientFeatureContributions'
 export * from './useTagState'
 export * from './dnd'
