@@ -23,33 +23,48 @@ export async function createFeatureEntrypoint({
   rootDir: string
 }): Promise<void> {
   const { packageJson } = await getProject()
-  const { client: { dashboardWidgets, ...rest } = {} } = packageJson.contributes
-  await fs.mkdirs(path.resolve(rootDir, path.dirname(clientEntrypointFile)))
+  const { client } = packageJson.contributes
 
-  const importFile = (file: string) =>
-    literal`import(${path.relative(
+  const relativePath = (file: string) =>
+    path.relative(
       path.dirname(path.resolve(rootDir, clientEntrypointFile)),
       path.resolve(rootDir, file)
-    )})`
-  await fs.writeFile(
-    path.resolve(rootDir, clientEntrypointFile),
-    dedent`
-    ${dashboardWidgets ? `import * as React from 'react'` : ''}
-    export default ${print({
-      ...rest,
-      ...(dashboardWidgets ?
-        {
-          dashboardWidgets: mapValues(
-            dashboardWidgets,
-            ({ component, ...rest }) => ({
-              ...rest,
-              component: literal`React.lazy(() => ${importFile(component)})`,
-            })
-          ),
-        }
-      : {}),
-    })}
-  `,
-    'utf8'
-  )
+    )
+
+  await fs.mkdirs(path.resolve(rootDir, path.dirname(clientEntrypointFile)))
+  if (typeof client === 'string') {
+    await fs.writeFile(
+      path.resolve(rootDir, clientEntrypointFile),
+      dedent`
+        export * from ${JSON.stringify(relativePath(client))}
+      `,
+      'utf8'
+    )
+  } else {
+    const { dashboardWidgets, ...rest } = client || {}
+
+    const importFile = (file: string) => literal`import(${relativePath(file)})`
+    await fs.writeFile(
+      path.resolve(rootDir, clientEntrypointFile),
+      dedent`
+        ${dashboardWidgets ? `import * as React from 'react'` : ''}
+        export default ${print({
+          ...rest,
+          ...(dashboardWidgets ?
+            {
+              dashboardWidgets: mapValues(dashboardWidgets, (value) => {
+                if (!value) return value
+                const { component, ...rest } = value
+                return {
+                  ...rest,
+                  component: literal`React.lazy(() => ${importFile(component)})`,
+                }
+              }),
+            }
+          : {}),
+        })}
+      `,
+      'utf8'
+    )
+  }
 }

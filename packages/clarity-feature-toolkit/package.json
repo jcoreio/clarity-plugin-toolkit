@@ -54,7 +54,8 @@
     "lint-staged": "^15.2.2",
     "prettier": "^3.4.2",
     "react": "^18.2.0",
-    "typescript": "^5.1.0"
+    "typescript": "^5.1.0",
+    "zod": "^3.25.76"
   },
   "sideEffects": false,
   "scripts": {
