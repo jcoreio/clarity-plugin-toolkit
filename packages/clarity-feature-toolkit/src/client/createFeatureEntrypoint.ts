@@ -36,7 +36,7 @@ export async function createFeatureEntrypoint({
     await fs.writeFile(
       path.resolve(rootDir, clientEntrypointFile),
       dedent`
-        export * from ${JSON.stringify(relativePath(client))}
+        export { default } from ${JSON.stringify(relativePath(client))}
       `,
       'utf8'
     )
