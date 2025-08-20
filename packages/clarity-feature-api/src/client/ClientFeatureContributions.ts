@@ -45,6 +45,11 @@ const LazyComponentSchema = z.unknown().refine(
 )
 
 export const ClientFeatureContributions = z.strictObject({
+  /**
+   * Custom dashboard widget types to add to Clarity.  The key is the unique
+   * `customVariant` stored in the dashboard config.
+   */
+
   dashboardWidgets: z
     .record(
       z.string(),
