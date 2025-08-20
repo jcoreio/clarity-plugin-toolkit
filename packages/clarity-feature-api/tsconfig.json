@@ -3,6 +3,7 @@
   "include": ["./src", "./test"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "isolatedModules": true
   }
 }

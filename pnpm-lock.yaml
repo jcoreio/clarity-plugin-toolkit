@@ -54,12 +54,9 @@ importers:
       semver:
         specifier: ^7.6.0
         version: 7.7.2
-      zod:
-        specifier: ^3.25.7
-        version: 3.25.17
       zod-route-schemas:
         specifier: ^2.0.0
-        version: 2.0.1(zod@3.25.17)
+        version: 2.0.1(zod@3.25.76)
     devDependencies:
       '@jcoreio/toolchain':
         specifier: ^5.5.4
@@ -112,6 +109,9 @@ importers:
       typescript:
         specifier: ^5.1.0
         version: 5.8.3
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
 
   packages/clarity-feature-toolkit:
     dependencies:
@@ -193,9 +193,6 @@ importers:
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
-      zod:
-        specifier: ^3.25.7
-        version: 3.25.76
       zod-route-schemas:
         specifier: ^2.0.0
         version: 2.0.1(zod@3.25.76)
@@ -263,6 +260,9 @@ importers:
       typescript:
         specifier: ^5.1.0
         version: 5.8.3
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
 
   packages/create-clarity-feature:
     dependencies:
@@ -6006,8 +6006,8 @@ snapshots:
       express-rate-limit: 7.5.0(express@5.1.0)
       pkce-challenge: 5.0.0
       raw-body: 3.0.0
-      zod: 3.25.17
-      zod-to-json-schema: 3.24.5(zod@3.25.17)
+      zod: 3.25.76
+      zod-to-json-schema: 3.24.5(zod@3.25.76)
     transitivePeerDependencies:
       - supports-color
 
@@ -7354,7 +7354,7 @@ snapshots:
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(eslint@8.57.1))(eslint@8.57.1)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@7.2.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@7.2.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.57.1)
       eslint-plugin-react: 7.37.5(eslint@8.57.1)
       eslint-plugin-react-hooks: 5.0.0-canary-7118f5dd7-20230705(eslint@8.57.1)
@@ -7388,7 +7388,7 @@ snapshots:
       tinyglobby: 0.2.14
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@7.2.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@7.2.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -7403,7 +7403,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.2.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.2.0(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -9904,9 +9904,9 @@ snapshots:
       '@babel/runtime': 7.27.1
       zod: 3.25.76
 
-  zod-to-json-schema@3.24.5(zod@3.25.17):
+  zod-to-json-schema@3.24.5(zod@3.25.76):
     dependencies:
-      zod: 3.25.17
+      zod: 3.25.76
 
   zod@3.25.17: {}
 

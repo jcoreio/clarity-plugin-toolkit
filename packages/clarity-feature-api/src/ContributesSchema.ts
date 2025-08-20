@@ -2,14 +2,20 @@ import z from 'zod'
 
 export const ContributesSchema = z.strictObject({
   client: z
-    .strictObject({
-      dashboardWidgets: z.record(
-        z.strictObject({
-          displayName: z.string(),
-          component: z.string(),
-        })
-      ),
-    })
+    .union([
+      z.string(),
+      z.strictObject({
+        dashboardWidgets: z.record(
+          z.string(),
+          z
+            .strictObject({
+              displayName: z.string(),
+              component: z.string(),
+            })
+            .optional()
+        ),
+      }),
+    ])
     .optional(),
 })
 
