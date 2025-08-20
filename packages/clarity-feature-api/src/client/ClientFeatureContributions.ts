@@ -45,6 +45,10 @@ export const ClientFeatureContributions = z.strictObject({
     )
     .optional(),
 })
-export type ClientFeatureContributions = z.input<
+
+// use output type so that we get the JSDoc.  This would be a problem for userland code doing
+// `satisfies ClientFeatureContributions` if the input and output types differed, but input
+// types don't have JSDoc on them
+export type ClientFeatureContributions = z.output<
   typeof ClientFeatureContributions
 >
