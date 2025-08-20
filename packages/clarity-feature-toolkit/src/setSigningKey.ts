@@ -11,6 +11,7 @@ export default async function setSigningKey(key: string): Promise<{
 }> {
   const { projectDir } = await getProject()
   const parsed = parseSigningKey(key)
+  await fs.mkdirs(path.dirname(path.resolve(projectDir, signingKeyFile)))
   await fs.writeFile(path.resolve(projectDir, signingKeyFile), key, 'utf8')
   // eslint-disable-next-line no-console
   console.error(`saved signing key`)
