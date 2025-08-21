@@ -35,8 +35,6 @@ export type PrintStationWidgetProps = z.output<
 
 export default React.forwardRef(function PrintStationWidget(
   {
-    loading,
-    error,
     stationLabel,
     printerStatus,
     cutterStatus,
@@ -78,13 +76,12 @@ export default React.forwardRef(function PrintStationWidget(
               <Light
                 size={30}
                 color={
-                  printerStatus === 'active'
-                    ? 'green'
-                    : printerStatus === 'idle'
-                    ? '#ddd'
-                    : printerStatus === 'error'
-                    ? 'red'
-                    : undefined
+                  printerStatus === 'active' ? 'green'
+                  : printerStatus === 'idle' ?
+                    '#ddd'
+                  : printerStatus === 'error' ?
+                    'red'
+                  : undefined
                 }
                 variant={printerStatus ? 'shining' : 'dimmed'}
               />
@@ -100,13 +97,12 @@ export default React.forwardRef(function PrintStationWidget(
               <Light
                 size={30}
                 color={
-                  cutterStatus === 'active'
-                    ? 'green'
-                    : cutterStatus === 'idle'
-                    ? '#ddd'
-                    : cutterStatus === 'error'
-                    ? 'red'
-                    : undefined
+                  cutterStatus === 'active' ? 'green'
+                  : cutterStatus === 'idle' ?
+                    '#ddd'
+                  : cutterStatus === 'error' ?
+                    'red'
+                  : undefined
                 }
                 variant={cutterStatus ? 'shining' : 'dimmed'}
               />
@@ -123,14 +119,16 @@ export default React.forwardRef(function PrintStationWidget(
       <Section title="Production Queue">
         <Box flexGrow={1} />
         <Box textAlign="center" fontSize="150%">
-          {typeof completed === 'number' &&
-          Number.isFinite(completed) &&
-          typeof total === 'number' &&
-          Number.isFinite(total) ? (
+          {(
+            typeof completed === 'number' &&
+            Number.isFinite(completed) &&
+            typeof total === 'number' &&
+            Number.isFinite(total)
+          ) ?
             <>
               {completed.toFixed(0)} of {total.toFixed(0)}
             </>
-          ) : null}
+          : null}
         </Box>
         <Box
           flexBasis="1em"
@@ -147,13 +145,15 @@ export default React.forwardRef(function PrintStationWidget(
             height="100%"
             left={0}
             width={`${
-              completed != null &&
-              total != null &&
-              total !== 0 &&
-              Number.isFinite(completed) &&
-              Number.isFinite(total)
-                ? (completed / total) * 100
-                : 0
+              (
+                completed != null &&
+                total != null &&
+                total !== 0 &&
+                Number.isFinite(completed) &&
+                Number.isFinite(total)
+              ) ?
+                (completed / total) * 100
+              : 0
             }%`}
           />
         </Box>
@@ -168,7 +168,7 @@ export default React.forwardRef(function PrintStationWidget(
 
 type SectionProps = React.ComponentProps<typeof Box> & {
   title: React.ReactNode
-  titleStyle?: {}
+  titleStyle?: React.CSSProperties
 }
 
 function Section({ title, children, titleStyle, ...props }: SectionProps) {

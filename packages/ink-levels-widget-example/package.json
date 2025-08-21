@@ -7,7 +7,7 @@
       "dashboardWidgets": {
         "printStation": {
           "displayName": "Print Station",
-          "component": "./src/ConnectedPrintStationWidget.tsx"
+          "component": "./src/client/ConnectedPrintStationWidget.tsx"
         }
       }
     }
@@ -23,14 +23,18 @@
     "react": "^18.2.0"
   },
   "devDependencies": {
+    "@eslint/compat": "^1.3.2",
+    "@eslint/js": "^9.33.0",
     "@jcoreio/clarity-feature-toolkit": "workspace:*",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@types/node": "^20",
     "@types/react": "^18.2.0",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.3",
+    "eslint": "^9",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.0.0",
     "typescript": "^5",
+    "typescript-eslint": "^8.40.0",
     "webpack": "^5",
     "webpack-cli": "^5.1.4",
     "zod": "^3.23.5"
