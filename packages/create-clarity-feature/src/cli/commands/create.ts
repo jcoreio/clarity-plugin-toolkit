@@ -65,7 +65,7 @@ export async function handler(): Promise<void> {
     version: '0.1.0',
     private: true,
     contributes: {
-      client: {},
+      client: './src/client/index.tsx',
     },
     scripts: {
       clean: 'clarity-feature-toolkit clean',
@@ -89,8 +89,16 @@ export async function handler(): Promise<void> {
       : {}),
       ...(useEslint ?
         {
-          eslint: '^8',
-          'eslint-config-next': '14.2.3',
+          '@eslint/compat': '^1.3.2',
+          '@eslint/js': '^9.33.0',
+          eslint: '^9',
+          'eslint-plugin-react': '^7.37.5',
+          globals: '^16.0.0',
+          ...(useTypescript ?
+            {
+              'typescript-eslint': '^8.40.0',
+            }
+          : {}),
         }
       : {}),
     }),
@@ -107,24 +115,24 @@ export async function handler(): Promise<void> {
       ## Getting Started
 
       At the moment, the only contribution point your feature can make is a custom dashboard widget.
-      There will be more contribution points and \`clarity-feature-toolkit\` helper commands to create them soon,
-      but for now, declare the custom dashboard widget in \`package.json\`:
+      There will be more contribution points soon, but for now, declare the custom dashboard widget
+      in \`src/client/index.${useTypescript ? 'tsx' : 'js'}\`:
 
-      \`\`\`json
-      {
-        "name": "my-feature",
-        "version": "1.0.0",
-        "contributes": {
-          "client": {
-            "dashboardWidgets": {
-              "My": {
-                "displayName": "My Widget",
-                "component": "./MyWidget.${useTypescript ? 'tsx' : 'js'}"
-              }
-            }
+      \`\`\`${useTypescript ? 'tsx' : 'js'}
+      ${
+        useTypescript ?
+          dedent`
+            import { type ClientFeatureContributions } from '@jcoreio/clarity-feature-toolkit/client'
+          ` + '\n'
+        : ''
+      }export default {
+        dashboardWidgets: {
+          MyWidget: {
+            displayName: 'MyWidget',
+            component: React.lazy(() => import('./MyWidget'))
           }
-        },
-      }
+        }
+      }${useTypescript ? ' satisfies ClientFeatureContributions' : ''}
       \`\`\`
 
       Then create the custom widget file:
@@ -137,18 +145,23 @@ export async function handler(): Promise<void> {
         CustomDashboardWidgetProps,
       } from '@jcoreio/clarity-feature-api/client'
 
-      type MyWidgetConfig = {
-        tag?: string
+      ${
+        useTypescript ?
+          dedent`
+            type MyWidgetConfig = {
+              tag?: string
+            }
+
+            export type MyWidgetProps = CustomDashboardWidgetProps<
+              MyWidgetConfig | undefined
+            >
+          ` + '\n'
+        : ''
       }
-
-      export type MyWidgetProps = CustomDashboardWidgetProps<
-        MyWidgetConfig | undefined
-      >
-
       export default function MyWidget({
         config,
         setConfig,
-      }: MyWidgetProps) {
+      }${useTypescript ? ': MyWidgetProps' : ''}) {
         const tag = config?.tag
         const tagState = useTagState(tag)
         const [, connectDropTarget] = useDrop({
@@ -177,13 +190,15 @@ export async function handler(): Promise<void> {
       node_modules
       /${clarityFeatureToolkitDir}
     `,
-    'webpack.config.js': dedent`
-      const { makeWebpackConfig } = require('@jcoreio/clarity-feature-toolkit/client')
-
-      module.exports = (env, argv) => makeWebpackConfig(env, argv)
-    `,
     ...(useTypescript ?
       {
+        'src/client/index.tsx': dedent`
+          import { type ClientFeatureContributions } from '@jcoreio/clarity-feature-toolkit/client'
+
+          export default {
+            // add contributions here
+          } satisfies ClientFeatureContributions
+        `,
         'tsconfig.json': dedent`
             {
               "compilerOptions": {
@@ -207,20 +222,67 @@ export async function handler(): Promise<void> {
             }
           `,
       }
-    : {}),
+    : {
+        'src/client/index.js': dedent`
+          export default {
+            // add contributions here
+          }
+        `,
+      }),
+    'webpack.config.mjs': dedent`
+      import { makeWebpackConfig } from '@jcoreio/clarity-feature-toolkit/client'
+
+      export default (env, argv) => makeWebpackConfig(env, argv)
+    `,
     ...(useEslint ?
       {
-        '.eslintrc.json': dedent`
+        'eslint.config.mjs': dedent`
+          ${
+            useTypescript ?
+              dedent`
+                // @ts-check
+
+                import tseslint from 'typescript-eslint'
+              ` + '\n'
+            : `import { defineConfig } from 'eslint/config'\n`
+          }import eslint from '@eslint/js'
+          import globals from 'globals'
+          import reactPlugin from 'eslint-plugin-react'
+          import { includeIgnoreFile } from '@eslint/compat'
+          import { fileURLToPath } from 'node:url'
+
+          const gitignorePath = fileURLToPath(new URL('.gitignore', import.meta.url))
+
+          export default ${useTypescript ? 'tseslint.config(' : 'defineConfig(['}
+            eslint.configs.recommended,
+            ${
+              useTypescript ?
+                dedent`
+                  tseslint.configs.recommended,
+                ` + '\n'
+              : ''
+            }includeIgnoreFile(gitignorePath, 'Imported .gitignore patterns'),
             {
-              "extends": "next/core-web-vitals"
+              files: ['./*.{js,mjs}'],
+              languageOptions: { globals: { ...globals.node } },
+            },
+            {
+              ...reactPlugin.configs.flat.recommended,
+              files: ['src/client/**/*.js,jsx,mjs,cjs${useTypescript ? ',ts,tsx' : ''}'],
+              languageOptions: {
+                ...reactPlugin.configs.flat.recommended.languageOptions,
+                globals: { ...globals.serviceworker, ...globals.browser },
+              },
             }
-          `,
+          ${useTypescript ? ')' : '])'}
+        `,
       }
     : {}),
   }
   await Promise.all(
     Object.entries(files).map(async ([name, content]) => {
       const file = path.resolve(cwd, name)
+      await fs.mkdirs(path.dirname(file))
       await fs.writeFile(file, content + '\n', 'utf8')
     })
   )
