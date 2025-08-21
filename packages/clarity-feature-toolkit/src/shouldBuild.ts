@@ -2,18 +2,23 @@ import Gitignore from 'gitignore-fs'
 import path from 'path'
 import { Glob } from 'glob'
 import fs from 'fs-extra'
-import { clientAssetsFile } from './constants'
+import { clientAssetsFile, serverAssetsFile } from './constants'
 import getProject from './getProject'
 
 export default async function shouldBuild(): Promise<boolean> {
   const { projectDir } = await getProject()
 
-  if (!(await fs.pathExists(path.resolve(projectDir, clientAssetsFile)))) {
-    return true
+  let assetsMtime = -Infinity
+  for (const file of [
+    path.resolve(projectDir, clientAssetsFile),
+    path.resolve(projectDir, serverAssetsFile),
+  ]) {
+    if (await fs.pathExists(file)) {
+      const { mtime } = await fs.stat(file)
+      assetsMtime = Math.max(assetsMtime, mtime.getTime())
+    }
   }
-  const { mtime: assetsMtime } = await fs.stat(
-    path.resolve(projectDir, clientAssetsFile)
-  )
+  if (!Number.isFinite(assetsMtime)) return true
 
   const gitignore = new Gitignore()
 
@@ -26,7 +31,7 @@ export default async function shouldBuild(): Promise<boolean> {
     },
   })) {
     const { mtime } = await fs.stat(file)
-    if (mtime > assetsMtime) return true
+    if (mtime.getTime() > assetsMtime) return true
   }
   return false
 }

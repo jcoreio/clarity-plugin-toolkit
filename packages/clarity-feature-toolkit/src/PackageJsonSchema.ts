@@ -1,6 +1,5 @@
 import z from 'zod'
 import semver from 'semver'
-import { ContributesSchema } from '@jcoreio/clarity-feature-api'
 
 const Version = z
   .string()
@@ -20,7 +19,10 @@ export const PackageJsonSchema = z
   .object({
     name: z.string(),
     version: Version,
-    contributes: ContributesSchema,
+    contributes: z.object({
+      client: z.string().optional(),
+      server: z.string().optional(),
+    }),
     dependencies: z
       .object({
         '@jcoreio/clarity-feature-api': VersionRange,
