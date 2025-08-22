@@ -1,4 +1,4 @@
-import '../checkNodeVersion'
+import './checkNodeVersion'
 import {
   Compilation,
   Configuration,
@@ -12,16 +12,16 @@ import {
   serverAssetsFile,
   distDir,
   emptyEntryFile,
-} from '../constants'
+} from './constants'
 import { customFeatureAssetRoute } from '@jcoreio/clarity-feature-api'
-import { AssetsSchema } from '../AssetsSchema'
-import getProject from '../getProject'
+import { AssetsSchema } from './AssetsSchema'
+import getProject from './getProject'
 const { ModuleFederationPlugin } = container
 
 export async function makeWebpackConfig(
-  env: Record<string, unknown>,
+  env: { [name in string]?: string },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  argv: Record<string, unknown>
+  argv: { [name in string]?: unknown }
 ): Promise<Configuration[]> {
   const { projectDir, packageJson } = await getProject()
 
@@ -177,7 +177,7 @@ export async function makeWebpackConfig(
             filename: 'f',
           })
           .replace(/f$/, ''),
-        filename: `[id]_[hash].js`,
+        filename: `[id]_[fullhash].js`,
       },
       resolve: {
         fallback: {
@@ -228,6 +228,7 @@ export async function makeWebpackConfig(
     configs.push({
       name: 'server',
       target: 'node',
+      experiments: { outputModule: true },
       // use a nonexistent entry to avoid making unnecessary chunks;
       // we will ignore webpack errors from this
       entry: emptyEntryFile,
@@ -246,7 +247,7 @@ export async function makeWebpackConfig(
             filename: 'f',
           })
           .replace(/f$/, ''),
-        filename: `[id]_[hash].js`,
+        filename: `[id]_[fullhash].js`,
       },
       resolve: { extensions },
       module: { rules },
@@ -256,6 +257,10 @@ export async function makeWebpackConfig(
           // when the entry script is run it will set globalThis[name] to the module federation container
           name: containerName,
           filename: `entry.js`,
+          library: {
+            type: 'module',
+            export: 'default',
+          },
           // this allows the app code to get the custom feature module out of the container
           exposes: {
             '.': contributes.server,

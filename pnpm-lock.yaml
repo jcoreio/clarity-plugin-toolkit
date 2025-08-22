@@ -124,6 +124,9 @@ importers:
       '@babel/preset-typescript':
         specifier: ^7.24.1
         version: 7.27.1(@babel/core@7.28.3)
+      '@babel/register':
+        specifier: ^7.28.3
+        version: 7.28.3(@babel/core@7.28.3)
       '@babel/runtime':
         specifier: ^7.26.0
         version: 7.27.1
@@ -340,12 +343,15 @@ importers:
   packages/ink-levels-widget-example:
     dependencies:
       '@jcoreio/clarity-feature-api':
-        specifier: ^2.0.0
-        version: 2.0.3(@types/node@20.17.41)(zod@3.25.17)
+        specifier: ^3.0.0-beta.1
+        version: 3.0.0-beta.1(@types/node@20.17.41)(zod@3.25.17)
       react:
         specifier: ^18.2.0
         version: 18.3.1
     devDependencies:
+      '@babel/register':
+        specifier: ^7.28.3
+        version: 7.28.3(@babel/core@7.28.3)
       '@eslint/compat':
         specifier: ^1.3.2
         version: 1.3.2(eslint@9.33.0)
@@ -1048,8 +1054,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/register@7.27.1':
-    resolution: {integrity: sha512-K13lQpoV54LATKkzBpBAEu1GGSIRzxR9f4IN4V8DCDgiUMo2UDGagEZr3lPeVNJPLkWUi5JE4hCHKneVTwQlYQ==}
+  '@babel/register@7.28.3':
+    resolution: {integrity: sha512-CieDOtd8u208eI49bYl4z1J22ySFw87IGwE+IswFEExH7e3rLgKb0WNQeumnacQ1+VoDJLYI5QFA3AJZuyZQfA==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -1201,8 +1207,8 @@ packages:
     resolution: {integrity: sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==}
     engines: {node: '>=8'}
 
-  '@jcoreio/clarity-feature-api@2.0.3':
-    resolution: {integrity: sha512-5I0sx7BpGL8t4Yj0DNUPRMzDwT3oMIdPrrBS/wgpVA592qXvv96hG2Yz/kE5M6eD+6lIZjki5obDYQSDu/uxmA==}
+  '@jcoreio/clarity-feature-api@3.0.0-beta.1':
+    resolution: {integrity: sha512-jQejDLqiHshR6WpkwS+DD1w5L+OrRkHNhCpVqcXmuFF7+/QWzViWHV9RSg0g9licXoDrKXokMVCmxKZ3VaNdCQ==}
     engines: {node: '>=16'}
     peerDependencies:
       zod: ^3.25.7
@@ -5222,7 +5228,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/register@7.27.1(@babel/core@7.28.3)':
+  '@babel/register@7.28.3(@babel/core@7.28.3)':
     dependencies:
       '@babel/core': 7.28.3
       clone-deep: 4.0.1
@@ -5390,7 +5396,7 @@ snapshots:
 
   '@istanbuljs/schema@0.1.3': {}
 
-  '@jcoreio/clarity-feature-api@2.0.3(@types/node@20.17.41)(zod@3.25.17)':
+  '@jcoreio/clarity-feature-api@3.0.0-beta.1(@types/node@20.17.41)(zod@3.25.17)':
     dependencies:
       '@babel/runtime': 7.27.1
       '@types/react': 18.3.20
@@ -5428,7 +5434,7 @@ snapshots:
       '@babel/eslint-parser': 7.27.1(@babel/core@7.28.3)(eslint@9.26.0)
       '@babel/plugin-transform-runtime': 7.27.3(@babel/core@7.28.3)
       '@babel/preset-env': 7.28.3(@babel/core@7.28.3)
-      '@babel/register': 7.27.1(@babel/core@7.28.3)
+      '@babel/register': 7.28.3(@babel/core@7.28.3)
       '@babel/runtime': 7.27.1
       '@babel/traverse': 7.28.3
       '@jcoreio/toolchain': 5.5.4
