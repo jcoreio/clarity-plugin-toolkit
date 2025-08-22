@@ -74,14 +74,15 @@ export async function handler(): Promise<void> {
       'clarity-feature-toolkit': 'clarity-feature-toolkit',
     },
     dependencies: sortKeys({
-      '@jcoreio/clarity-feature-api': '^2.0.0',
+      '@jcoreio/clarity-feature-api': '^3.0.0-beta',
       react: '^18.2.0',
     }),
     devDependencies: sortKeys({
-      '@jcoreio/clarity-feature-toolkit': '^1.0.0',
+      '@jcoreio/clarity-feature-toolkit': '^2.0.0-beta',
       webpack: '^5',
       ...(useTypescript ?
         {
+          '@babel/register': '^7.28.3',
           '@types/react': '^18.2.0',
           '@types/node': `^20`,
           typescript: '^5',
@@ -221,6 +222,14 @@ export async function handler(): Promise<void> {
               )}]
             }
           `,
+        'webpack.config.ts': dedent`
+          import { makeWebpackConfig } from '@jcoreio/clarity-feature-toolkit'
+
+          export default (
+            env: {[name in string]?: string},
+            argv: {[name in string]?: unknown}
+          ) => makeWebpackConfig(env, argv)
+        `,
       }
     : {
         'src/client/index.js': dedent`
@@ -228,12 +237,12 @@ export async function handler(): Promise<void> {
             // add contributions here
           }
         `,
-      }),
-    'webpack.config.mjs': dedent`
-      import { makeWebpackConfig } from '@jcoreio/clarity-feature-toolkit/client'
+        'webpack.config.mjs': dedent`
+          import { makeWebpackConfig } from '@jcoreio/clarity-feature-toolkit'
 
-      export default (env, argv) => makeWebpackConfig(env, argv)
-    `,
+          export default (env, argv) => makeWebpackConfig(env, argv)
+        `,
+      }),
     ...(useEslint ?
       {
         'eslint.config.mjs': dedent`
