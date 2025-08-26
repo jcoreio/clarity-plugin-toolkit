@@ -135,12 +135,21 @@ export async function buildServer({
     })
   )
 
+  const dependencies = fileList.flatMap((file) => {
+    const pkg = /^node_modules[/]((@[^/]+\/)?[^/]+)/.exec(toPosix(file))?.[1]
+    if (
+      pkg &&
+      pkg !== '@jcoreio/clarity-feature-api' &&
+      (packageJson.dependencies[pkg] || packageJson.devDependencies?.[pkg])
+    ) {
+      return [pkg]
+    }
+    return []
+  })
+
   const packlist = await makePacklist({
     projectDir,
-    dependencies: fileList.flatMap((file) => {
-      const pkg = /^node_modules[/]((@[^/]+\/)?[^/]+)/.exec(toPosix(file))?.[1]
-      return pkg && pkg !== '@jcoreio/clarity-feature-api' ? [pkg] : []
-    }),
+    dependencies,
   })
 
   const stripParentDirs = (file: string) =>

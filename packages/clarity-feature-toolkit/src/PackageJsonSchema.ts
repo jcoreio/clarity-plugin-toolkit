@@ -21,6 +21,7 @@ export const PackageJsonSchema = z
         '@jcoreio/clarity-feature-api': z.string(),
       })
       .catchall(z.string()),
+    devDependencies: z.object({}).catchall(z.string()).optional(),
     clarity: z
       .object({
         url: z.string().optional(),
