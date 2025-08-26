@@ -1,4 +1,4 @@
-import './checkNodeVersion'
+import '../checkNodeVersion'
 import {
   Compilation,
   Configuration,
