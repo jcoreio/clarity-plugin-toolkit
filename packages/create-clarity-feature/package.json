@@ -26,10 +26,10 @@
     "clarity"
   ],
   "devDependencies": {
-    "@jcoreio/toolchain": "^5.5.4",
-    "@jcoreio/toolchain-esnext": "^5.5.4",
-    "@jcoreio/toolchain-semantic-release": "^5.5.4",
-    "@jcoreio/toolchain-typescript": "^5.5.4",
+    "@jcoreio/toolchain": "^5.5.5",
+    "@jcoreio/toolchain-esnext": "^5.5.5",
+    "@jcoreio/toolchain-semantic-release": "^5.5.5",
+    "@jcoreio/toolchain-typescript": "^5.5.5",
     "@types/fs-extra": "^11.0.4",
     "@types/prompts": "^2.4.9",
     "@types/validate-npm-package-name": "^4.0.2",
@@ -68,6 +68,6 @@
     }
   },
   "@jcoreio/toolchain": {
-    "migratedVersion": "5.5.4"
+    "migratedVersion": "5.5.5"
   }
 }
