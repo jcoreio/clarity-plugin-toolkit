@@ -1,6 +1,5 @@
 import * as yargs from 'yargs'
 import path from 'path'
-import { clientAssetsFile, distDir, emptyEntryFile } from '../../constants'
 import getProject from '../../getProject'
 import fs from 'fs-extra'
 
@@ -15,7 +14,8 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
   yargs.usage('$0 clean')
 
 export async function handler(): Promise<void> {
-  const { projectDir } = await getProject()
+  const { projectDir, distDir, clientAssetsFile, emptyEntryFile } =
+    await getProject()
   await Promise.all(
     [distDir, clientAssetsFile, emptyEntryFile].map(async (p) =>
       fs.remove(path.resolve(projectDir, p))

@@ -6,12 +6,15 @@ import z from 'zod'
 import { PackageJsonSchema } from './PackageJsonSchema'
 import dedent from 'dedent-js'
 import stringifyPath from './stringifyPath'
+import { paths } from './paths'
 
-export async function getProjectBase(cwd = process.cwd()): Promise<{
-  projectDir: string
-  packageJsonFile: string
-  packageJson: z.output<typeof PackageJsonSchema>
-}> {
+export async function getProjectBase(cwd = process.cwd()): Promise<
+  {
+    projectDir: string
+    packageJsonFile: string
+    packageJson: z.output<typeof PackageJsonSchema>
+  } & ReturnType<typeof paths>
+> {
   const packageJsonFile = await findUp('package.json', { type: 'file', cwd })
   if (!packageJsonFile) {
     throw new Error(`failed to find project package.json file`)
@@ -51,7 +54,7 @@ export async function getProjectBase(cwd = process.cwd()): Promise<{
     )
   }
 
-  return { projectDir, packageJsonFile, packageJson }
+  return { projectDir, packageJsonFile, packageJson, ...paths(projectDir) }
 }
 
 const getProject = once(() => getProjectBase())

@@ -1,8 +1,6 @@
 import * as yargs from 'yargs'
 import getProject from '../../getProject'
-import path from 'path'
 import fs from 'fs-extra'
-import { signingKeyFile } from '../../constants'
 
 export const command = 'clear-signing-key'
 export const description = `delete the local copy of the key for signing code`
@@ -15,9 +13,9 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
   yargs.usage('$0 clear-signing-key')
 
 export async function handler(): Promise<void> {
-  const { projectDir } = await getProject()
-  if (await fs.pathExists(path.resolve(projectDir, signingKeyFile))) {
-    await fs.remove(path.resolve(projectDir, signingKeyFile))
+  const { signingKeyFile } = await getProject()
+  if (await fs.pathExists(signingKeyFile)) {
+    await fs.remove(signingKeyFile)
     // eslint-disable-next-line no-console
     console.error(`deleted signing key`)
   }

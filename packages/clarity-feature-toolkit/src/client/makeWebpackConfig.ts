@@ -7,12 +7,6 @@ import {
 } from 'webpack'
 import path from 'path'
 import fs from 'fs-extra'
-import {
-  clientAssetsFile,
-  serverAssetsFile,
-  distDir,
-  emptyEntryFile,
-} from '../constants'
 import { customFeatureAssetRoute } from '@jcoreio/clarity-feature-api'
 import { AssetsSchema } from './AssetsSchema'
 import getProject from '../getProject'
@@ -24,7 +18,13 @@ export async function makeWebpackConfig(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   argv: { [name in string]?: unknown }
 ): Promise<Configuration[]> {
-  const { projectDir, packageJson } = await getProject()
+  const {
+    projectDir,
+    packageJson,
+    clientAssetsFile,
+    distClientDir,
+    emptyEntryFile,
+  } = await getProject()
 
   const context = projectDir
 
@@ -151,7 +151,7 @@ export async function makeWebpackConfig(
               entryChunks.flatMap((c) => [...c.getAllReferencedChunks()])
             ),
           ]
-          const { outputPath, name } = compilation
+          const { outputPath } = compilation
             .getStats()
             .toJson({ outputPath: true })
           if (!outputPath) throw new Error(`failed to get webpack outputPath`)
@@ -163,15 +163,14 @@ export async function makeWebpackConfig(
             ...chunks.flatMap((chunk) => [...chunk.files]),
           ].filter((file) => !entrypoints.has(file))
 
-          const destFile = path.resolve(
-            context,
-            name === 'server' ? serverAssetsFile : clientAssetsFile
-          )
-          await fs.mkdirs(path.dirname(destFile))
+          await fs.mkdirs(path.dirname(clientAssetsFile))
           await fs.writeJson(
-            destFile,
+            clientAssetsFile,
             AssetsSchema.parse({
-              outputPath: path.relative(path.dirname(destFile), outputPath),
+              outputPath: path.relative(
+                path.dirname(clientAssetsFile),
+                outputPath
+              ),
               entrypoints: [...entrypoints],
               otherAssets: [...otherAssets],
             }),
@@ -184,8 +183,6 @@ export async function makeWebpackConfig(
   }
 
   if (contributes.client) {
-    const outputPath = path.resolve(context, distDir, 'client')
-
     configs.push({
       name: 'client',
       // use a nonexistent entry to avoid making unnecessary chunks;
@@ -195,7 +192,7 @@ export async function makeWebpackConfig(
       mode: env.production ? 'production' : 'development',
       output: {
         clean: true,
-        path: outputPath,
+        path: distClientDir,
         // this has to match the route that the webapp will serve the generated
         // assets from
         publicPath: customFeatureAssetRoute
@@ -235,48 +232,6 @@ export async function makeWebpackConfig(
       ],
     })
   }
-  if (contributes.server) {
-    const outputPath = path.resolve(context, distDir, 'server')
 
-    configs.push({
-      name: 'server',
-      target: 'node',
-      experiments: { outputModule: true },
-      // use a nonexistent entry to avoid making unnecessary chunks;
-      // we will ignore webpack errors from this
-      entry: emptyEntryFile,
-      context,
-      mode: env.production ? 'production' : 'development',
-      output: {
-        clean: true,
-        path: outputPath,
-        // this has to match the route that the webapp will serve the generated
-        // assets from
-        publicPath: `./`,
-        filename: `[id]_[fullhash].js`,
-      },
-      resolve: { extensions },
-      module: { rules: rules({ targets: { node: 20 } }) },
-      externals: {
-        express: 'import express',
-      },
-      plugins: [
-        writeAssetsPlugin,
-        new ModuleFederationPlugin({
-          // when the entry script is run it will set globalThis[name] to the module federation container
-          name: containerName,
-          filename: `entry.js`,
-          library: {
-            type: 'module',
-          },
-          // this allows the app code to get the custom feature module out of the container
-          exposes: {
-            '.': contributes.server,
-          },
-          shared: sharedVersions('react', 'react-dom/server'),
-        }),
-      ],
-    })
-  }
   return configs
 }

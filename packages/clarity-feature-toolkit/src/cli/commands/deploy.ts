@@ -4,7 +4,6 @@ import path from 'path'
 import fs from 'fs-extra'
 import archiver from 'archiver'
 import { createGzip } from 'zlib'
-import { clientAssetsFile, serverAssetsFile } from '../../constants'
 import { AssetsSchema } from '../../client/AssetsSchema'
 import z from 'zod'
 import prompt from 'prompts'
@@ -15,6 +14,7 @@ import shouldBuild from '../../shouldBuild'
 import { getSigningKey } from '../../getSigningKey'
 import { pipeline } from 'stream/promises'
 import { PassThrough, Readable } from 'stream'
+import { DeployClarityFeaturePackageJson } from '@jcoreio/clarity-feature-api'
 
 export const command = 'deploy'
 export const description = `build (if necessary) and deploy to Clarity`
@@ -31,7 +31,7 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
   yargs.usage('$0 deploy')
 
 export async function handler(): Promise<void> {
-  const { projectDir, packageJson } = await getProject()
+  const { packageJson, clientAssetsFile, serverTarball } = await getProject()
   if (await shouldBuild()) await build.handler()
 
   const clarityUrl = await getClarityUrl()
@@ -46,20 +46,16 @@ export async function handler(): Promise<void> {
     overwrite,
   }: { overwrite?: boolean } = {}): Promise<void> => {
     const archive = archiver('tar')
-    const clientAssets = AssetsSchema.parse(
-      await fs.readJson(path.resolve(projectDir, clientAssetsFile))
-    )
-    const clientAssetsDir = path.resolve(
-      path.dirname(path.resolve(projectDir, clientAssetsFile)),
-      clientAssets.outputPath
-    )
-    const serverAssets = AssetsSchema.parse(
-      await fs.readJson(path.resolve(projectDir, serverAssetsFile))
-    )
-    const serverAssetsDir = path.resolve(
-      path.dirname(path.resolve(projectDir, serverAssetsFile)),
-      serverAssets.outputPath
-    )
+    const clientAssets =
+      (await fs.pathExists(clientAssetsFile)) ?
+        AssetsSchema.parse(await fs.readJson(clientAssetsFile))
+      : undefined
+    const clientAssetsDir =
+      clientAssets ?
+        path.resolve(path.dirname(clientAssetsFile), clientAssets.outputPath)
+      : undefined
+
+    const hasServerTarball = await fs.pathExists(serverTarball)
 
     const packageJsonStr = JSON.stringify(
       {
@@ -67,13 +63,19 @@ export async function handler(): Promise<void> {
         clarity: {
           signatureVerificationKeyId: signingKey.id,
         },
-        client: {
-          entrypoints: clientAssets.entrypoints.map((name) => `client/${name}`),
-        },
-        server: {
-          entrypoints: serverAssets.entrypoints.map((name) => `server/${name}`),
-        },
-      },
+        client:
+          clientAssets ?
+            {
+              entrypoints: clientAssets.entrypoints.map(
+                (name) => `client/${name}`
+              ),
+            }
+          : undefined,
+        server:
+          hasServerTarball ?
+            { tarball: `./${path.basename(serverTarball)}` }
+          : undefined,
+      } satisfies DeployClarityFeaturePackageJson,
       null,
       2
     )
@@ -121,20 +123,21 @@ export async function handler(): Promise<void> {
         duplex: 'half',
       }),
       addFileAndSignature(packageJsonStr, { name: 'package.json' }),
-      ...[...clientAssets.entrypoints, ...clientAssets.otherAssets].map(
-        (name) =>
+      ...(clientAssets && clientAssetsDir ?
+        [...clientAssets.entrypoints, ...clientAssets.otherAssets].map((name) =>
           addFileAndSignature(
             fs.createReadStream(path.resolve(clientAssetsDir, name)),
             { name: `client/${name}` }
           )
-      ),
-      ...[...serverAssets.entrypoints, ...serverAssets.otherAssets].map(
-        (name) =>
-          addFileAndSignature(
-            fs.createReadStream(path.resolve(serverAssetsDir, name)),
-            { name: `server/${name}` }
-          )
-      ),
+        )
+      : []),
+      ...(hasServerTarball ?
+        [
+          addFileAndSignature(fs.createReadStream(serverTarball), {
+            name: path.basename(serverTarball),
+          }),
+        ]
+      : []),
       archive.finalize(),
     ])
 

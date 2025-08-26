@@ -1,8 +1,6 @@
 import { once } from 'lodash'
-import path from 'path'
 import fs from 'fs-extra'
 import crypto from 'crypto'
-import { signingKeyFile } from './constants'
 import getProject from './getProject'
 import prompt from 'prompts'
 import { getClarityUrl } from './getClarityUrl'
@@ -12,7 +10,7 @@ import promptAndSetSigningKey from './promptAndSetSigningKey'
 
 export const getSigningKey = once(
   async (): Promise<{ id: number; privateKey: crypto.KeyObject }> => {
-    const { projectDir } = await getProject()
+    const { signingKeyFile } = await getProject()
     const clarityUrl = await getClarityUrl()
     const signingUrl = new URL('login', clarityUrl)
     signingUrl.searchParams.set(
@@ -20,10 +18,8 @@ export const getSigningKey = once(
       '/superadmin/signingKeys?create=true'
     )
 
-    if (await fs.pathExists(path.resolve(projectDir, signingKeyFile))) {
-      return parseSigningKey(
-        await fs.readFile(path.resolve(projectDir, signingKeyFile), 'utf8')
-      )
+    if (await fs.pathExists(signingKeyFile)) {
+      return parseSigningKey(await fs.readFile(signingKeyFile, 'utf8'))
     }
     // eslint-disable-next-line no-console
     console.error(dedent`

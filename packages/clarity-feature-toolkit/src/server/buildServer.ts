@@ -2,7 +2,6 @@ import { getProjectBase } from '../getProject'
 import { nodeFileTrace } from '@vercel/nft'
 import fs from 'fs-extra'
 import path from 'path'
-import { distServerDir as relDistServerDir } from '../constants'
 import { transformFileAsync } from '@babel/core'
 import archiver from 'archiver'
 import { createGzip } from 'zlib'
@@ -12,21 +11,18 @@ import { makePacklist, toPosix } from './makePacklist'
 export async function buildServer({
   cwd = process.cwd(),
 }: { cwd?: string } = {}) {
-  const { projectDir, packageJson } = await getProjectBase(cwd)
+  const { projectDir, packageJson, distServerDir, serverTarball } =
+    await getProjectBase(cwd)
   const serverEntry = packageJson.contributes.server
   if (!serverEntry) return
 
-  const distServerDir = path.resolve(projectDir, relDistServerDir)
   await fs.mkdirs(distServerDir)
   await fs.emptydir(distServerDir)
-  const tarballFilename = `${packageJson.name.replace(/^@/, '').replace(/\//, '-')}-${packageJson.version}.tgz`
-
-  const tarballFile = path.resolve(distServerDir, tarballFilename)
 
   const archive = archiver('tar')
   const archiveStream = archive
     .pipe(createGzip())
-    .pipe(fs.createWriteStream(tarballFile))
+    .pipe(fs.createWriteStream(serverTarball))
   let archiveError: Error | undefined = undefined
   archive.once('error', (err) => {
     archiveError = err
@@ -49,10 +45,10 @@ export async function buildServer({
   })
   // eslint-disable-next-line no-console
   console.error(
-    `${path.relative(process.cwd(), path.resolve(projectDir, 'package.json'))} -> ${path.relative(process.cwd(), path.resolve(distServerDir, 'package.json'))}`
+    `${path.relative(process.cwd(), path.resolve(projectDir, 'package.json'))} -> ${path.relative(process.cwd(), path.join(distServerDir, 'package.json'))}`
   )
   await fs.writeFile(
-    path.resolve(distServerDir, 'package.json'),
+    path.join(distServerDir, 'package.json'),
     transformedPackageJson,
     'utf8'
   )
@@ -84,17 +80,14 @@ export async function buildServer({
           .resolve(distServerDir, relativeSrc)
           .replace(/\.([cm])?tsx?$/, '.$1js')
 
-        if (
-          /\.[cm]?tsx?$/.test(relativeSrc) &&
-          !/\.d\.[cm]?tsx?$/.test(relativeSrc)
-        ) {
+        if (/\.[cm]?tsx?$/.test(src) && !/\.d\.[cm]?tsx?$/.test(src)) {
           const transformed = await transformFileAsync(src, babelOptions)
           if (!transformed) return ''
           const { code, map } = transformed
           if (code != null) {
             // eslint-disable-next-line no-console
             console.error(
-              `${path.relative(cwd, relativeSrc)} -> ${path.relative(cwd, dest)}`
+              `${path.relative(cwd, src)} -> ${path.relative(cwd, dest)}`
             )
             await fs.mkdirs(path.dirname(dest))
             await fs.writeFile(dest, code, 'utf8')
@@ -181,5 +174,5 @@ export async function buildServer({
   }
   await Promise.all([archive.finalize(), emitted(archiveStream, 'close')])
   // eslint-disable-next-line no-console
-  console.error(`wrote ${path.relative(process.cwd(), tarballFile)}`)
+  console.error(`wrote ${path.relative(process.cwd(), serverTarball)}`)
 }

@@ -3,7 +3,7 @@ import execa from 'execa'
 import fs from 'fs-extra'
 import path from 'path'
 import { buildServer } from '../../src/server/buildServer'
-import { distDir, distServerDir } from '../../src/constants'
+import { paths } from '../../src/paths'
 import { expect } from 'chai'
 
 const fixturesDir = path.resolve(__dirname, '..', '..', '..', '..', 'fixtures')
@@ -11,16 +11,16 @@ const fixtureDir = path.resolve(fixturesDir, 'build-server')
 
 describe(`buildServer`, function () {
   it(`basic test`, async function () {
-    await fs.remove(path.resolve(fixtureDir, distDir))
+    const { distDir, serverTarball } = paths(fixtureDir)
+    await fs.remove(distDir)
     await buildServer({ cwd: fixtureDir })
-    await fs.mkdirs(path.resolve(fixtureDir, distDir, 'test'))
-    await execa(
-      'tar',
-      ['xzf', path.join(fixtureDir, distServerDir, 'build-server-0.1.0.tgz')],
-      { cwd: path.resolve(fixtureDir, distDir, 'test'), stdio: 'inherit' }
-    )
+    await fs.mkdirs(path.resolve(distDir, 'test'))
+    await execa('tar', ['xzf', serverTarball], {
+      cwd: path.resolve(distDir, 'test'),
+      stdio: 'inherit',
+    })
     const mod = await import(
-      path.resolve(fixtureDir, distDir, 'test', 'src', 'server', 'index.js')
+      path.resolve(distDir, 'test', 'src', 'server', 'index.js')
     )
     const contributions = mod.default()
     expect(contributions.api)
