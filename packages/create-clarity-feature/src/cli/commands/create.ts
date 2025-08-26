@@ -277,7 +277,7 @@ export async function handler(): Promise<void> {
             },
             {
               ...reactPlugin.configs.flat.recommended,
-              files: ['src/client/**/*.js,jsx,mjs,cjs${useTypescript ? ',ts,tsx' : ''}'],
+              files: ['src/client/**/*.{js,jsx,mjs,cjs${useTypescript ? ',ts,tsx' : ''}'],
               languageOptions: {
                 ...reactPlugin.configs.flat.recommended.languageOptions,
                 globals: { ...globals.serviceworker, ...globals.browser },
