@@ -16,6 +16,7 @@ import {
 import { customFeatureAssetRoute } from '@jcoreio/clarity-feature-api'
 import { AssetsSchema } from './AssetsSchema'
 import getProject from './getProject'
+
 const { ModuleFederationPlugin } = container
 
 export async function makeWebpackConfig(
@@ -27,66 +28,95 @@ export async function makeWebpackConfig(
 
   const context = projectDir
 
-  const reactVersion = packageJson.dependencies.react
-  const clarityFeatureApiVersion =
-    packageJson.dependencies['@jcoreio/clarity-feature-api']
+  function sharedVersions(
+    ...modules: string[]
+  ): ConstructorParameters<typeof ModuleFederationPlugin>[0]['shared'] & any[] {
+    const result: ConstructorParameters<
+      typeof ModuleFederationPlugin
+    >[0]['shared'] & {} = {}
+    for (const mod of modules) {
+      const pkg = /^(@[^/]+\/)?[^@/]+/.exec(mod)?.[0] || mod
+      const spec = packageJson.dependencies[pkg]
+      let requiredVersion = spec
+      // if the package was installed as a tarball, try to extract the version from the filename,
+      // so that we can install @jcoreio/clarity-feature-* as tarballs in Clarity to test changes
+      // before releasing them
+      if (/\.tgz$/.test(spec)) {
+        // semver regex copied from semver webpabge, without leading/trailing ^ $
+        const semverRx =
+          /(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?/
+        requiredVersion =
+          semverRx.exec(path.basename(spec.replace(/^file:/, '')))?.[0] || spec
+      }
+      if (!requiredVersion) continue
+      result[mod] = {
+        requiredVersion,
+        singleton: true,
+      }
+    }
+    return [result]
+  }
 
   const containerName =
     '__clarity_feature__' +
     packageJson.name.replace(/^@([^/]+)\//, '_$1_').replace(/[^_a-z0-9]+/g, '_')
   const { contributes } = packageJson
 
-  const presetEnv = ['@babel/preset-env', { targets: '> 0.25%, not dead' }]
   const configs: Configuration[] = []
 
-  const rules = [
-    { test: /\.json$/, loader: require.resolve('json-loader') },
-    { test: /\.txt$/, type: 'asset/source' },
-    { test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, type: 'asset' },
-    { test: /\.(eot|ttf|wav|mp3)$/, type: 'asset/resource' },
-    { test: /\.css$/, use: ['style-loader', 'css-loader'] },
-    {
-      test: /\.[cm]?jsx?$/,
-      loader: require.resolve('babel-loader'),
-      exclude: /node_modules/,
-      options: {
-        presets: [presetEnv, require.resolve('@babel/preset-react')],
+  const rules = (options: { targets?: string | { node: number | string } }) => {
+    const presetEnv = [require.resolve('@babel/preset-env'), options]
+    return [
+      { test: /\.txt$/, type: 'asset/source' },
+      { test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, type: 'asset' },
+      { test: /\.(eot|ttf|wav|mp3)$/, type: 'asset/resource' },
+      {
+        test: /\.css$/,
+        use: [require.resolve('style-loader'), require.resolve('css-loader')],
       },
-    },
-    {
-      test: /\.[cm]?ts$/,
-      loader: require.resolve('babel-loader'),
-      exclude: /node_modules/,
-      options: {
-        presets: [
-          presetEnv,
-          [
-            require.resolve('@babel/preset-typescript'),
-            { isTSX: false, allowDeclareFields: true },
+      {
+        test: /\.[cm]?jsx?$/,
+        loader: require.resolve('babel-loader'),
+        exclude: /node_modules/,
+        options: {
+          presets: [presetEnv, require.resolve('@babel/preset-react')],
+        },
+      },
+      {
+        test: /\.[cm]?ts$/,
+        loader: require.resolve('babel-loader'),
+        exclude: /node_modules/,
+        options: {
+          presets: [
+            presetEnv,
+            [
+              require.resolve('@babel/preset-typescript'),
+              { isTSX: false, allowDeclareFields: true },
+            ],
           ],
-        ],
+        },
       },
-    },
-    {
-      test: /\.[cm]?tsx$/,
-      loader: require.resolve('babel-loader'),
-      exclude: /node_modules/,
-      options: {
-        presets: [
-          presetEnv,
-          [
-            require.resolve('@babel/preset-typescript'),
-            {
-              isTSX: true,
-              allExtensions: true,
-              allowDeclareFields: true,
-            },
+      {
+        test: /\.[cm]?tsx$/,
+        loader: require.resolve('babel-loader'),
+        exclude: /node_modules/,
+        options: {
+          presets: [
+            presetEnv,
+            [
+              require.resolve('@babel/preset-typescript'),
+              {
+                isTSX: true,
+                allExtensions: true,
+                allowDeclareFields: true,
+              },
+            ],
+            require.resolve('@babel/preset-react'),
           ],
-          require.resolve('@babel/preset-react'),
-        ],
+        },
       },
-    },
-  ]
+    ]
+  }
 
   const extensions = [
     '.mtsx',
@@ -101,7 +131,6 @@ export async function makeWebpackConfig(
     '.mjs',
     '.cjs',
     '.js',
-    '.json',
     '.wasm',
   ]
 
@@ -187,7 +216,7 @@ export async function makeWebpackConfig(
         },
         extensions,
       },
-      module: { rules },
+      module: { rules: rules({ targets: '> 0.25%, not dead' }) },
       plugins: [
         writeAssetsPlugin,
         new ModuleFederationPlugin({
@@ -198,26 +227,10 @@ export async function makeWebpackConfig(
           exposes: {
             '.': contributes.client,
           },
-          shared: [
-            {
-              ...(reactVersion ?
-                {
-                  react: {
-                    requiredVersion: reactVersion,
-                    singleton: true,
-                  },
-                }
-              : {}),
-              ...(clarityFeatureApiVersion ?
-                {
-                  '@jcoreio/clarity-feature-api/client': {
-                    requiredVersion: clarityFeatureApiVersion,
-                    singleton: true,
-                  },
-                }
-              : {}),
-            },
-          ],
+          shared: sharedVersions(
+            'react',
+            '@jcoreio/clarity-feature-api/client'
+          ),
         }),
       ],
     })
@@ -239,18 +252,14 @@ export async function makeWebpackConfig(
         path: outputPath,
         // this has to match the route that the webapp will serve the generated
         // assets from
-        publicPath: customFeatureAssetRoute
-          .format({
-            feature: packageJson.name,
-            version: packageJson.version,
-            environment: 'server',
-            filename: 'f',
-          })
-          .replace(/f$/, ''),
+        publicPath: `./`,
         filename: `[id]_[fullhash].js`,
       },
       resolve: { extensions },
-      module: { rules },
+      module: { rules: rules({ targets: { node: 20 } }) },
+      externals: {
+        express: 'import express',
+      },
       plugins: [
         writeAssetsPlugin,
         new ModuleFederationPlugin({
@@ -259,24 +268,12 @@ export async function makeWebpackConfig(
           filename: `entry.js`,
           library: {
             type: 'module',
-            export: 'default',
           },
           // this allows the app code to get the custom feature module out of the container
           exposes: {
             '.': contributes.server,
           },
-          shared: [
-            {
-              ...(reactVersion ?
-                {
-                  react: {
-                    requiredVersion: reactVersion,
-                    singleton: true,
-                  },
-                }
-              : {}),
-            },
-          ],
+          shared: sharedVersions('react', 'react-dom/server'),
         }),
       ],
     })

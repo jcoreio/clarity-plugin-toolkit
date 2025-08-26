@@ -4,7 +4,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import archiver from 'archiver'
 import { createGzip } from 'zlib'
-import { clientAssetsFile } from '../../constants'
+import { clientAssetsFile, serverAssetsFile } from '../../constants'
 import { AssetsSchema } from '../../AssetsSchema'
 import z from 'zod'
 import prompt from 'prompts'
@@ -53,6 +53,13 @@ export async function handler(): Promise<void> {
       path.dirname(path.resolve(projectDir, clientAssetsFile)),
       clientAssets.outputPath
     )
+    const serverAssets = AssetsSchema.parse(
+      await fs.readJson(path.resolve(projectDir, serverAssetsFile))
+    )
+    const serverAssetsDir = path.resolve(
+      path.dirname(path.resolve(projectDir, serverAssetsFile)),
+      serverAssets.outputPath
+    )
 
     const packageJsonStr = JSON.stringify(
       {
@@ -62,6 +69,9 @@ export async function handler(): Promise<void> {
         },
         client: {
           entrypoints: clientAssets.entrypoints.map((name) => `client/${name}`),
+        },
+        server: {
+          entrypoints: serverAssets.entrypoints.map((name) => `server/${name}`),
         },
       },
       null,
@@ -116,6 +126,13 @@ export async function handler(): Promise<void> {
           addFileAndSignature(
             fs.createReadStream(path.resolve(clientAssetsDir, name)),
             { name: `client/${name}` }
+          )
+      ),
+      ...[...serverAssets.entrypoints, ...serverAssets.otherAssets].map(
+        (name) =>
+          addFileAndSignature(
+            fs.createReadStream(path.resolve(serverAssetsDir, name)),
+            { name: `server/${name}` }
           )
       ),
       archive.finalize(),

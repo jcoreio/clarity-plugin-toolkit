@@ -7,29 +7,28 @@ import { PackageJsonSchema } from './PackageJsonSchema'
 import dedent from 'dedent-js'
 import stringifyPath from './stringifyPath'
 
-const getProject = once(
-  async (): Promise<{
-    projectDir: string
-    packageJsonFile: string
-    packageJson: z.output<typeof PackageJsonSchema>
-  }> => {
-    const packageJsonFile = await findUp('package.json', { type: 'file' })
-    if (!packageJsonFile) {
-      throw new Error(`failed to find project package.json file`)
-    }
-    const projectDir = path.dirname(packageJsonFile)
-    const packageJson = await fs.readJson(packageJsonFile)
+export async function getProjectBase(cwd = process.cwd()): Promise<{
+  projectDir: string
+  packageJsonFile: string
+  packageJson: z.output<typeof PackageJsonSchema>
+}> {
+  const packageJsonFile = await findUp('package.json', { type: 'file', cwd })
+  if (!packageJsonFile) {
+    throw new Error(`failed to find project package.json file`)
+  }
+  const projectDir = path.dirname(packageJsonFile)
+  const packageJson = await fs.readJson(packageJsonFile)
 
-    try {
-      PackageJsonSchema.parse(packageJson)
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const { issues } = error
-        throw Object.assign(
-          new Error(
-            dedent`
+  try {
+    PackageJsonSchema.parse(packageJson)
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const { issues } = error
+      throw Object.assign(
+        new Error(
+          dedent`
               ${path.relative(
-                process.cwd(),
+                cwd,
                 packageJsonFile
               )} is invalid for building a Clarity feature
               Issues:
@@ -40,20 +39,21 @@ const getProject = once(
                   )
                   .join('\n  ')}
             `
-          ),
-          { issues }
-        )
-      }
-      throw new Error(
-        `Invalid clarity feature package.json: ${path.relative(
-          process.cwd(),
-          packageJsonFile
-        )}`
+        ),
+        { issues }
       )
     }
-
-    return { projectDir, packageJsonFile, packageJson }
+    throw new Error(
+      `Invalid clarity feature package.json: ${path.relative(
+        cwd,
+        packageJsonFile
+      )}`
+    )
   }
-)
+
+  return { projectDir, packageJsonFile, packageJson }
+}
+
+const getProject = once(() => getProjectBase())
 
 export default getProject

@@ -9,6 +9,7 @@
   "devDependencies": {
     "@jcoreio/toolchain": "^5.5.4",
     "@jcoreio/toolchain-circle": "^5.5.4",
+    "@jcoreio/toolchain-mocha": "^5.5.4",
     "eslint": "^9.17.0",
     "glob": "^10.3.12",
     "globals": "^16.0.0",

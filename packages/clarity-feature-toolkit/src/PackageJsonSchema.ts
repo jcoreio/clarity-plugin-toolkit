@@ -8,13 +8,6 @@ const Version = z
     'must be a valid semantic version'
   )
 
-const VersionRange = z
-  .string()
-  .refine(
-    (range) => semver.validRange(range),
-    'must be a valid semantic version range'
-  )
-
 export const PackageJsonSchema = z
   .object({
     name: z.string(),
@@ -25,7 +18,7 @@ export const PackageJsonSchema = z
     }),
     dependencies: z
       .object({
-        '@jcoreio/clarity-feature-api': VersionRange,
+        '@jcoreio/clarity-feature-api': z.string(),
       })
       .catchall(z.string()),
     clarity: z
