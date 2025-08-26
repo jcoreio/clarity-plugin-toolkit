@@ -7,14 +7,15 @@ import archiver from 'archiver'
 import { createGzip } from 'zlib'
 import emitted from 'p-event'
 import { makePacklist, toPosix } from './makePacklist'
+import { isEmpty, mapValues } from 'lodash'
 
 export async function buildServer({
   cwd = process.cwd(),
 }: { cwd?: string } = {}) {
   const { projectDir, packageJson, distServerDir, serverTarball } =
     await getProjectBase(cwd)
-  const serverEntry = packageJson.contributes.server
-  if (!serverEntry) return
+  const serverEntrypoints = packageJson.contributes.server
+  if (isEmpty(serverEntrypoints)) return
 
   await fs.mkdirs(distServerDir)
   await fs.emptydir(distServerDir)
@@ -33,7 +34,9 @@ export async function buildServer({
       ...packageJson,
       contributes: {
         ...packageJson.contributes,
-        server: serverEntry.replace(/\.([cm])?tsx?$/, '.$1js'),
+        server: mapValues(serverEntrypoints, (file) =>
+          file?.replace(/\.([cm])?tsx?$/, '.$1js')
+        ),
       },
     },
     null,
@@ -69,7 +72,9 @@ export async function buildServer({
     ],
   }
   const { fileList: fileSet } = await nodeFileTrace(
-    [path.resolve(projectDir, serverEntry)],
+    Object.values(serverEntrypoints).map((file) =>
+      path.resolve(projectDir, file)
+    ),
     {
       processCwd: projectDir,
       base: projectDir,

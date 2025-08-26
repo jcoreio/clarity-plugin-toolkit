@@ -14,7 +14,7 @@ export const PackageJsonSchema = z
     version: Version,
     contributes: z.object({
       client: z.string().optional(),
-      server: z.string().optional(),
+      server: z.object({ webapp: z.string().optional() }).optional(),
     }),
     dependencies: z
       .object({

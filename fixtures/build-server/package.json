@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "contributes": {
-    "server": "./src/server/index.ts"
+    "server": {
+      "webapp": "./src/server/index.ts"
+    }
   },
   "devDependencies": {
     "@babel/register": "^7.28.3",
