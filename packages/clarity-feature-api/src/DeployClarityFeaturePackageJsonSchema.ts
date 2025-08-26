@@ -13,7 +13,11 @@ export const DeployClarityFeaturePackageJson = z
     devDependencies: z.record(z.string()).optional(),
     contributes: z.object({
       client: z.string().optional(),
-      server: z.string().optional(),
+      server: z
+        .object({
+          webapp: z.string().optional(),
+        })
+        .optional(),
     }),
     client: z
       .object({
