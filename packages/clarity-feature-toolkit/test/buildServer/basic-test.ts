@@ -2,7 +2,7 @@ import { describe, it } from 'mocha'
 import execa from 'execa'
 import fs from 'fs-extra'
 import path from 'path'
-import { buildServer } from '../../src/buildServer'
+import { buildServer } from '../../src/server/buildServer'
 import { distDir, distServerDir } from '../../src/constants'
 import { expect } from 'chai'
 

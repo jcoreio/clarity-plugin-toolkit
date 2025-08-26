@@ -1,6 +1,6 @@
 import * as yargs from 'yargs'
-import { buildClient } from '../../buildClient'
-import { buildServer } from '../../buildServer'
+import { buildClient } from '../../client/buildClient'
+import { buildServer } from '../../server/buildServer'
 
 export const command = 'build'
 export const description = `build bundles for deployment`

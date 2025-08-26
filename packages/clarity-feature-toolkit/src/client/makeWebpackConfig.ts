@@ -12,10 +12,10 @@ import {
   serverAssetsFile,
   distDir,
   emptyEntryFile,
-} from './constants'
+} from '../constants'
 import { customFeatureAssetRoute } from '@jcoreio/clarity-feature-api'
 import { AssetsSchema } from './AssetsSchema'
-import getProject from './getProject'
+import getProject from '../getProject'
 
 const { ModuleFederationPlugin } = container
 
