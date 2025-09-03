@@ -26,7 +26,7 @@ export const DeployClarityFeaturePackageJson = z
       .optional(),
     server: z
       .object({
-        tarball: z.string(),
+        webapp: z.string().optional(),
       })
       .optional(),
     clarity: z.object({

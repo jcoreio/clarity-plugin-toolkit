@@ -8,14 +8,14 @@ export const customFeatureAssetRoute = new ZodRoute(
     feature: z.string().transform((s) => decodeURIComponent(s)),
     version: z.string().refine((version) => semver.valid(version)),
     environment: z.enum(['client', 'server']),
-    filename: z.string().regex(/^[^/]+$/g),
+    filename: z.string().transform((s) => s.replace(/^\.?\/?/, '')),
   }),
   {
     formatSchema: z.strictObject({
       feature: z.string(),
       version: z.string().refine((version) => semver.valid(version)),
       environment: z.enum(['client', 'server']),
-      filename: z.string().regex(/^[^/]+$/g),
+      filename: z.string().transform((s) => s.replace(/^\.?\/?/, '')),
     }),
   }
 )
