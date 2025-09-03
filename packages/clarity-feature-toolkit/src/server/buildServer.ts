@@ -56,7 +56,7 @@ export async function buildServer({
     'utf8'
   )
 
-  const babelOptions = {
+  const babelOptions = (modules: false | 'commonjs') => ({
     cwd: projectDir,
     babelrc: false,
     presets: [
@@ -64,13 +64,17 @@ export async function buildServer({
         require.resolve('@babel/preset-env'),
         {
           targets: { node: 20 },
-          modules: false,
+          modules,
           exclude: ['proposal-dynamic-import'],
         },
       ],
       [require.resolve('@babel/preset-typescript')],
     ],
-  }
+  })
+
+  const ctsOptions = babelOptions('commonjs')
+  const mtsOptions = babelOptions(false)
+
   const { fileList: fileSet } = await nodeFileTrace(
     Object.values(serverEntrypoints).map((file) =>
       path.resolve(projectDir, file)
@@ -86,6 +90,11 @@ export async function buildServer({
           .replace(/\.([cm])?tsx?$/, '.$1js')
 
         if (/\.[cm]?tsx?$/.test(src) && !/\.d\.[cm]?tsx?$/.test(src)) {
+          const babelOptions =
+            /\.ctsx?$/.test(src) ? ctsOptions
+            : /\.mtsx?$/.test(src) ? mtsOptions
+            : packageJson.type === 'module' ? mtsOptions
+            : ctsOptions
           const transformed = await transformFileAsync(src, babelOptions)
           if (!transformed) return ''
           const { code, map } = transformed
@@ -169,15 +178,18 @@ export async function buildServer({
     })
   }
   for (const [from, { target, mode }] of packlist.symlinks.entries()) {
-    const resolvedTarget = path.normalize(
-      path.join(stripParentDirs(from), target)
-    )
-    const strippedTarget = stripParentDirs(resolvedTarget)
-    archive.symlink(
-      stripParentDirs(from),
-      target.substring(resolvedTarget.length - strippedTarget.length),
-      mode
-    )
+    const linkpath = stripParentDirs(from)
+    const baseDir = path.dirname(linkpath)
+    const resolvedTarget = path.normalize(path.join(baseDir, target))
+    if (resolvedTarget.startsWith('..')) {
+      archive.symlink(
+        linkpath,
+        path.relative(baseDir, stripParentDirs(resolvedTarget)),
+        mode
+      )
+    } else {
+      archive.symlink(linkpath, target, mode)
+    }
   }
 
   // @typescript-eslint kinda sux

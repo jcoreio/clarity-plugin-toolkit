@@ -3,7 +3,8 @@ import { getClarityUrl } from '../../getClarityUrl'
 import path from 'path'
 import fs from 'fs-extra'
 import archiver from 'archiver'
-import { createGzip } from 'zlib'
+import tar from 'tar-stream'
+import { createGzip, createGunzip } from 'zlib'
 import { AssetsSchema } from '../../client/AssetsSchema'
 import z from 'zod'
 import prompt from 'prompts'
@@ -15,6 +16,9 @@ import { getSigningKey } from '../../getSigningKey'
 import { pipeline } from 'stream/promises'
 import { PassThrough, Readable } from 'stream'
 import { DeployClarityFeaturePackageJson } from '@jcoreio/clarity-feature-api'
+import { isReadable } from '../../util/isReadable'
+import { copyReadable } from '../../util/copyReadable'
+import semver from 'semver'
 
 export const command = 'deploy'
 export const description = `build (if necessary) and deploy to Clarity`
@@ -31,7 +35,8 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
   yargs.usage('$0 deploy')
 
 export async function handler(): Promise<void> {
-  const { packageJson, clientAssetsFile, serverTarball } = await getProject()
+  const { packageJson, projectDir, clientAssetsFile, serverTarball } =
+    await getProject()
   if (await shouldBuild()) await build.handler()
 
   const clarityUrl = await getClarityUrl()
@@ -57,6 +62,18 @@ export async function handler(): Promise<void> {
 
     const hasServerTarball = await fs.pathExists(serverTarball)
 
+    // declare a valid semver range for @jcoreio/clarity-feature-api in the deployed package.json
+    // so that Clarity can tell whether it's compatible
+    if (
+      packageJson.dependencies?.['@jcoreio/clarity-feature-api'] &&
+      !semver.validRange(
+        packageJson.dependencies?.['@jcoreio/clarity-feature-api']
+      )
+    ) {
+      packageJson.dependencies['@jcoreio/clarity-feature-api'] =
+        `^${(await fs.readJson(path.join(projectDir, 'node_modules', '@jcoreio', 'clarity-feature-api', 'package.json'))).version}`
+    }
+
     const packageJsonStr = JSON.stringify(
       {
         ...packageJson,
@@ -73,7 +90,12 @@ export async function handler(): Promise<void> {
           : undefined,
         server:
           hasServerTarball ?
-            { tarball: `./${path.basename(serverTarball)}` }
+            {
+              webapp: packageJson.contributes.server?.webapp?.replace(
+                /\.([cm])?tsx?$/,
+                '.$1js'
+              ),
+            }
           : undefined,
       } satisfies DeployClarityFeaturePackageJson,
       null,
@@ -88,7 +110,13 @@ export async function handler(): Promise<void> {
         name: string
       }
     ) => {
-      archive.append(content, { name })
+      if (!(content instanceof Readable) && isReadable(content)) {
+        // archiver requires an instance of Readable, not something
+        // duck type compatible with it
+        archive.append(copyReadable(content), { name })
+      } else {
+        archive.append(content, { name })
+      }
       const signature = new PassThrough()
       archive.append(signature, { name: `${name}.sig` })
 
@@ -102,7 +130,7 @@ export async function handler(): Promise<void> {
           filename: name.replace(/^(client|server)\//, ''),
         })
       )
-      if (content instanceof Readable) content.pipe(input)
+      if (isReadable(content)) content.pipe(input)
       else input.end(content)
       const signer = crypto.createSign('SHA256')
       await pipeline(input, signer)
@@ -111,6 +139,27 @@ export async function handler(): Promise<void> {
 
     const url = new URL('/api/customFeatures/upload', clarityUrl)
     if (overwrite) url.searchParams.set('overwrite', 'true')
+
+    if (hasServerTarball) {
+      for await (const entry of fs
+        .createReadStream(serverTarball)
+        .pipe(createGunzip())
+        .pipe(tar.extract())) {
+        const { header } = entry
+        const { name } = header
+        if (name === 'package.json') continue
+        switch (header.type) {
+          case 'file':
+            await addFileAndSignature(entry, { name })
+            break
+          case 'symlink':
+            if (header.linkname) {
+              archive.symlink(header.linkname, name)
+            }
+            break
+        }
+      }
+    }
 
     const [uploadResponse] = await Promise.all([
       fetch(url, {
@@ -130,13 +179,6 @@ export async function handler(): Promise<void> {
             { name: `client/${name}` }
           )
         )
-      : []),
-      ...(hasServerTarball ?
-        [
-          addFileAndSignature(fs.createReadStream(serverTarball), {
-            name: path.basename(serverTarball),
-          }),
-        ]
       : []),
       archive.finalize(),
     ])

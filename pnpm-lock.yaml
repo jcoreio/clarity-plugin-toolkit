@@ -245,6 +245,12 @@ importers:
       semver:
         specifier: ^7.6.0
         version: 7.7.2
+      style-loader:
+        specifier: ^4.0.0
+        version: 4.0.0(webpack@5.99.6)
+      tar-stream:
+        specifier: ^3.1.7
+        version: 3.1.7
       validate-npm-package-name:
         specifier: ^5.0.0
         version: 5.0.1
@@ -309,6 +315,9 @@ importers:
       '@types/semver':
         specifier: ^7.5.8
         version: 7.7.0
+      '@types/tar-stream':
+        specifier: ^3.1.4
+        version: 3.1.4
       '@types/validate-npm-package-name':
         specifier: ^4.0.2
         version: 4.0.2
@@ -1337,6 +1346,7 @@ packages:
   '@material-ui/core@4.12.4':
     resolution: {integrity: sha512-tr7xekNlM9LjA6pagJmL8QCgZXaubWUwkJnoYcMKd4gw/t4XiyvnTkjdGrUVicyB2BsdaAv1tvow45bPM4sSwQ==}
     engines: {node: '>=8.0.0'}
+    deprecated: Material UI v4 doesn't receive active development since September 2021. See the guide https://mui.com/material-ui/migration/migration-v4/ to upgrade to v5.
     peerDependencies:
       '@types/react': ^16.8.6 || ^17.0.0
       react: ^16.8.0 || ^17.0.0
@@ -1360,6 +1370,7 @@ packages:
   '@material-ui/styles@4.11.5':
     resolution: {integrity: sha512-o/41ot5JJiUsIETME9wVLAJrmIWL3j0R0Bj2kCOLbSfqEkKf0fmaPt+5vtblUh5eXr2S+J/8J3DaCb10+CzPGA==}
     engines: {node: '>=8.0.0'}
+    deprecated: Material UI v4 doesn't receive active development since September 2021. See the guide https://mui.com/material-ui/migration/migration-v4/ to upgrade to v5.
     peerDependencies:
       '@types/react': ^16.8.6 || ^17.0.0
       react: ^16.8.0 || ^17.0.0
@@ -1506,6 +1517,7 @@ packages:
 
   '@types/p-event@3.0.0':
     resolution: {integrity: sha512-zNdBlwtU8Ri2sJZI7YStzxUc8oG2X4mmQqY9cSyo7kj/tuuKKq5AnBRQg62cQ+lrrfsklpFS6BdIcUG4QtIp6A==}
+    deprecated: This is a stub types definition. p-event provides its own type definitions, so you do not need this installed.
 
   '@types/prompts@2.4.9':
     resolution: {integrity: sha512-qTxFi6Buiu8+50/+3DGIWLHM6QuWsEKugJnnP6iv2Mc4ncxE4A/OJkjuVOA+5X0X1S/nq5VJRa8Lu+nwcvbrKA==}
@@ -1538,6 +1550,9 @@ packages:
 
   '@types/serve-static@1.15.8':
     resolution: {integrity: sha512-roei0UY3LhpOJvjbIP6ZZFngyLKl5dskOtDhxY5THRSpO+ZI+nzJ+m5yUMzGrp89YRa7lvknKkMYjqQFGwA7Sg==}
+
+  '@types/tar-stream@3.1.4':
+    resolution: {integrity: sha512-921gW0+g29mCJX0fRvqeHzBlE/XclDaAG0Ousy1LCghsOhvaKacDeRGEVzQP9IPfKn8Vysy7FEXAIxycpc/CMg==}
 
   '@types/validate-npm-package-name@4.0.2':
     resolution: {integrity: sha512-lrpDziQipxCEeK5kWxvljWYhUvOiB2A9izZd9B2AFarYAkqZshb4lPbRs7zKEic6eGtH8V/2qJW+dPp9OtF6bw==}
@@ -2808,10 +2823,12 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    deprecated: Glob versions prior to v9 are no longer supported
 
   glob@8.1.0:
     resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
     engines: {node: '>=12'}
+    deprecated: Glob versions prior to v9 are no longer supported
 
   globals@11.12.0:
     resolution: {integrity: sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==}
@@ -2943,6 +2960,7 @@ packages:
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
@@ -3988,6 +4006,7 @@ packages:
 
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   router@2.2.0:
@@ -4214,6 +4233,12 @@ packages:
   strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
+
+  style-loader@4.0.0:
+    resolution: {integrity: sha512-1V4WqhhZZgjVAVJyt7TdDPZoPBPNHbekX4fWnCJL1yQukhCeZhJySUL+gL9y6sNdN95uEOS83Y55SqHcP7MzLA==}
+    engines: {node: '>= 18.12.0'}
+    peerDependencies:
+      webpack: ^5.27.0
 
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
@@ -6112,6 +6137,10 @@ snapshots:
       '@types/http-errors': 2.0.5
       '@types/node': 20.17.41
       '@types/send': 0.17.5
+
+  '@types/tar-stream@3.1.4':
+    dependencies:
+      '@types/node': 20.17.41
 
   '@types/validate-npm-package-name@4.0.2': {}
 
@@ -9418,6 +9447,10 @@ snapshots:
   strip-final-newline@3.0.0: {}
 
   strip-json-comments@3.1.1: {}
+
+  style-loader@4.0.0(webpack@5.99.6):
+    dependencies:
+      webpack: 5.99.6(webpack-cli@5.1.4)
 
   supports-color@7.2.0:
     dependencies:

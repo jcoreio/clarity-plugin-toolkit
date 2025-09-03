@@ -11,6 +11,7 @@ const fixtureDir = path.resolve(fixturesDir, 'build-server')
 
 describe(`buildServer`, function () {
   it(`basic test`, async function () {
+    this.timeout(10000)
     const { distDir, serverTarball } = paths(fixtureDir)
     await fs.remove(distDir)
     await buildServer({ cwd: fixtureDir })

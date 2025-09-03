@@ -1,5 +1,6 @@
 import z from 'zod'
 import semver from 'semver'
+import { DeployClarityFeaturePackageJson } from '@jcoreio/clarity-feature-api'
 
 const Version = z
   .string()
@@ -12,10 +13,7 @@ export const PackageJsonSchema = z
   .object({
     name: z.string(),
     version: Version,
-    contributes: z.object({
-      client: z.string().optional(),
-      server: z.object({ webapp: z.string().optional() }).optional(),
-    }),
+    contributes: DeployClarityFeaturePackageJson.shape.contributes,
     dependencies: z
       .object({
         '@jcoreio/clarity-feature-api': z.string(),

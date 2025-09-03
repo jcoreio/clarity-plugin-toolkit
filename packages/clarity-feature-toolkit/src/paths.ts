@@ -14,7 +14,7 @@ export const paths = (projectDir: string) => {
     distClientDir: path.join(distDir, 'client'),
     distServerDir,
     clientAssetsFile: path.join(clarityFeatureToolkitDir, 'client-assets.json'),
-    serverTarball: path.join(distServerDir, 'server-bundle.tgz'),
+    serverTarball: path.join(distServerDir, 'bundle.tgz'),
     signingKeyFile: path.join(clarityFeatureToolkitDir, 'clarity-signing-key'),
   }
 }
