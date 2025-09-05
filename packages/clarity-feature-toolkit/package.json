@@ -110,6 +110,7 @@
     "lodash": "^4.17.21",
     "open": "^8.0.0",
     "p-event": "^4.2.0",
+    "p-map": "^7.0.3",
     "path-browserify": "^1.0.1",
     "process": "^0.11.10",
     "prompts": "^2.4.2",

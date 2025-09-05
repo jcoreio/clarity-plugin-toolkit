@@ -133,6 +133,38 @@ export async function buildServer({
       (!/\.[cm]?tsx?$/.test(file) || /\.d\.[cm]?tsx?$/.test(file))
   )
 
+  const archiveEntries: { src: string; name: string; stats: fs.Stats }[] = []
+
+  const { default: pMap } = await import('p-map')
+  await pMap(
+    otherAssets,
+    async (relativeSrc) => {
+      const stats = await fs.stat(relativeSrc)
+      const src = path.resolve(projectDir, relativeSrc)
+      const dest = path.resolve(distServerDir, relativeSrc)
+
+      // eslint-disable-next-line no-console
+      console.error(
+        `${path.relative(process.cwd(), src)} -> ${path.relative(process.cwd(), dest)}`
+      )
+      await fs.mkdirs(path.dirname(dest))
+      await fs.copy(src, dest)
+      // save this info for later, so we can sort it into a deterministic order,
+      // since the assets are getting processed in a nondeterministic order here
+      archiveEntries.push({ src, name: relativeSrc, stats })
+    },
+    { concurrency: 1024 }
+  )
+
+  // sort to ensure the archive entries are in deterministic order
+  for (const { src, name, stats } of archiveEntries.sort((a, b) =>
+    a.name > b.name ? 1
+    : a.name < b.name ? -1
+    : 0
+  )) {
+    archive.append(fs.createReadStream(src), { name, stats })
+  }
+
   await Promise.all(
     otherAssets.map(async (relativeSrc) => {
       const stats = await fs.stat(relativeSrc)
