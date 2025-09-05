@@ -136,6 +136,13 @@ export async function makeWebpackConfig(
 
   const writeAssetsPlugin: WebpackPluginInstance = {
     apply(compiler) {
+      compiler.hooks.beforeCompile.tapPromise(
+        'createFeatureEntrypoint',
+        async () => {
+          await fs.mkdirs(path.resolve(context, path.dirname(emptyEntryFile)))
+          await fs.writeFile(path.resolve(context, emptyEntryFile), '', 'utf8')
+        }
+      )
       compiler.hooks.afterEmit.tapAsync(
         { name: 'writeFeatureAssets' },
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
