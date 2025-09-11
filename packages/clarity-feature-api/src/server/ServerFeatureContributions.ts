@@ -11,6 +11,7 @@ interface ParsedQs {
  * Components and behaviors contributed to the server side of Clarity by a custom feature.
  */
 export type ServerFeatureContributions = () => {
+  // environment variables to forward to client?
   /**
    * An API request handler for this feature (optional)
    */

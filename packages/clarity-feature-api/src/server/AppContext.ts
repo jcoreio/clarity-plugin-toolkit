@@ -1,3 +1,4 @@
+// eslint-disable-next-line @jcoreio/implicit-dependencies/no-implicit
 import type { Pool, PoolClient } from 'pg'
 
 /**
@@ -29,6 +30,17 @@ export type PostgresPool = Pick<Pool, 'query'> & {
  * The Clarity application context types exposed to custom features
  */
 export interface AppContext {
+  // configHandler?
+  // getTagState
+  // historian
+  // ingestData
+  // keyValueRedis
+  // observableQueryStream?
+  // pubsub
+  // rateLimit
+  // secretsManager?
+  // sendEmail
+  // sendStandardEmail?
   /**
    * The postgres pool of connections to the app database.
    * This may not be a true {@link Pool pg.Pool} instance, instead it may

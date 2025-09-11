@@ -26,6 +26,23 @@ export type ClientFeatureContributions = {
       >
     }
   }
+
+  // rootRoutes?: Routes
+  // contentRoutes?: Routes
+  // organizationRoutes?: Routes
+  // organizationRedirectRoutes?: OneOrMore<OrganizationRedirectRoute>
+  // organizationRedirectRoutesOrder?: number
+  // navbarRoutes?: Routes
+  // navbarTitleRoutes?: Routes
+  // userMenuItems?: Content<UserMenuProps, React.ReactNode>
+  // loggedInRoutes?: Routes
+  // loggedInComponents?: Components
+  // sidebarSections?: Components
+  // sidebarSectionsOrder?: number
+  // tagContextMenuItems?: Content<TagContextMenuProps, React.ReactNode>
+  // tagContextMenuItemsOrder?: number
+  // adminLinks?: Components<AdminLinksProps>
+  // adminLinksOrder?: number
 }
 
 const lazySymbol = React.lazy(() => null as any).$$typeof
