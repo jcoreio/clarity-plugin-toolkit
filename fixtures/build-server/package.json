@@ -3,10 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "contributes": {
-    "server": {
-      "webapp": "./src/server/index.ts"
-    }
+  "exports": {
+    "./webapp": "./src/server/index.ts"
   },
   "devDependencies": {
     "@babel/register": "^7.28.3",

@@ -75,9 +75,7 @@ export async function buildServer({
   const mtsOptions = babelOptions(false)
 
   const { fileList: fileSet } = await nodeFileTrace(
-    Object.values(serverEntrypoints).map((file) =>
-      path.resolve(projectDir, file)
-    ),
+    [...serverEntrypoints].map((file) => path.resolve(projectDir, file)),
     {
       processCwd: projectDir,
       base: projectDir,
@@ -122,7 +120,6 @@ export async function buildServer({
       },
     }
   )
-
   const fileList = [...fileSet]
 
   const otherAssets = fileList.filter(
