@@ -7,15 +7,17 @@ import archiver from 'archiver'
 import { createGzip } from 'zlib'
 import emitted from 'p-event'
 import { makePacklist, toPosix } from './makePacklist'
-import { isEmpty, mapValues } from 'lodash'
+import { mapExports } from '../util/mapExports'
+import { collectExports } from './collectExports'
 
 export async function buildServer({
   cwd = process.cwd(),
 }: { cwd?: string } = {}) {
   const { projectDir, packageJson, distServerDir, serverTarball } =
     await getProjectBase(cwd)
-  const serverEntrypoints = packageJson.contributes.server
-  if (isEmpty(serverEntrypoints)) return
+  const serverEntrypoints = new Set<string>()
+  collectExports(packageJson.exports, new Set(['./webapp']), serverEntrypoints)
+  if (!serverEntrypoints.size) return
 
   await fs.mkdirs(distServerDir)
   await fs.emptydir(distServerDir)
@@ -32,12 +34,9 @@ export async function buildServer({
   const transformedPackageJson = JSON.stringify(
     {
       ...packageJson,
-      contributes: {
-        ...packageJson.contributes,
-        server: mapValues(serverEntrypoints, (file) =>
-          file?.replace(/\.([cm])?tsx?$/, '.$1js')
-        ),
-      },
+      exports: mapExports(packageJson.exports, (file) =>
+        file.replace(/\.([cm])?[jt]sx?$/, '.$1js')
+      ),
     },
     null,
     2

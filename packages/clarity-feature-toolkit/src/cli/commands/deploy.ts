@@ -19,6 +19,7 @@ import { DeployClarityFeaturePackageJson } from '@jcoreio/clarity-feature-api'
 import { isReadable } from '../../util/isReadable'
 import { copyReadable } from '../../util/copyReadable'
 import semver from 'semver'
+import { mapExports } from '../../util/mapExports'
 
 export const command = 'deploy'
 export const description = `build (if necessary) and deploy to Clarity`
@@ -65,37 +66,36 @@ export async function handler(): Promise<void> {
     // declare a valid semver range for @jcoreio/clarity-feature-api in the deployed package.json
     // so that Clarity can tell whether it's compatible
     if (
-      packageJson.dependencies?.['@jcoreio/clarity-feature-api'] &&
+      packageJson.dependencies['@jcoreio/clarity-feature-api'] &&
       !semver.validRange(
-        packageJson.dependencies?.['@jcoreio/clarity-feature-api']
+        packageJson.dependencies['@jcoreio/clarity-feature-api']
       )
     ) {
       packageJson.dependencies['@jcoreio/clarity-feature-api'] =
         `^${(await fs.readJson(path.join(projectDir, 'node_modules', '@jcoreio', 'clarity-feature-api', 'package.json'))).version}`
     }
 
+    const mappedExports = mapExports(packageJson.exports, (file) =>
+      file.replace(/\.([cm])?[jt]sx?$/, '.$1js')
+    )
+
     const packageJsonStr = JSON.stringify(
       {
         ...packageJson,
         clarity: {
           signatureVerificationKeyId: signingKey.id,
+          client:
+            clientAssets ?
+              {
+                entrypoints: clientAssets.entrypoints.map(
+                  (name) => `client/${name}`
+                ),
+              }
+            : undefined,
         },
-        client:
-          clientAssets ?
-            {
-              entrypoints: clientAssets.entrypoints.map(
-                (name) => `client/${name}`
-              ),
-            }
-          : undefined,
-        server:
-          hasServerTarball ?
-            {
-              webapp: packageJson.contributes.server?.webapp?.replace(
-                /\.([cm])?tsx?$/,
-                '.$1js'
-              ),
-            }
+        exports:
+          mappedExports != null && typeof mappedExports === 'object' ?
+            mappedExports
           : undefined,
       } satisfies DeployClarityFeaturePackageJson,
       null,

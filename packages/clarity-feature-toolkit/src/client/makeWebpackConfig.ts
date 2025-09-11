@@ -60,7 +60,7 @@ export async function makeWebpackConfig(
   const containerName =
     '__clarity_feature__' +
     packageJson.name.replace(/^@([^/]+)\//, '_$1_').replace(/[^_a-z0-9]+/g, '_')
-  const { contributes } = packageJson
+  const client = packageJson.clarity?.client
 
   const configs: Configuration[] = []
 
@@ -189,12 +189,12 @@ export async function makeWebpackConfig(
     },
   }
 
-  if (contributes.client) {
+  if (client?.entrypoints) {
     configs.push({
       name: 'client',
       // use a nonexistent entry to avoid making unnecessary chunks;
       // we will ignore webpack errors from this
-      entry: emptyEntryFile,
+      entry: client.entrypoints,
       context,
       mode: env.production ? 'production' : 'development',
       output: {
@@ -229,7 +229,7 @@ export async function makeWebpackConfig(
           filename: `entry.js`,
           // this allows the app code to get the custom feature module out of the container
           exposes: {
-            '.': contributes.client,
+            '.': client.entrypoints,
           },
           shared: sharedVersions(
             'react',
