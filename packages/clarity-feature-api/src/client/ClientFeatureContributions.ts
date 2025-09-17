@@ -2,6 +2,30 @@ import z from 'zod'
 import * as React from 'react'
 import { CustomDashboardWidgetProps } from './CustomDashboardWidgetProps'
 
+/**
+ * A function that imports a React component module (the argument to {@link React.lazy})
+ */
+export type ComponentLoader<
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  P extends {} = {},
+> = () => Promise<{
+  default: React.ComponentType<P>
+}>
+
+/**
+ * A set of URL route -> {@link ComponentLoader} pairs.
+ */
+export type ComponentLoaderRoutes = { [Route in string]?: ComponentLoader }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+const ComponentLoader = <P extends {} = {}>() =>
+  z.function(
+    z.tuple([]),
+    z.promise(
+      z.object({ default: z.any() as z.ZodType<React.ComponentType<P>> })
+    )
+  ) satisfies z.ZodType<ComponentLoader<P>>
+
 // we declare this manually instead of using `z.input<typeof ClientFeatureContributions>` because
 // the JSDoc gets lost in .d.ts files
 /**
@@ -19,65 +43,95 @@ export type ClientFeatureContributions = {
        */
       displayName: string
       /**
-       * The React.lazy()-wrapped component for rendering the content of the widget
+       * The component loader for rendering the content of the widget
        */
-      component: React.LazyExoticComponent<
-        React.ComponentType<CustomDashboardWidgetProps>
-      >
+      component: ComponentLoader<CustomDashboardWidgetProps>
     }
   }
+  /**
+   * A component to render in the sidebar
+   */
+  sidebarSections?: ComponentLoader
+  /**
+   * The order of `sidebarContent` relative to other elements
+   * in the sidebar
+   */
+  sidebarSectionsOrder?: number
+  /**
+   * Components to render in the navbar title within routes for this feature
+   */
+  navbarTitle?: {
+    /**
+     * A component to render in the navbar title within non-organization routes
+     * for this feature (including when the user isn't logged in)
+     */
+    root?: ComponentLoader | ComponentLoaderRoutes
+    /**
+     * A component to render in the navbar title within organization routes for
+     * this feature
+     */
+    organization?: ComponentLoader | ComponentLoaderRoutes
+  }
+  /**
+   * Components to render in the main content area within routes for this feature
+   */
+  mainContent?: {
+    /**
+     * A component to render in the main content area within non-organization routes
+     * for this feature (including when the user isn't logged in)
+     */
+    root?: ComponentLoader | ComponentLoaderRoutes
+    /**
+     * A component to render in the main content area within organization routes for
+     * this feature
+     */
+    organization?: ComponentLoader | ComponentLoaderRoutes
+  }
 
-  // rootRoutes?: Routes
-  // contentRoutes?: Routes
-  // organizationRoutes?: Routes
-  // organizationRedirectRoutes?: OneOrMore<OrganizationRedirectRoute>
-  // organizationRedirectRoutesOrder?: number
-  // navbarRoutes?: Routes
-  // navbarTitleRoutes?: Routes
   // userMenuItems?: Content<UserMenuProps, React.ReactNode>
-  // loggedInRoutes?: Routes
-  // loggedInComponents?: Components
-  // sidebarSections?: Components
-  // sidebarSectionsOrder?: number
   // tagContextMenuItems?: Content<TagContextMenuProps, React.ReactNode>
   // tagContextMenuItemsOrder?: number
   // adminLinks?: Components<AdminLinksProps>
   // adminLinksOrder?: number
 }
 
-const lazySymbol = React.lazy(() => null as any).$$typeof
-
-type LazyComponentSchema<Props = any> = z.ZodType<
-  React.LazyExoticComponent<React.ComponentType<Props>>
->
-
-const LazyComponentSchema = z.unknown().refine(
-  (v): v is React.LazyExoticComponent<React.ComponentType> =>
-    z
-      .object({
-        $$typeof: z.literal(lazySymbol),
-      })
-      .safeParse(v).success,
-  'must be a React.lazy exotic component'
-)
+const ComponentLoaderOrRoutes = z.union([
+  ComponentLoader(),
+  z.record(
+    z.string().regex(/^[^/]/, 'subroute must not start with /'),
+    ComponentLoader().optional()
+  ),
+])
 
 export const ClientFeatureContributions = z.strictObject({
   /**
    * Custom dashboard widget types to add to Clarity.  The key is the unique
    * `customVariant` stored in the dashboard config.
    */
-
   dashboardWidgets: z
     .record(
       z.string(),
       z
         .strictObject({
           displayName: z.string(),
-          component:
-            LazyComponentSchema as LazyComponentSchema<CustomDashboardWidgetProps>,
+          component: ComponentLoader<CustomDashboardWidgetProps>(),
         })
         .optional()
     )
+    .optional(),
+  sidebarSections: ComponentLoader().optional(),
+  sidebarSectionsOrder: z.number().optional(),
+  navbarTitle: z
+    .object({
+      root: ComponentLoaderOrRoutes.optional(),
+      organization: ComponentLoaderOrRoutes.optional(),
+    })
+    .optional(),
+  mainContent: z
+    .object({
+      root: ComponentLoaderOrRoutes.optional(),
+      organization: ComponentLoaderOrRoutes.optional(),
+    })
     .optional(),
 }) satisfies z.ZodType<
   ClientFeatureContributions,

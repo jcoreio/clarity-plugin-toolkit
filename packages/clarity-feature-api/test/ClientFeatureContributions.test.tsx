@@ -14,9 +14,7 @@ describe(`ClientFeatureSchema`, function () {
       dashboardWidgets: {
         test: {
           displayName: 'Test',
-          component: React.lazy(
-            () => import('./ClientFeatureContributions.test')
-          ),
+          component: () => import('./ClientFeatureContributions.test'),
         },
         test2: undefined,
       },
