@@ -2,9 +2,6 @@
   "name": "@jcoreio/clarity-ink-levels-widget-example",
   "version": "0.1.0",
   "private": true,
-  "contributes": {
-    "client": "./src/client/index.ts"
-  },
   "scripts": {
     "clean": "clarity-plugin clean",
     "build": "clarity-plugin build",
@@ -12,7 +9,8 @@
     "clarity-plugin": "clarity-plugin"
   },
   "dependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "@jcoreio/clarity-plugin-api": "workspace:*"
   },
   "devDependencies": {
     "@babel/register": "^7.28.3",
@@ -33,6 +31,11 @@
     "zod": "^3.23.5"
   },
   "clarity": {
-    "url": "http://localhost:4000"
+    "url": "http://localhost:4000",
+    "client": {
+      "entrypoints": [
+        "./src/client/index.ts"
+      ]
+    }
   }
 }

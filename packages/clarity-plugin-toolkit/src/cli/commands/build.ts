@@ -6,13 +6,19 @@ export const command = 'build'
 export const description = `build bundles for deployment`
 
 type Options = {
-  // empty for now
+  env?: string[]
 }
 
 export const builder = (yargs: yargs.Argv<Options>): any =>
-  yargs.usage('$0 build')
+  yargs.usage('$0 build').option('env', {
+    type: 'string',
+    array: true,
+    default: ['development'],
+  })
 
-export async function handler(): Promise<void> {
-  await buildClient()
+export async function handler({
+  env,
+}: Partial<yargs.Arguments<Options>>): Promise<void> {
+  await buildClient({ args: env?.flatMap((v) => ['--env', v]) })
   await buildServer()
 }

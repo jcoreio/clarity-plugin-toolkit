@@ -445,6 +445,9 @@ importers:
 
   packages/ink-levels-widget-example:
     dependencies:
+      '@jcoreio/clarity-plugin-api':
+        specifier: workspace:*
+        version: link:../clarity-plugin-api
       react:
         specifier: ^18.2.0
         version: 18.3.1

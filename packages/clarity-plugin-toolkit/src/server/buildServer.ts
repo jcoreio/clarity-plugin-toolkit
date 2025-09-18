@@ -2,7 +2,7 @@ import { getProjectBase } from '../getProject'
 import { nodeFileTrace } from '@vercel/nft'
 import fs from 'fs-extra'
 import path from 'path'
-import { transformFileAsync } from '@babel/core'
+import { transformFileAsync, TransformOptions } from '@babel/core'
 import archiver from 'archiver'
 import { createGzip } from 'zlib'
 import emitted from 'p-event'
@@ -55,9 +55,10 @@ export async function buildServer({
     'utf8'
   )
 
-  const babelOptions = (modules: false | 'commonjs') => ({
+  const babelOptions = (modules: false | 'commonjs'): TransformOptions => ({
     cwd: projectDir,
     babelrc: false,
+    sourceMaps: true,
     presets: [
       [
         require.resolve('@babel/preset-env'),

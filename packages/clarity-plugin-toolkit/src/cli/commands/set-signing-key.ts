@@ -7,7 +7,6 @@ export const description = `set the key for signing code`
 
 type Options = {
   key?: string
-  // empty for now
 }
 
 export const builder = (yargs: yargs.Argv<Options>): any =>

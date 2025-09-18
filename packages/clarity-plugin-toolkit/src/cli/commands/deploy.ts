@@ -25,7 +25,7 @@ export const command = 'deploy'
 export const description = `build (if necessary) and deploy to Clarity`
 
 type Options = {
-  // empty for now
+  env?: string[]
 }
 
 const ErrorResponseSchema = z.object({
@@ -33,12 +33,18 @@ const ErrorResponseSchema = z.object({
 })
 
 export const builder = (yargs: yargs.Argv<Options>): any =>
-  yargs.usage('$0 deploy')
+  yargs.usage('$0 deploy').option('env', {
+    type: 'string',
+    array: true,
+    default: ['development'],
+  })
 
-export async function handler(): Promise<void> {
+export async function handler({
+  env,
+}: yargs.Arguments<Options>): Promise<void> {
   const { packageJson, projectDir, clientAssetsFile, serverTarball } =
     await getProject()
-  if (await shouldBuild()) await build.handler()
+  if (await shouldBuild({ env })) await build.handler({ env })
 
   const clarityUrl = await getClarityUrl()
   const signingKey = await getSigningKey()

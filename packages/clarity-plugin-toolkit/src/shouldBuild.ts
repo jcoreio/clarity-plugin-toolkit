@@ -2,9 +2,18 @@ import Gitignore from 'gitignore-fs'
 import { Glob } from 'glob'
 import fs from 'fs-extra'
 import getProject from './getProject'
+import { isEqual } from 'lodash'
 
-export default async function shouldBuild(): Promise<boolean> {
-  const { clientAssetsFile } = await getProject()
+export default async function shouldBuild({
+  env = [],
+}: { env?: string[] } = {}): Promise<boolean> {
+  const { clientAssetsFile, envFile } = await getProject()
+
+  const previousEnv = await fs.readJson(envFile).catch(() => undefined)
+  if (!isEqual(previousEnv, env)) {
+    await fs.writeJson(envFile, env, { spaces: 2 })
+    return true
+  }
 
   let assetsMtime = -Infinity
   for (const file of [clientAssetsFile]) {
