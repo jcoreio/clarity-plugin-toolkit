@@ -1,0 +1,108 @@
+{
+  "name": "@jcoreio/clarity-plugin-api",
+  "version": "0.0.0-development",
+  "description": "Clarity Plugin API mocks for developing plugins",
+  "scripts": {
+    "tc": "toolchain",
+    "toolchain": "toolchain",
+    "test": "toolchain test",
+    "prepublishOnly": "echo This package is meant to be published by semantic-release from the dist build directory. && exit 1"
+  },
+  "keywords": [
+    "jcore",
+    "jcoreio",
+    "jcore systems",
+    "clarity"
+  ],
+  "author": "Andy Edwards",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jcoreio/clarity-plugin-toolkit.git",
+    "directory": "packages/clarity-plugin-api"
+  },
+  "bugs": {
+    "url": "https://github.com/jcoreio/clarity-plugin-toolkit/issues"
+  },
+  "homepage": "https://github.com/jcoreio/clarity-plugin-toolkit/tree/master/packages/clarity-plugin-api",
+  "devDependencies": {
+    "@jcoreio/toolchain": "^5.5.5",
+    "@jcoreio/toolchain-circle": "^5.5.5",
+    "@jcoreio/toolchain-esnext": "^5.5.5",
+    "@jcoreio/toolchain-mocha": "^5.5.5",
+    "@jcoreio/toolchain-react": "^5.5.5",
+    "@jcoreio/toolchain-semantic-release": "^5.5.5",
+    "@jcoreio/toolchain-typescript": "^5.5.5",
+    "@types/chai": "^4.3.5",
+    "@types/chai-as-promised": "^7.1.5",
+    "@types/mocha": "^10.0.1",
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^9.17.0",
+    "globals": "^16.0.0",
+    "lint-staged": "^15.2.2",
+    "mocha": "^10.4.0",
+    "nyc": "^15.1.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.1.0",
+    "zod": "^3.25.76"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=16"
+  },
+  "packageManager": "pnpm@10.6.5",
+  "dependencies": {
+    "@babel/runtime": "^7.26.0",
+    "@types/express": "^4.17.0",
+    "@types/pg": "^8.15.5",
+    "@types/react": "^18.3.24",
+    "@types/semver": "^7.5.8",
+    "express": "^4.21.2",
+    "react": "^18.3.1",
+    "react-dnd": "^14.0.5",
+    "semver": "^7.6.0",
+    "zod-route-schemas": "^2.0.0"
+  },
+  "peerDependencies": {
+    "zod": "^3.25.7"
+  },
+  "exports": {
+    "./package.json": "./dist/package.json",
+    ".": {
+      "types": {
+        "import": "./dist/index.d.mts",
+        "default": "./dist/index.d.ts"
+      },
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
+    },
+    "./client": {
+      "types": {
+        "import": "./dist/client/index.d.mts",
+        "default": "./dist/client/index.d.ts"
+      },
+      "import": "./dist/client/index.mjs",
+      "default": "./dist/client/index.js"
+    },
+    "./client/test": {
+      "types": {
+        "import": "./dist/client/test.d.mts",
+        "default": "./dist/client/test.d.ts"
+      },
+      "import": "./dist/client/test.mjs",
+      "default": "./dist/client/test.js"
+    },
+    "./server": {
+      "types": {
+        "import": "./dist/server/index.d.mts",
+        "default": "./dist/server/index.d.ts"
+      },
+      "import": "./dist/server/index.mjs",
+      "default": "./dist/server/index.js"
+    }
+  },
+  "@jcoreio/toolchain": {
+    "migratedVersion": "5.5.5"
+  }
+}

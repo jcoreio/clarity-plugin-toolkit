@@ -14,5 +14,5 @@
     "incremental": true
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", ".clarity-feature-toolkit"]
+  "exclude": ["node_modules", ".clarity-plugin-toolkit"]
 }

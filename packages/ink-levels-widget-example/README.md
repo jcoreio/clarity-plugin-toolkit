@@ -1,14 +1,14 @@
-This is a [Clarity](https://www.jcore.io/clarity) custom feature project bootstrapped with [`create-clarity-feature`](https://github.com/jcoreio/clarity-feature-toolkit/tree/master/packages/create-clarity-feature).
+This is a [Clarity](https://www.jcore.io/clarity) plugin project bootstrapped with [`create-clarity-plugin`](https://github.com/jcoreio/clarity-plugin-toolkit/tree/master/packages/create-clarity-plugin).
 
 ## Getting Started
 
-At the moment, the only contribution point your feature can make is a custom dashboard widget.
-There will be more contribution points and `clarity-feature-toolkit` helper commands to create them soon,
-but for now, declare the custom dashboard widget in `package.json`:
+At the moment, the only contribution point your plugin can make is a dashboard widget.
+There will be more contribution points and `clarity-plugin-toolkit` helper commands to create them soon,
+but for now, declare the dashboard widget in `package.json`:
 
 ```json
 {
-  "name": "my-feature",
+  "name": "my-plugin",
   "version": "1.0.0",
   "contributes": {
     "client": {
@@ -19,32 +19,27 @@ but for now, declare the custom dashboard widget in `package.json`:
         }
       }
     }
-  },
+  }
 }
 ```
 
-Then create the custom widget file:
+Then create the widget file:
 
 ```tsx
 import * as React from 'react'
 import {
   useTagState,
   useDrop,
-  CustomDashboardWidgetProps,
-} from '@jcoreio/clarity-feature-api/client'
+  DashboardWidgetProps,
+} from '@jcoreio/clarity-plugin-api/client'
 
 type MyWidgetConfig = {
   tag?: string
 }
 
-export type MyWidgetProps = CustomDashboardWidgetProps<
-  MyWidgetConfig | undefined
->
+export type MyWidgetProps = DashboardWidgetProps<MyWidgetConfig | undefined>
 
-export default function MyWidget({
-  config,
-  setConfig,
-}: MyWidgetProps) {
+export default function MyWidget({ config, setConfig }: MyWidgetProps) {
   const tag = config?.tag
   const tagState = useTagState(tag)
   const [, connectDropTarget] = useDrop({
@@ -66,5 +61,5 @@ export default function MyWidget({
 
 ## Deploying
 
-Run `npm run deploy`, and `clarity-feature-toolkit` will run through the process of deploying to
+Run `npm run deploy`, and `clarity-plugin-toolkit` will run through the process of deploying to
 Clarity in an interactive CLI.

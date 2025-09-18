@@ -1,0 +1,128 @@
+{
+  "name": "@jcoreio/clarity-plugin-toolkit",
+  "version": "0.0.0-development",
+  "description": "CLI to develop and deploy plugins for Clarity",
+  "keywords": [
+    "jcore systems",
+    "jcore.io",
+    "clarity",
+    "test"
+  ],
+  "author": "Andy Edwards",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jcoreio/clarity-plugin-toolkit.git",
+    "directory": "packages/clarity-plugin-toolkit"
+  },
+  "bugs": {
+    "url": "https://github.com/jcoreio/clarity-plugin-toolkit/issues"
+  },
+  "homepage": "https://github.com/jcoreio/clarity-plugin-toolkit/tree/master/packages/clarity-plugin-toolkit",
+  "bin": {
+    "clarity-plugin-toolkit": "./dist/cli/index.js"
+  },
+  "exports": {
+    "./package.json": "./dist/package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "default": "./dist/client/index.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "default": "./dist/*.js"
+    }
+  },
+  "devDependencies": {
+    "@jcoreio/clarity-plugin-api": "workspace:*",
+    "@jcoreio/toolchain": "^5.5.5",
+    "@jcoreio/toolchain-esnext": "^5.5.5",
+    "@jcoreio/toolchain-mocha": "^5.5.5",
+    "@jcoreio/toolchain-react": "^5.5.5",
+    "@jcoreio/toolchain-semantic-release": "^5.5.5",
+    "@jcoreio/toolchain-typescript": "^5.5.5",
+    "@types/archiver": "^6.0.3",
+    "@types/babel__core": "^7.20.5",
+    "@types/chai": "^4.3.5",
+    "@types/fs-extra": "^11.0.4",
+    "@types/lodash": "^4.17.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.12.7",
+    "@types/p-event": "^3.0.0",
+    "@types/prompts": "^2.4.9",
+    "@types/semver": "^7.5.8",
+    "@types/tar-stream": "^3.1.4",
+    "@types/validate-npm-package-name": "^4.0.2",
+    "@types/yargs": "^17.0.32",
+    "chai": "^4.3.7",
+    "conventional-changelog-conventionalcommits": "^7.0.2",
+    "eslint": "^9.17.0",
+    "globals": "^16.0.0",
+    "lint-staged": "^15.2.2",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
+    "prettier": "^3.4.2",
+    "react": "^18.2.0",
+    "typescript": "^5.1.0",
+    "zod": "^3.25.76"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "tc": "toolchain",
+    "toolchain": "toolchain",
+    "test": "toolchain test",
+    "prepublishOnly": "echo This package is meant to be published by semantic-release from the dist build directory. && exit 1"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "packageManager": "pnpm@10.6.5",
+  "peerDependencies": {
+    "@jcoreio/clarity-plugin-api": "^2.0.0",
+    "react": "^18.2.0",
+    "zod": "^3.25.7"
+  },
+  "dependencies": {
+    "@babel/core": "^7.28.3",
+    "@babel/preset-env": "^7.24.5",
+    "@babel/preset-react": "^7.24.1",
+    "@babel/preset-typescript": "^7.24.1",
+    "@babel/register": "^7.28.3",
+    "@babel/runtime": "^7.26.0",
+    "@types/webpack": "^5.28.5",
+    "@vercel/nft": "^0.30.1",
+    "archiver": "^7.0.1",
+    "assert": "^2.1.0",
+    "babel-loader": "^9.1.3",
+    "chalk": "^4.1.2",
+    "css-loader": "^7.1.1",
+    "dedent-js": "^1.0.1",
+    "execa": "^5.1.1",
+    "find-up": "^5.0.0",
+    "fs-extra": "^11.2.0",
+    "gitignore-fs": "^2.2.2",
+    "glob": "^10.3.12",
+    "json-loader": "^0.5.7",
+    "lodash": "^4.17.21",
+    "open": "^8.0.0",
+    "p-event": "^4.2.0",
+    "p-map": "^7.0.3",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
+    "prompts": "^2.4.2",
+    "semver": "^7.6.0",
+    "style-loader": "^4.0.0",
+    "tar-stream": "^3.1.7",
+    "validate-npm-package-name": "^5.0.0",
+    "webpack": "^5.91.0",
+    "yargs": "^17.7.2",
+    "zod-route-schemas": "^2.0.0"
+  },
+  "@jcoreio/toolchain": {
+    "migratedVersion": "5.5.5"
+  }
+}

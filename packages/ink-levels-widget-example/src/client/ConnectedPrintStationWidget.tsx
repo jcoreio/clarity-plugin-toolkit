@@ -2,18 +2,17 @@ import * as React from 'react'
 import PrintStationWidget from './PrintStationWidget'
 import z from 'zod'
 import {
-  CustomDashboardWidgetProps,
+  DashboardWidgetProps,
   useDrop,
   useTagState,
-} from '@jcoreio/clarity-feature-api/client'
+} from '@jcoreio/clarity-plugin-api/client'
 
 const ConfigSchema = z.object({
   baseTag: z.string().optional(),
 })
 type Config = z.output<typeof ConfigSchema>
 
-export type ConnectedPrintStationWidgetProps =
-  CustomDashboardWidgetProps<Config>
+export type ConnectedPrintStationWidgetProps = DashboardWidgetProps<Config>
 
 export default function ConnectedPrintStationWidget({
   config,
@@ -49,8 +48,8 @@ export default function ConnectedPrintStationWidget({
   const tagValue = (key: keyof typeof tagStates) => tagStates[key].data?.v
   const statusValue = (key: keyof typeof tagStates) => {
     const value = tagValue(key)
-    return value === 'active' || value === 'idle' || value === 'error'
-      ? value
+    return value === 'active' || value === 'idle' || value === 'error' ?
+        value
       : undefined
   }
   const numberValue = (key: keyof typeof tagStates) => {

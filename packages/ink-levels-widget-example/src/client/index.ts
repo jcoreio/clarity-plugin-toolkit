@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ClientFeatureContributions } from '@jcoreio/clarity-feature-api/client'
+import { ClientPluginContributions } from '@jcoreio/clarity-plugin-api/client'
 
 export default {
   dashboardWidgets: {
@@ -8,4 +8,4 @@ export default {
       component: React.lazy(() => import('./ConnectedPrintStationWidget')),
     },
   },
-} satisfies ClientFeatureContributions
+} satisfies ClientPluginContributions

@@ -1,4 +1,4 @@
-import { ServerFeatureContributions } from '@jcoreio/clarity-feature-api/server'
+import { ServerPluginContributions } from '@jcoreio/clarity-plugin-api/server'
 import express from 'express'
 import { message } from './constants.js'
 
@@ -11,4 +11,4 @@ export default (() => {
   return {
     api,
   }
-}) satisfies ServerFeatureContributions
+}) satisfies ServerPluginContributions

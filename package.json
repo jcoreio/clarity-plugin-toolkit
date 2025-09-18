@@ -1,8 +1,8 @@
 {
-  "name": "@jcoreio/clarity-feature-toolkit-monorepo",
+  "name": "@jcoreio/clarity-plugin-toolkit-monorepo",
   "version": "0.0.0-development",
   "private": true,
-  "description": "development and deploy CLI for custom Clarity features",
+  "description": "development and deploy CLI for Clarity plugins",
   "keywords": [],
   "author": "Andy Edwards",
   "license": "MIT",
