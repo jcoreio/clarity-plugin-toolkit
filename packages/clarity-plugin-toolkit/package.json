@@ -82,7 +82,7 @@
   },
   "packageManager": "pnpm@10.6.5",
   "peerDependencies": {
-    "@jcoreio/clarity-plugin-api": "^2.0.0",
+    "@jcoreio/clarity-plugin-api": "^1.0.0-beta",
     "react": "^18.2.0",
     "zod": "^3.25.7"
   },
