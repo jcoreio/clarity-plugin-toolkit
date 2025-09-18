@@ -36,7 +36,7 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
   yargs.usage('$0 deploy').option('env', {
     type: 'string',
     array: true,
-    default: ['development'],
+    default: ['production'],
   })
 
 export async function handler({
