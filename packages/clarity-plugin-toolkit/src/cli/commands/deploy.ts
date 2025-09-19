@@ -20,6 +20,7 @@ import { isReadable } from '../../util/isReadable'
 import { copyReadable } from '../../util/copyReadable'
 import semver from 'semver'
 import { mapExports } from '../../util/mapExports'
+import chalk from 'chalk'
 
 export const command = 'deploy'
 export const description = `build (if necessary) and deploy to Clarity`
@@ -51,7 +52,7 @@ export async function handler({
 
   // eslint-disable-next-line no-console
   console.error(
-    `Deploying ${packageJson.name}@${packageJson.version} to ${clarityUrl}...`
+    `🚀 Deploying ${packageJson.name}@${packageJson.version} to ${clarityUrl}...`
   )
 
   const doUpload = async ({
@@ -191,7 +192,9 @@ export async function handler({
 
     if (uploadResponse.ok) {
       // eslint-disable-next-line no-console
-      console.error(`Deployed ${packageJson.name}@${packageJson.version}!`)
+      console.error(
+        `${chalk.greenBright('✔')} Deployed ${packageJson.name}@${packageJson.version}!`
+      )
     } else {
       if (
         uploadResponse.headers
@@ -205,7 +208,7 @@ export async function handler({
             name: 'overwrite',
             type: 'confirm',
             initial: false,
-            message: `Plugin ${packageJson.name}@${packageJson.version} already exists.  Overwrite?`,
+            message: `⚠️ Plugin ${packageJson.name}@${packageJson.version} already exists.  Overwrite?`,
           })
           if (overwrite) await doUpload({ overwrite: true })
           return
@@ -214,6 +217,10 @@ export async function handler({
         console.error(body)
         return
       }
+      // eslint-disable-next-line no-console
+      console.error(
+        `${chalk.redBright('✘')} Upload failed with status ${uploadResponse.status}`
+      )
       const body = await uploadResponse.text()
       // eslint-disable-next-line no-console
       console.error(body)
