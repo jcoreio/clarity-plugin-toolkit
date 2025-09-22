@@ -21,12 +21,15 @@ import { copyReadable } from '../../util/copyReadable'
 import semver from 'semver'
 import { mapExports } from '../../util/mapExports'
 import chalk from 'chalk'
+import { fetchWithSignature } from '../../util/fetchWithSignature'
 
 export const command = 'deploy'
 export const description = `build (if necessary) and deploy to Clarity`
 
 type Options = {
   env?: string[]
+  setActive?: boolean
+  restartServices?: boolean
 }
 
 const ErrorResponseSchema = z.object({
@@ -34,14 +37,26 @@ const ErrorResponseSchema = z.object({
 })
 
 export const builder = (yargs: yargs.Argv<Options>): any =>
-  yargs.usage('$0 deploy').option('env', {
-    type: 'string',
-    array: true,
-    default: ['production'],
-  })
+  yargs
+    .usage('$0 deploy')
+    .option('env', {
+      type: 'string',
+      array: true,
+      default: ['production'],
+    })
+    .option('setActive', {
+      type: 'boolean',
+      demandOption: false,
+    })
+    .option('restartServices', {
+      type: 'boolean',
+      demandOption: false,
+    })
 
 export async function handler({
   env,
+  setActive,
+  restartServices,
 }: yargs.Arguments<Options>): Promise<void> {
   const { packageJson, projectDir, clientAssetsFile, serverTarball } =
     await getProject()
@@ -221,9 +236,48 @@ export async function handler({
       console.error(
         `${chalk.redBright('✘')} Upload failed with status ${uploadResponse.status}`
       )
-      const body = await uploadResponse.text()
       // eslint-disable-next-line no-console
-      console.error(body)
+      console.error(
+        await uploadResponse
+          .text()
+          .catch(() => '(failed to get error response text)')
+      )
+      return
+    }
+
+    if (setActive) {
+      // eslint-disable-next-line no-console
+      console.error(
+        `🔄 setting deployed version to active${restartServices ? ` and restarting services` : ''}...`
+      )
+      const { name, version } = packageJson
+      const res = await fetchWithSignature(
+        new URL(`/api/plugins/${encodeURIComponent(name)}/active`, clarityUrl),
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            version,
+            ...(restartServices ? { restartServices } : {}),
+          }),
+        },
+        signingKey
+      )
+      if (res.ok) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `${chalk.greenBright('✔')} Set ${packageJson.name}@${packageJson.version} active!`
+        )
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(
+          `${chalk.redBright('✘')} set active failed with status ${res.status}:`
+        )
+        // eslint-disable-next-line no-console
+        console.error(
+          await res.text().catch(() => '(failed to get error response text)')
+        )
+      }
     }
   }
   await doUpload()
