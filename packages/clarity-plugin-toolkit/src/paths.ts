@@ -11,6 +11,7 @@ export const paths = (projectDir: string) => {
     clarityPluginToolkitDir,
     emptyEntryFile: path.join(clarityPluginToolkitDir, 'empty.js'),
     distDir,
+    distPackageJsonFile: path.join(distDir, 'package.json'),
     distClientDir: path.join(distDir, 'client'),
     distServerDir,
     clientAssetsFile: path.join(clarityPluginToolkitDir, 'client-assets.json'),
