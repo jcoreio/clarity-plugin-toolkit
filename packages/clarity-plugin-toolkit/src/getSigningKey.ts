@@ -7,6 +7,7 @@ import { getClarityUrl } from './getClarityUrl'
 import dedent from 'dedent-js'
 import open from 'open'
 import promptAndSetSigningKey from './promptAndSetSigningKey'
+import chalk from 'chalk'
 
 export const getSigningKey = once(
   async (): Promise<{ id: number; privateKey: crypto.KeyObject }> => {
@@ -25,7 +26,7 @@ export const getSigningKey = once(
     console.error(dedent`
 
       To deploy, you will need to create a signing key in Clarity.
-      Press enter to open ${signingUrl} in your default browser;
+      Press enter to open ${chalk.underline(signingUrl)} in your default browser;
       Once you have created and copied a signing key, come back here
       to paste it.
 

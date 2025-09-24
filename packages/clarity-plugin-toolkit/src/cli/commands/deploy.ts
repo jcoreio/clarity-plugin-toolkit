@@ -21,15 +21,16 @@ import { copyReadable } from '../../util/copyReadable'
 import semver from 'semver'
 import { mapExports } from '../../util/mapExports'
 import chalk from 'chalk'
-import { fetchWithSignature } from '../../util/fetchWithSignature'
+import { confirm } from '../../util/confirm'
+import dedent from 'dedent-js'
+import open from 'open'
+import { isInteractive } from '../../util/isInteractive'
 
 export const command = 'deploy'
 export const description = `build (if necessary) and deploy to Clarity`
 
 type Options = {
   env?: string[]
-  setActive?: boolean
-  restartServices?: boolean
 }
 
 const ErrorResponseSchema = z.object({
@@ -55,8 +56,6 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
 
 export async function handler({
   env,
-  setActive,
-  restartServices,
 }: yargs.Arguments<Options>): Promise<void> {
   const { packageJson, projectDir, clientAssetsFile, serverTarball } =
     await getProject()
@@ -245,37 +244,25 @@ export async function handler({
       return
     }
 
-    if (setActive) {
+    if (isInteractive) {
+      const activateUrl = new URL(
+        `/superadmin/plugins/${encodeURIComponent(packageJson.name)}`,
+        clarityUrl
+      )
+
       // eslint-disable-next-line no-console
-      console.error(
-        `🔄 setting deployed version to active${restartServices ? ` and restarting services` : ''}...`
-      )
-      const { name, version } = packageJson
-      const res = await fetchWithSignature(
-        new URL(`/api/plugins/${encodeURIComponent(name)}/active`, clarityUrl),
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            version,
-            ...(restartServices ? { restartServices } : {}),
-          }),
-        },
-        signingKey
-      )
-      if (res.ok) {
-        // eslint-disable-next-line no-console
-        console.error(
-          `${chalk.greenBright('✔')} Set ${packageJson.name}@${packageJson.version} active!`
-        )
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(
-          `${chalk.redBright('✘')} set active failed with status ${res.status}:`
-        )
-        // eslint-disable-next-line no-console
-        console.error(
-          await res.text().catch(() => '(failed to get error response text)')
+      console.error(dedent`
+
+      You will need to activate this plugin version in Clarity (requires superadmin access).
+      Press enter to open ${chalk.underline(activateUrl)} in your default browser.
+      Then click on version ${chalk.bold(packageJson.version)} in the list that appears to open
+      a dropdown menu, and click ${chalk.bold('Activate')} in the menu.
+
+    `)
+
+      if (await confirm(`Open ${activateUrl}?`, { initial: true })) {
+        await open(activateUrl.toString(), { wait: false }).then((child) =>
+          child.unref()
         )
       }
     }
