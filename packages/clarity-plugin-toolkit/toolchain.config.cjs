@@ -6,6 +6,7 @@ module.exports = {
   outputEsm: false, // disables ESM output (default: true)
   // esWrapper: true, // outputs ES module wrappers for CJS modules (default: false)
   scripts: {
+    pretest: 'tc build',
     'build:smoke-test': {
       description: 'no-op',
       run: () => {},
