@@ -1,0 +1,22 @@
+{
+  "name": "testpkg",
+  "version": "0.1.0",
+  "private": true,
+  "contributes": {
+    "client": "./src/client/index.tsx"
+  },
+  "scripts": {
+    "clean": "clarity-plugin-toolkit clean",
+    "build": "clarity-plugin-toolkit build",
+    "deploy": "clarity-plugin-toolkit deploy",
+    "clarity-plugin-toolkit": "clarity-plugin-toolkit"
+  },
+  "dependencies": {
+    "@jcoreio/clarity-plugin-api": "^1.0.0-beta",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@jcoreio/clarity-plugin-toolkit": "^1.0.0-beta",
+    "webpack": "^5"
+  }
+}

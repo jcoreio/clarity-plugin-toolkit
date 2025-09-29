@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@jcoreio/clarity-plugin-api": "workspace:*",
-    "@jcoreio/clarity-plugin-toolkit": "workspace:*",
+    "@jcoreio/clarity-plugin-toolkit": "workspace:0.0.0-development",
     "body-parser": "^2.2.0",
     "express": "^4.21.2",
     "react": "^18.2.0",

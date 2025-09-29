@@ -8,6 +8,9 @@ import dedent from 'dedent-js'
 import chalk from 'chalk'
 import validateNpmPackageName from 'validate-npm-package-name'
 import { getPackageManager } from '../../getPackageManager'
+import { TemplateOptions } from '../../templates/TemplateOptions'
+import { makePackageJson } from '../../templates/packageJson'
+import { files } from '../../templates/files'
 
 export const command = '$0'
 export const description = `create a new Clarity plugin project`
@@ -20,7 +23,7 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
   yargs.usage('$0 create')
 
 export async function handler(): Promise<void> {
-  const { name, useTypescript, useEslint } = await prompt([
+  const { name, useTypescript, useToolchain } = await prompt([
     {
       type: 'text',
       name: 'name',
@@ -44,13 +47,34 @@ export async function handler(): Promise<void> {
     },
     {
       type: 'toggle',
-      name: 'useEslint',
-      message: 'Do you want to use ESLint?',
-      initial: true,
+      name: 'useToolchain',
+      message: 'Use @jcoreio/toolchain?',
+      initial: false,
       active: 'yes',
       inactive: 'no',
     },
   ])
+  const { useEslint, usePrettier } =
+    useToolchain ?
+      { useEslint: true, usePrettier: true }
+    : await prompt([
+        {
+          type: 'toggle',
+          name: 'useEslint',
+          message: 'Do you want to use ESLint?',
+          initial: true,
+          active: 'yes',
+          inactive: 'no',
+        },
+        {
+          type: 'toggle',
+          name: 'usePrettier',
+          message: 'Do you want to use Prettier?',
+          initial: true,
+          active: 'yes',
+          inactive: 'no',
+        },
+      ])
 
   const directory = path.basename(name)
 
@@ -60,243 +84,40 @@ export async function handler(): Promise<void> {
 
   process.chdir(cwd)
 
-  const packageJson = {
-    name,
-    version: '0.1.0',
-    private: true,
-    contributes: {
-      client: './src/client/index.tsx',
-    },
-    scripts: {
-      clean: 'clarity-plugin-toolkit clean',
-      build: 'clarity-plugin-toolkit build',
-      deploy: 'clarity-plugin-toolkit deploy',
-      'clarity-plugin-toolkit': 'clarity-plugin-toolkit',
-    },
-    dependencies: sortKeys({
-      '@jcoreio/clarity-plugin-api': '^3.0.0-beta',
-      react: '^18.2.0',
-    }),
-    devDependencies: sortKeys({
-      '@jcoreio/clarity-plugin-toolkit': '^2.0.0-beta',
-      webpack: '^5',
-      ...(useTypescript ?
-        {
-          '@babel/register': '^7.28.3',
-          '@types/react': '^18.2.0',
-          '@types/node': `^20`,
-          typescript: '^5',
-        }
-      : {}),
-      ...(useEslint ?
-        {
-          '@eslint/compat': '^1.3.2',
-          '@eslint/js': '^9.33.0',
-          eslint: '^9',
-          'eslint-plugin-react': '^7.37.5',
-          globals: '^16.0.0',
-          ...(useTypescript ?
-            {
-              'typescript-eslint': '^8.40.0',
-            }
-          : {}),
-        }
-      : {}),
-    }),
-  }
-
-  await fs.writeJson('package.json', packageJson, { spaces: 2 })
-
   const clarityPluginToolkitDir = '.clarity-plugin-toolkit'
 
-  const files = {
-    'README.md': dedent`
-      This is a [Clarity](https://www.jcore.io/clarity) plugin project bootstrapped with [\`create-clarity-plugin\`](https://github.com/jcoreio/clarity-plugin-toolkit/tree/master/packages/create-clarity-plugin).
-
-      ## Getting Started
-
-      At the moment, the only contribution point your plugin can make is a dashboard widget.
-      There will be more contribution points soon, but for now, declare the dashboard widget
-      in \`src/client/index.${useTypescript ? 'tsx' : 'js'}\`:
-
-      \`\`\`${useTypescript ? 'tsx' : 'js'}
-      ${
-        useTypescript ?
-          dedent`
-            import { type ClientPluginContributions } from '@jcoreio/clarity-plugin-toolkit/client'
-          ` + '\n'
-        : ''
-      }export default {
-        dashboardWidgets: {
-          MyWidget: {
-            displayName: 'MyWidget',
-            component: React.lazy(() => import('./MyWidget'))
-          }
-        }
-      }${useTypescript ? ' satisfies ClientPluginContributions' : ''}
-      \`\`\`
-
-      Then create the widget file:
-
-      \`\`\`${useTypescript ? 'tsx' : 'js'}
-      import * as React from 'react'
-      import {
-        useTagState,
-        useDrop,
-        DashboardWidgetProps,
-      } from '@jcoreio/clarity-plugin-api/client'
-
-      ${
-        useTypescript ?
-          dedent`
-            type MyWidgetConfig = {
-              tag?: string
-            }
-
-            export type MyWidgetProps = DashboardWidgetProps<
-              MyWidgetConfig | undefined
-            >
-          ` + '\n'
-        : ''
-      }
-      export default function MyWidget({
-        config,
-        setConfig,
-      }${useTypescript ? ': MyWidgetProps' : ''}) {
-        const tag = config?.tag
-        const tagState = useTagState(tag)
-        const [, connectDropTarget] = useDrop({
-          canDrop: ({ tag }) => tag != null,
-          drop: ({ tag }) => {
-            if (tag) setConfig({ tag })
-            return undefined
-          },
-        })
-        return (
-          <div ref={connectDropTarget}>
-            <h1>My Widget</h1>
-            <pre>{JSON.stringify(config, null, 2)}</pre>
-            <pre>{JSON.stringify(tagState, null, 2)}</pre>
-          </div>
-        )
-      }
-      \`\`\`
-
-      ## Deploying
-
-      Run \`npm run deploy\`, and \`clarity-plugin-toolkit\` will run through the process of deploying to
-      Clarity in an interactive CLI.
-    `,
-    '.gitignore': dedent`
-      node_modules
-      /${clarityPluginToolkitDir}
-    `,
-    ...(useTypescript ?
-      {
-        'src/client/index.tsx': dedent`
-          import { type ClientPluginContributions } from '@jcoreio/clarity-plugin-toolkit/client'
-
-          export default {
-            // add contributions here
-          } satisfies ClientPluginContributions
-        `,
-        'tsconfig.json': dedent`
-            {
-              "compilerOptions": {
-                "lib": ["dom", "dom.iterable", "esnext"],
-                "allowJs": true,
-                "skipLibCheck": true,
-                "strict": true,
-                "noEmit": true,
-                "esModuleInterop": true,
-                "module": "esnext",
-                "moduleResolution": "bundler",
-                "resolveJsonModule": true,
-                "isolatedModules": true,
-                "jsx": "preserve",
-                "incremental": true,
-              },
-              "include": ["**/*.tsx"],
-              "exclude": ["node_modules", ${JSON.stringify(
-                clarityPluginToolkitDir
-              )}]
-            }
-          `,
-        'webpack.config.ts': dedent`
-          import { makeWebpackConfig } from '@jcoreio/clarity-plugin-toolkit'
-
-          export default (
-            env: {[name in string]?: string},
-            argv: {[name in string]?: unknown}
-          ) => makeWebpackConfig(env, argv)
-        `,
-      }
-    : {
-        'src/client/index.js': dedent`
-          export default {
-            // add contributions here
-          }
-        `,
-        'webpack.config.mjs': dedent`
-          import { makeWebpackConfig } from '@jcoreio/clarity-plugin-toolkit'
-
-          export default (env, argv) => makeWebpackConfig(env, argv)
-        `,
-      }),
-    ...(useEslint ?
-      {
-        'eslint.config.mjs': dedent`
-          ${
-            useTypescript ?
-              dedent`
-                // @ts-check
-
-                import tseslint from 'typescript-eslint'
-              ` + '\n'
-            : `import { defineConfig } from 'eslint/config'\n`
-          }import eslint from '@eslint/js'
-          import globals from 'globals'
-          import reactPlugin from 'eslint-plugin-react'
-          import { includeIgnoreFile } from '@eslint/compat'
-          import { fileURLToPath } from 'node:url'
-
-          const gitignorePath = fileURLToPath(new URL('.gitignore', import.meta.url))
-
-          export default ${useTypescript ? 'tseslint.config(' : 'defineConfig(['}
-            eslint.configs.recommended,
-            ${
-              useTypescript ?
-                dedent`
-                  tseslint.configs.recommended,
-                ` + '\n'
-              : ''
-            }includeIgnoreFile(gitignorePath, 'Imported .gitignore patterns'),
-            {
-              files: ['./*.{js,mjs}'],
-              languageOptions: { globals: { ...globals.node } },
-            },
-            {
-              ...reactPlugin.configs.flat.recommended,
-              files: ['src/client/**/*.{js,jsx,mjs,cjs${useTypescript ? ',ts,tsx' : ''}'],
-              languageOptions: {
-                ...reactPlugin.configs.flat.recommended.languageOptions,
-                globals: { ...globals.serviceworker, ...globals.browser },
-              },
-            }
-          ${useTypescript ? ')' : '])'}
-        `,
-      }
-    : {}),
+  let toolchainVersion = ''
+  if (useToolchain) {
+    toolchainVersion = (
+      await execa('npm', ['view', '@jcoreio/toolchain', 'version'], {
+        stdio: 'pipe',
+      })
+    ).stdout
   }
+
+  const templateOptions: TemplateOptions = {
+    name,
+    useToolchain,
+    toolchainVersion,
+    useTypescript,
+    useEslint,
+    usePrettier,
+    clarityPluginToolkitDir,
+  }
+
+  const packageJson = makePackageJson(templateOptions)
   await Promise.all(
-    Object.entries(files).map(async ([name, content]) => {
-      const file = path.resolve(cwd, name)
-      await fs.mkdirs(path.dirname(file))
-      await fs.writeFile(file, content + '\n', 'utf8')
-    })
+    Object.entries(await files(templateOptions)).map(
+      async ([name, content]: [string, string | undefined]) => {
+        if (content == null) return
+        const file = path.resolve(cwd, name)
+        await fs.mkdirs(path.dirname(file))
+        await fs.writeFile(file, content + '\n', 'utf8')
+      }
+    )
   )
 
-  const packageManager = getPackageManager()
+  const packageManager = useToolchain ? 'pnpm' : getPackageManager()
 
   // eslint-disable-next-line no-console
   console.error(dedent`
@@ -321,6 +142,10 @@ export async function handler(): Promise<void> {
 
   await execa(packageManager, ['install'], execaOpts)
 
+  if (useToolchain) {
+    await execa('tc', ['migrate'], execaOpts)
+  }
+
   await execa('git', ['init'], execaOpts)
   await execa('git', ['add', '.'], execaOpts)
   await execa(
@@ -328,12 +153,4 @@ export async function handler(): Promise<void> {
     ['commit', '-m', `chore: initial commit from create-clarity-plugin`],
     execaOpts
   )
-}
-
-function sortKeys<T extends object>(obj: T): T {
-  return Object.fromEntries(
-    Object.keys(obj)
-      .sort()
-      .map((key) => [key, obj[key as keyof T]])
-  ) as T
 }
