@@ -13,6 +13,7 @@ import { parseSigningKey } from '../../getSigningKey'
 import crypto, { KeyObject } from 'crypto'
 import { pipeline } from 'stream/promises'
 import { PassThrough } from 'stream'
+import { makeSignaturesFilename } from '@jcoreio/clarity-plugin-api'
 
 export const command = 'pack'
 export const description = `pack code into a tarball for deployment`
@@ -167,7 +168,7 @@ export async function handler(): Promise<void> {
       )
     )
     archive.append(JSON.stringify(finalSignatures, null, 2), {
-      name: `package/signatures-${signingKey.id}.json`,
+      name: `package/${makeSignaturesFilename(signingKey.id)}`,
     })
   }
 

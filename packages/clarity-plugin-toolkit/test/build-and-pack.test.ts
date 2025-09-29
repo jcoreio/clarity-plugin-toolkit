@@ -9,6 +9,7 @@ import { getProjectBase } from '../src/getProject'
 import setSigningKey from '../src/setSigningKey'
 import crypto from 'crypto'
 import { pipeline } from 'stream/promises'
+import { makeSignaturesFilename } from '@jcoreio/clarity-plugin-api'
 
 const fixturesDir = path.resolve(__dirname, '..', '..', '..', 'fixtures')
 const fixtureDir = path.resolve(fixturesDir, 'test-plugin')
@@ -53,13 +54,13 @@ describe(`build and pack`, function () {
       )
     })
 
-    const signingKeyId = 2
+    const signatureVerificationKeyId = 2
 
     const privateKey = Buffer.concat([
       Buffer.alloc(4),
       privateKeyObject.export({ type: 'pkcs8', format: 'der' }),
     ])
-    privateKey.writeUint32BE(signingKeyId)
+    privateKey.writeUint32BE(signatureVerificationKeyId)
 
     await setSigningKey(privateKey.toString('base64'))
     await build.handler({ env: ['development'] })
@@ -82,11 +83,15 @@ describe(`build and pack`, function () {
         client: {
           entrypoints: ['client/entry.js'],
         },
-        signatureVerificationKeyId: 2,
+        signatureVerificationKeyId,
       },
     })
     const signatures = await fs.readJson(
-      path.resolve(unpackDir, 'package', `signatures-${signingKeyId}.json`)
+      path.resolve(
+        unpackDir,
+        'package',
+        makeSignaturesFilename(signatureVerificationKeyId)
+      )
     )
     for (const [file, signature] of Object.entries(signatures)) {
       const absFile = path.resolve(unpackDir, 'package', file)

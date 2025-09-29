@@ -1,4 +1,5 @@
 import path from 'path'
+import fs from 'fs-extra'
 
 export const paths = (projectDir: string) => {
   const clarityPluginToolkitDir = path.resolve(
@@ -6,17 +7,19 @@ export const paths = (projectDir: string) => {
     '.clarity-plugin-toolkit'
   )
   const distDir = path.join(clarityPluginToolkitDir, 'dist')
-  const distServerDir = path.join(distDir, 'server')
+  let clientDirName = 'client'
+  let i = 0
+  while (fs.pathExistsSync(path.join(projectDir, clientDirName))) {
+    clientDirName = `_client${i++ || ''}`
+  }
   return {
     clarityPluginToolkitDir,
     emptyEntryFile: path.join(clarityPluginToolkitDir, 'empty.js'),
-    distDir,
-    distPackageJsonFile: path.join(distDir, 'package.json'),
-    distClientDir: path.join(distDir, 'client'),
-    distServerDir,
     clientAssetsFile: path.join(clarityPluginToolkitDir, 'client-assets.json'),
     envFile: path.join(clarityPluginToolkitDir, 'env.json'),
-    serverTarball: path.join(distServerDir, 'bundle.tgz'),
     signingKeyFile: path.join(clarityPluginToolkitDir, 'clarity-signing-key'),
+    distDir,
+    distPackageJsonFile: path.join(distDir, 'package.json'),
+    distClientDir: path.join(distDir, clientDirName),
   }
 }
