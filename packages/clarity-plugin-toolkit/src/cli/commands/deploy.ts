@@ -12,6 +12,7 @@ import { confirm } from '../../util/confirm'
 import dedent from 'dedent-js'
 import open from 'open'
 import { isInteractive } from '../../util/isInteractive'
+import { defaultWebpackEnv } from '../../util/defaultWebapckEnv'
 
 export const command = 'deploy'
 export const description = `build (if necessary) and deploy to Clarity`
@@ -31,7 +32,7 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
     .option('env', {
       type: 'string',
       array: true,
-      default: ['production'],
+      default: defaultWebpackEnv,
     })
     .option('overwrite', {
       type: 'boolean',
@@ -119,7 +120,10 @@ export async function handler({
       process.exit(1)
     }
 
-    if (isInteractive) {
+    if (
+      isInteractive &&
+      !parseInt(process.env.CLARITY_PLUGIN_TOOLKIT_NO_ACTIVATE_PROMPT || '0')
+    ) {
       const activateUrl = new URL(
         `/superadmin/plugins/${encodeURIComponent(packageJson.name)}`,
         clarityUrl

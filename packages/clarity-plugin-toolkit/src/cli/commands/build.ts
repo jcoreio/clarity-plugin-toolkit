@@ -8,6 +8,7 @@ import { cloneDeep } from 'lodash'
 import path from 'path'
 import fs from 'fs-extra'
 import { AssetsSchema } from '../../client/AssetsSchema'
+import { defaultWebpackEnv } from '../../util/defaultWebapckEnv'
 
 export const command = 'build'
 export const description = `transpile/bundle code for deployment`
@@ -20,7 +21,7 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
   yargs.usage('$0 build').option('env', {
     type: 'string',
     array: true,
-    default: ['production'],
+    default: defaultWebpackEnv,
   })
 
 export async function handler({
