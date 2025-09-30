@@ -442,6 +442,9 @@ importers:
       fs-extra:
         specifier: ^11.2.0
         version: 11.3.0
+      prettier:
+        specifier: ^3.4.2
+        version: 3.5.3
       prompts:
         specifier: ^2.4.2
         version: 2.4.2
@@ -509,9 +512,6 @@ importers:
       nyc:
         specifier: ^15.1.0
         version: 15.1.0
-      prettier:
-        specifier: ^3.4.2
-        version: 3.5.3
       typescript:
         specifier: ^5.1.0
         version: 5.9.2

@@ -1,4 +1,6 @@
 export { ServerPluginContributions } from './ServerPluginContributions'
+export { WebappPluginContributions } from './WebappPluginContributions'
+export { MigratePluginContributions } from './MigratePluginContributions'
 export { getAPIContext } from './getAPIContext'
 export type { APIContext } from './APIContext'
 export type { AppContext } from './AppContext'
