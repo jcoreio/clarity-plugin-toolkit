@@ -2,7 +2,6 @@ import * as yargs from 'yargs'
 import { getClarityUrl } from '../../getClarityUrl'
 import fs from 'fs-extra'
 import z from 'zod'
-import prompt from 'prompts'
 import getProject from '../../getProject'
 import * as build from './build'
 import * as pack from './pack'
@@ -19,6 +18,7 @@ export const description = `build (if necessary) and deploy to Clarity`
 
 type Options = {
   env?: string[]
+  overwrite?: boolean
 }
 
 const ErrorResponseSchema = z.object({
@@ -33,17 +33,14 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
       array: true,
       default: ['production'],
     })
-    .option('setActive', {
+    .option('overwrite', {
       type: 'boolean',
-      demandOption: false,
-    })
-    .option('restartServices', {
-      type: 'boolean',
-      demandOption: false,
+      default: false,
     })
 
 export async function handler({
   env,
+  overwrite,
 }: yargs.Arguments<Options>): Promise<void> {
   const { packageJson, distTarball } = await getProject()
   if (await shouldBuild({ env })) await build.handler({ env })
@@ -90,18 +87,24 @@ export async function handler({
         const body = await uploadResponse.json()
         const parsed = ErrorResponseSchema.safeParse(body)
         if (parsed.success && parsed.data.code === 'API_ERROR_ALREADY_EXISTS') {
-          const { overwrite } = await prompt({
-            name: 'overwrite',
-            type: 'confirm',
-            initial: false,
-            message: `⚠️ Plugin ${packageJson.name}@${packageJson.version} already exists.  Overwrite?`,
-          })
-          if (overwrite) await doUpload({ overwrite: true })
-          return
+          const overwrite = await confirm(
+            `⚠️ Plugin ${packageJson.name}@${packageJson.version} already exists.  Overwrite?`,
+            { initial: false, valueIfNotInteractive: false }
+          )
+          if (overwrite) {
+            await doUpload({ overwrite: true })
+            return
+          } else if (!isInteractive) {
+            // eslint-disable-next-line no-console
+            console.error(
+              `${chalk.redBright('✘')} Plugin ${packageJson.name}@${packageJson.version} already exists`
+            )
+          }
+          process.exit(1)
         }
         // eslint-disable-next-line no-console
         console.error(body)
-        return
+        process.exit(1)
       }
       // eslint-disable-next-line no-console
       console.error(
@@ -113,7 +116,7 @@ export async function handler({
           .text()
           .catch(() => '(failed to get error response text)')
       )
-      return
+      process.exit(1)
     }
 
     if (isInteractive) {
@@ -139,5 +142,5 @@ export async function handler({
       }
     }
   }
-  await doUpload()
+  await doUpload({ overwrite })
 }
