@@ -62,17 +62,22 @@ export async function handler({
     const url = new URL('/api/plugins/upload', clarityUrl)
     if (overwrite) url.searchParams.set('overwrite', 'true')
 
-    const [uploadResponse] = await Promise.all([
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-tar',
-          'Content-Encoding': 'gzip',
-        },
-        body: fs.createReadStream(distTarball),
-        duplex: 'half',
-      }),
-    ])
+    const uploadResponse = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-tar',
+        'Content-Encoding': 'gzip',
+      },
+      body: fs.createReadStream(distTarball),
+      duplex: 'half',
+    }).catch((error: unknown) => {
+      // eslint-disable-next-line no-console
+      console.error(
+        `${chalk.redBright('✘')} Failed to upload:`,
+        error instanceof Error ? error.message : error
+      )
+      process.exit(1)
+    })
 
     if (uploadResponse.ok) {
       // eslint-disable-next-line no-console
