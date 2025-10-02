@@ -71,10 +71,21 @@ export async function handler({
       body: fs.createReadStream(distTarball),
       duplex: 'half',
     }).catch((error: unknown) => {
+      if (
+        error != null &&
+        typeof error === 'object' &&
+        'cause' in error &&
+        error.cause instanceof Error
+      ) {
+        error = error.cause
+      }
       // eslint-disable-next-line no-console
       console.error(
-        `${chalk.redBright('✘')} Failed to upload:`,
-        error instanceof Error ? error.message : error
+        chalk`{redBright ✘} {red Failed to upload to Clarity:}`,
+        error instanceof AggregateError ?
+          chalk.red(error.errors.map((error) => error.message).join('; '))
+        : error instanceof Error ? chalk.red(error.message)
+        : error
       )
       process.exit(1)
     })
@@ -82,7 +93,7 @@ export async function handler({
     if (uploadResponse.ok) {
       // eslint-disable-next-line no-console
       console.error(
-        `${chalk.greenBright('✔')} Deployed ${packageJson.name}@${packageJson.version}!`
+        chalk`{greenBright ✔ Deployed ${packageJson.name}@${packageJson.version}!}`
       )
     } else {
       if (
@@ -94,7 +105,9 @@ export async function handler({
         const parsed = ErrorResponseSchema.safeParse(body)
         if (parsed.success && parsed.data.code === 'API_ERROR_ALREADY_EXISTS') {
           const overwrite = await confirm(
-            `⚠️ Plugin ${packageJson.name}@${packageJson.version} already exists.  Overwrite?`,
+            chalk.yellow(
+              `⚠️ Plugin ${packageJson.name}@${packageJson.version} already exists.  Overwrite?`
+            ),
             { initial: false, valueIfNotInteractive: false }
           )
           if (overwrite) {
@@ -103,7 +116,7 @@ export async function handler({
           } else if (!isInteractive) {
             // eslint-disable-next-line no-console
             console.error(
-              `${chalk.redBright('✘')} Plugin ${packageJson.name}@${packageJson.version} already exists`
+              chalk`{redBright ✘} {red Plugin ${packageJson.name}@${packageJson.version} already exists}`
             )
           }
           process.exit(1)
@@ -114,13 +127,15 @@ export async function handler({
       }
       // eslint-disable-next-line no-console
       console.error(
-        `${chalk.redBright('✘')} Upload failed with status ${uploadResponse.status}`
+        chalk`{redBright ✘} {red Upload failed with status ${uploadResponse.status}}`
       )
       // eslint-disable-next-line no-console
       console.error(
-        await uploadResponse
-          .text()
-          .catch(() => '(failed to get error response text)')
+        chalk.red(
+          await uploadResponse
+            .text()
+            .catch(() => '(failed to get error response text)')
+        )
       )
       process.exit(1)
     }

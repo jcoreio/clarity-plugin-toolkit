@@ -9,7 +9,7 @@ export default async function promptAndSetSigningKey(): Promise<{
 }> {
   const { key } = await prompt({
     name: 'key',
-    type: 'password',
+    type: 'invisible',
     message: 'Paste signing key:',
     validate: (value: any) => {
       if (typeof value !== 'string') return 'is required'
