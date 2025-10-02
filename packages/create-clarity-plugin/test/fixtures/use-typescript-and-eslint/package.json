@@ -13,14 +13,14 @@
     "clarity-plugin-toolkit": "clarity-plugin-toolkit"
   },
   "dependencies": {
-    "@jcoreio/clarity-plugin-api": "^1.0.0",
+    "@jcoreio/clarity-plugin-api": "^1",
     "react": "^18.2.0"
   },
   "devDependencies": {
     "@babel/register": "^7.28.3",
     "@eslint/compat": "^1.3.2",
     "@eslint/js": "^9.33.0",
-    "@jcoreio/clarity-plugin-toolkit": "^1.0.0",
+    "@jcoreio/clarity-plugin-toolkit": "^1",
     "@types/node": "^20",
     "@types/react": "^18.2.0",
     "eslint": "^9",

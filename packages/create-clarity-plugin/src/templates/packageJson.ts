@@ -7,8 +7,6 @@ export function makePackageJson({
   useTypescript,
   useEslint,
   usePrettier,
-  pluginApiVersion,
-  pluginToolkitVersion,
 }: TemplateOptions) {
   const checks = []
   if (usePrettier) checks.push('prettier -c .')
@@ -37,11 +35,11 @@ export function makePackageJson({
       'clarity-plugin-toolkit': 'clarity-plugin-toolkit',
     },
     dependencies: sortKeys({
-      '@jcoreio/clarity-plugin-api': `^${pluginApiVersion}`,
+      '@jcoreio/clarity-plugin-api': `^1`,
       react: '^18.2.0',
     }),
     devDependencies: sortKeys({
-      '@jcoreio/clarity-plugin-toolkit': `^${pluginToolkitVersion}`,
+      '@jcoreio/clarity-plugin-toolkit': `^1`,
       webpack: '^5',
       '@babel/register': '^7.28.3', // needed for TS webpack config
       ...(useToolchain ?
