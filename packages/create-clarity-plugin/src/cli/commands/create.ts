@@ -95,6 +95,17 @@ export async function handler(): Promise<void> {
     ).stdout
   }
 
+  const [pluginApiVersion, pluginToolkitVersion] = await Promise.all(
+    ['@jcoreio/clarity-plugin-api', '@jcoreio/clarity-plugin-toolkit'].map(
+      async (pkg) =>
+        (
+          await execa('npm', ['view', pkg, 'version'], {
+            stdio: 'pipe',
+          })
+        ).stdout
+    )
+  )
+
   const templateOptions: TemplateOptions = {
     name,
     useToolchain,
@@ -103,6 +114,8 @@ export async function handler(): Promise<void> {
     useEslint,
     usePrettier,
     clarityPluginToolkitDir,
+    pluginApiVersion,
+    pluginToolkitVersion,
   }
 
   const packageJson = makePackageJson(templateOptions)

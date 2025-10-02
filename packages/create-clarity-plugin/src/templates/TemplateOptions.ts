@@ -6,4 +6,6 @@ export type TemplateOptions = {
   useEslint?: boolean
   usePrettier?: boolean
   clarityPluginToolkitDir: string
+  pluginApiVersion: string
+  pluginToolkitVersion: string
 }

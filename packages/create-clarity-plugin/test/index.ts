@@ -19,6 +19,8 @@ for (const fixture of fixtures) {
       useTypescript: false,
       useEslint: false,
       usePrettier: false,
+      pluginApiVersion: '1.0.0',
+      pluginToolkitVersion: '1.0.0',
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       ...require(path.join(fixtureDir, '_options.js')),
     }

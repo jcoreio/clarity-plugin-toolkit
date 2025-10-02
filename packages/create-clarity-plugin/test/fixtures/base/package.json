@@ -12,11 +12,12 @@
     "clarity-plugin-toolkit": "clarity-plugin-toolkit"
   },
   "dependencies": {
-    "@jcoreio/clarity-plugin-api": "^1.0.0-beta",
+    "@jcoreio/clarity-plugin-api": "^1.0.0",
     "react": "^18.2.0"
   },
   "devDependencies": {
-    "@jcoreio/clarity-plugin-toolkit": "^1.0.0-beta",
+    "@babel/register": "^7.28.3",
+    "@jcoreio/clarity-plugin-toolkit": "^1.0.0",
     "webpack": "^5"
   }
 }
