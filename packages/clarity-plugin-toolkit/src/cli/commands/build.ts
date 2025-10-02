@@ -69,6 +69,7 @@ export async function handler({
       mappedExports
     : undefined
 
+  await fs.mkdirs(path.dirname(distPackageJsonFile))
   await fs.writeJson(distPackageJsonFile, distPackageJson, { spaces: 2 })
   // eslint-disable-next-line no-console
   console.error(`wrote ${path.relative(process.cwd(), distPackageJsonFile)}`)
