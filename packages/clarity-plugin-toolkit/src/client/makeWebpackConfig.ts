@@ -219,6 +219,10 @@ export async function makeWebpackConfig(
           process: require.resolve('process/browser'),
         },
         extensions,
+        extensionAlias: {
+          '.js': ['.tsx', '.ts', '.js'],
+          '.mjs': ['.mtsx', '.mts', '.mjs'],
+        },
       },
       module: { rules: rules({ targets: '> 0.25%, not dead' }) },
       plugins: [
