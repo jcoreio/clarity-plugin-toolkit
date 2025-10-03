@@ -30,4 +30,9 @@ export default tseslint.config(
       },
     },
   },
+  {
+    rules: {
+      "react/prop-types": 0,
+    },
+  },
 );

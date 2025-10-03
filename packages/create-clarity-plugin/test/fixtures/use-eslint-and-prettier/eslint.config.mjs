@@ -29,5 +29,10 @@ export default defineConfig([
       },
     },
   },
+  {
+    rules: {
+      "react/prop-types": 0,
+    },
+  },
   eslintConfigPrettier,
 ]);
