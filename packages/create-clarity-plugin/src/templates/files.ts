@@ -50,6 +50,7 @@ export async function files(templateOptions: TemplateOptions) {
       content =
         (
           await transformAsync(content, {
+            babelrc: false,
             filename: file,
             plugins: /\.tsx$/.test(file) ? ['@babel/plugin-syntax-jsx'] : [],
             presets: [
