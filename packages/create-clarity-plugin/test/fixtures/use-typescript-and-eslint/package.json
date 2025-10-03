@@ -2,9 +2,14 @@
   "name": "testpkg",
   "version": "0.1.0",
   "private": true,
-  "contributes": {
-    "client": "./src/client/index.tsx"
+  "clarity": {
+    "client": {
+      "entrypoints": [
+        "./src/client/index.tsx"
+      ]
+    }
   },
+  "exports": {},
   "scripts": {
     "check": "eslint && tsc --noEmit",
     "clean": "clarity-plugin-toolkit clean",
@@ -14,7 +19,8 @@
   },
   "dependencies": {
     "@jcoreio/clarity-plugin-api": "^1",
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "zod": "^3"
   },
   "devDependencies": {
     "@babel/register": "^7.28.3",
@@ -28,6 +34,7 @@
     "globals": "^16.0.0",
     "typescript": "^5",
     "typescript-eslint": "^8.40.0",
-    "webpack": "^5"
+    "webpack": "^5",
+    "webpack-cli": "^6"
   }
 }

@@ -8,7 +8,7 @@ import dedent from 'dedent-js'
 import chalk from 'chalk'
 import validateNpmPackageName from 'validate-npm-package-name'
 import { getPackageManager } from '../../getPackageManager'
-import { TemplateOptions } from '../../templates/TemplateOptions'
+import { Stub, TemplateOptions } from '../../templates/TemplateOptions'
 import { makePackageJson } from '../../templates/packageJson'
 import { files } from '../../templates/files'
 
@@ -76,6 +76,48 @@ export async function handler(): Promise<void> {
         },
       ])
 
+  const stubs: Stub[] = (
+    await prompt([
+      {
+        type: 'multiselect',
+        name: 'stubs',
+        message: 'Select example stubs to create:',
+        choices: [
+          {
+            value: 'dashboardWidget',
+            title: 'Dashboard Widget',
+            selected: true,
+          },
+          {
+            value: 'organizationView',
+            title: 'Organization View',
+            selected: true,
+          },
+          {
+            value: 'expressApi',
+            title: 'Express API',
+            selected: false,
+          },
+          {
+            value: 'sidebarItem',
+            title: 'Sidebar Item',
+            selected: false,
+          },
+          {
+            value: 'sqlMigrations',
+            title: 'SQL Migrations',
+            selected: false,
+          },
+          {
+            value: 'jsMigrations',
+            title: `${useTypescript ? 'TS' : 'JS'} Migrations`,
+            selected: false,
+          },
+        ] satisfies (prompt.Choice & { value: Stub })[],
+      },
+    ])
+  ).stubs
+
   const directory = path.basename(name)
 
   const cwd = path.resolve(directory)
@@ -103,6 +145,7 @@ export async function handler(): Promise<void> {
     useEslint,
     usePrettier,
     clarityPluginToolkitDir,
+    stubs,
   }
 
   const packageJson = makePackageJson(templateOptions)

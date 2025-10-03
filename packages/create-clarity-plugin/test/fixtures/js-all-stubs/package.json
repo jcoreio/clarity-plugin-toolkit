@@ -1,0 +1,34 @@
+{
+  "name": "testpkg",
+  "version": "0.1.0",
+  "private": true,
+  "clarity": {
+    "client": {
+      "entrypoints": [
+        "./src/client/index.js"
+      ]
+    }
+  },
+  "exports": {
+    "./migrate": "./src/server/migrate.js",
+    "./webapp": "./src/server/webapp.js"
+  },
+  "scripts": {
+    "clean": "clarity-plugin-toolkit clean",
+    "build": "clarity-plugin-toolkit build",
+    "deploy": "clarity-plugin-toolkit deploy",
+    "clarity-plugin-toolkit": "clarity-plugin-toolkit"
+  },
+  "dependencies": {
+    "@jcoreio/clarity-plugin-api": "^1",
+    "express": "^4.21.2",
+    "react": "^18.2.0",
+    "zod": "^3"
+  },
+  "devDependencies": {
+    "@babel/register": "^7.28.3",
+    "@jcoreio/clarity-plugin-toolkit": "^1",
+    "webpack": "^5",
+    "webpack-cli": "^6"
+  }
+}

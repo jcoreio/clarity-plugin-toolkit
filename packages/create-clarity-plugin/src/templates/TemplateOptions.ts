@@ -1,3 +1,11 @@
+export type Stub =
+  | 'dashboardWidget'
+  | 'organizationView'
+  | 'expressApi'
+  | 'sidebarItem'
+  | 'sqlMigrations'
+  | 'jsMigrations'
+
 export type TemplateOptions = {
   name?: string
   useToolchain?: boolean
@@ -6,4 +14,5 @@ export type TemplateOptions = {
   useEslint?: boolean
   usePrettier?: boolean
   clarityPluginToolkitDir: string
+  stubs?: Stub[]
 }

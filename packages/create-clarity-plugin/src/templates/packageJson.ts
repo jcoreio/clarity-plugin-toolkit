@@ -7,6 +7,7 @@ export function makePackageJson({
   useTypescript,
   useEslint,
   usePrettier,
+  stubs,
 }: TemplateOptions) {
   const checks = []
   if (usePrettier) checks.push('prettier -c .')
@@ -16,8 +17,27 @@ export function makePackageJson({
     name,
     version: '0.1.0',
     private: true,
-    contributes: {
-      client: './src/client/index.tsx',
+    clarity:
+      (
+        stubs?.includes('dashboardWidget') ||
+        stubs?.includes('organizationView') ||
+        stubs?.includes('sidebarItem')
+      ) ?
+        {
+          client: {
+            entrypoints: [`./src/client/index.${useTypescript ? 'tsx' : 'js'}`],
+          },
+        }
+      : undefined,
+    exports: {
+      './migrate':
+        stubs?.includes('jsMigrations') || stubs?.includes('sqlMigrations') ?
+          `./src/server/migrate.${useTypescript ? 'ts' : 'js'}`
+        : undefined,
+      './webapp':
+        stubs?.includes('expressApi') ?
+          `./src/server/webapp.${useTypescript ? 'ts' : 'js'}`
+        : undefined,
     },
     scripts: {
       ...(checks.length ?
@@ -37,10 +57,14 @@ export function makePackageJson({
     dependencies: sortKeys({
       '@jcoreio/clarity-plugin-api': `^1`,
       react: '^18.2.0',
+      ...(stubs?.includes('expressApi') ? { express: '^4.21.2' } : {}),
+      ...(stubs?.includes('dashboardWidget') ? { zod: '^3' } : {}),
     }),
     devDependencies: sortKeys({
       '@jcoreio/clarity-plugin-toolkit': `^1`,
+
       webpack: '^5',
+      'webpack-cli': '^6',
       '@babel/register': '^7.28.3', // needed for TS webpack config
       ...(useToolchain ?
         {
@@ -56,6 +80,9 @@ export function makePackageJson({
           '@types/react': '^18.2.0',
           '@types/node': `^20`,
           typescript: '^5',
+          ...(stubs?.includes('expressApi') ?
+            { '@types/express': '^4.17.23' }
+          : {}),
         }
       : {}),
       ...(useEslint && !useToolchain ?

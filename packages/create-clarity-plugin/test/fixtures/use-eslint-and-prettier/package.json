@@ -2,9 +2,14 @@
   "name": "testpkg",
   "version": "0.1.0",
   "private": true,
-  "contributes": {
-    "client": "./src/client/index.tsx"
+  "clarity": {
+    "client": {
+      "entrypoints": [
+        "./src/client/index.js"
+      ]
+    }
   },
+  "exports": {},
   "scripts": {
     "check": "prettier -c . && eslint",
     "format": "prettier -w .",
@@ -15,7 +20,8 @@
   },
   "dependencies": {
     "@jcoreio/clarity-plugin-api": "^1",
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "zod": "^3"
   },
   "devDependencies": {
     "@babel/register": "^7.28.3",
@@ -27,6 +33,7 @@
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.0.0",
     "prettier": "^3.4.2",
-    "webpack": "^5"
+    "webpack": "^5",
+    "webpack-cli": "^6"
   }
 }

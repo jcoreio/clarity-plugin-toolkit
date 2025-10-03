@@ -1,10 +1,8 @@
 This is a [Clarity](https://www.jcore.io/clarity) plugin project bootstrapped with [`create-clarity-plugin`](https://github.com/jcoreio/clarity-plugin-toolkit/tree/master/packages/create-clarity-plugin).
 
-## Getting Started
+## Creating a Dashboard widget
 
-At the moment, the only contribution point your plugin can make is a dashboard widget.
-There will be more contribution points soon, but for now, declare the dashboard widget
-in `src/client/index.tsx`:
+In `src/client/index.tsx`:
 
 ```tsx
 import { type ClientPluginContributions } from "@jcoreio/clarity-plugin-toolkit/client";
@@ -12,7 +10,7 @@ export default {
   dashboardWidgets: {
     MyWidget: {
       displayName: "MyWidget",
-      component: React.lazy(() => import("./MyWidget")),
+      component: () => import("./MyWidget"),
     },
   },
 } satisfies ClientPluginContributions;

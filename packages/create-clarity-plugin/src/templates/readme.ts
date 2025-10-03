@@ -6,11 +6,9 @@ export function readme({ useTypescript }: TemplateOptions) {
     'README.md': dedent`
     This is a [Clarity](https://www.jcore.io/clarity) plugin project bootstrapped with [\`create-clarity-plugin\`](https://github.com/jcoreio/clarity-plugin-toolkit/tree/master/packages/create-clarity-plugin).
 
-    ## Getting Started
+    ## Creating a Dashboard widget
 
-    At the moment, the only contribution point your plugin can make is a dashboard widget.
-    There will be more contribution points soon, but for now, declare the dashboard widget
-    in \`src/client/index.${useTypescript ? 'tsx' : 'js'}\`:
+    In \`src/client/index.${useTypescript ? 'tsx' : 'js'}\`:
 
     \`\`\`${useTypescript ? 'tsx' : 'js'}
     ${
@@ -23,7 +21,7 @@ export function readme({ useTypescript }: TemplateOptions) {
       dashboardWidgets: {
         MyWidget: {
           displayName: 'MyWidget',
-          component: React.lazy(() => import('./MyWidget'))
+          component: () => import('./MyWidget')
         }
       }
     }${useTypescript ? ' satisfies ClientPluginContributions' : ''}
