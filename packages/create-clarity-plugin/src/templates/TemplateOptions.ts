@@ -15,4 +15,5 @@ export type TemplateOptions = {
   usePrettier?: boolean
   clarityPluginToolkitDir: string
   stubs?: Stub[]
+  packageManager?: string
 }

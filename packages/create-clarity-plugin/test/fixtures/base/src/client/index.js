@@ -2,7 +2,7 @@ export default {
   dashboardWidgets: {
     exampleWidget: {
       displayName: "Example Widget",
-      component: () => import("./ExampleWidget"),
+      component: () => import("./ExampleWidget.jsx"),
     },
   },
 

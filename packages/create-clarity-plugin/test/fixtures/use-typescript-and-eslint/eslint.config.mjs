@@ -11,18 +11,23 @@ const gitignorePath = fileURLToPath(new URL(".gitignore", import.meta.url));
 
 export default tseslint.config(
   eslint.configs.recommended,
-  tseslint.configs.recommended,
+  ...tseslint.configs.recommended,
   includeIgnoreFile(gitignorePath, "Imported .gitignore patterns"),
   {
-    files: ["./*.{js,mjs}"],
+    files: ["./*.{js,cjs,mjs}", "src/server/**/*.{js,cjs,mjs}"],
     languageOptions: { globals: { ...globals.node } },
   },
   {
     ...reactPlugin.configs.flat.recommended,
-    files: ["src/client/**/*.{js,jsx,mjs,cjs,ts,tsx"],
+    files: ["src/client/**/*.{js,jsx,mjs,cjs,ts,tsx}"],
     languageOptions: {
       ...reactPlugin.configs.flat.recommended.languageOptions,
       globals: { ...globals.serviceworker, ...globals.browser },
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
     },
   },
 );

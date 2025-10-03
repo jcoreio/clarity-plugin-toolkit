@@ -6,7 +6,21 @@ export function tsconfig({
   useToolchain,
   clarityPluginToolkitDir,
 }: TemplateOptions) {
-  if (!useTypescript || useToolchain) return {}
+  if (!useTypescript) return {}
+  if (useToolchain) {
+    return {
+      'tsconfig.json': dedent`
+        {
+          "extends": "./node_modules/@jcoreio/toolchain-typescript/tsconfig.json",
+          "include": ["./src", "./test", "./*.ts"],
+          "exclude": ["node_modules"],
+          "compilerOptions": {
+            "module": "nodenext"
+          }
+        }
+      `,
+    }
+  }
   return {
     'tsconfig.json': dedent`
       {
@@ -17,9 +31,7 @@ export function tsconfig({
           "strict": true,
           "noEmit": true,
           "esModuleInterop": true,
-          "module": "esnext",
-          "moduleResolution": "bundler",
-          "resolveJsonModule": true,
+          "module": "nodenext",
           "isolatedModules": true,
           "jsx": "preserve",
           "incremental": true,

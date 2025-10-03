@@ -1,7 +1,7 @@
 import dedent from 'dedent-js'
 import { TemplateOptions } from './TemplateOptions'
 
-export function clientIndex({ stubs }: TemplateOptions) {
+export function clientIndex({ stubs, useTypescript }: TemplateOptions) {
   if (
     !stubs?.includes('dashboardWidget') &&
     !stubs?.includes('organizationView') &&
@@ -9,8 +9,9 @@ export function clientIndex({ stubs }: TemplateOptions) {
   ) {
     return {}
   }
+  const jsxExtension = useTypescript ? 'js' : 'jsx'
   return {
-    'src/client/index.tsx': dedent`
+    'src/client/index.ts': dedent`
       import { type ClientPluginContributions } from '@jcoreio/clarity-plugin-api/client'
 
       export default {
@@ -20,7 +21,7 @@ export function clientIndex({ stubs }: TemplateOptions) {
               dashboardWidgets: {
                 exampleWidget: {
                   displayName: 'Example Widget',
-                  component: () => import('./ExampleWidget'),
+                  component: () => import('./ExampleWidget.${jsxExtension}'),
                 },
               },
             `
@@ -29,7 +30,7 @@ export function clientIndex({ stubs }: TemplateOptions) {
         ${
           stubs.includes('sidebarItem') ?
             dedent`
-              sidebarSections: () => import('./ExampleSidebarItem'),
+              sidebarSections: () => import('./ExampleSidebarItem.${jsxExtension}'),
             `
           : ''
         }
@@ -39,13 +40,13 @@ export function clientIndex({ stubs }: TemplateOptions) {
               navbarTitle: {
                 organization: {
                   // this is the /<org base url>/<plugin>/example route
-                  example: () => import('./ExampleTitle'),
+                  example: () => import('./ExampleTitle.${jsxExtension}'),
                 },
               },
               mainContent: {
                 organization: {
                   // this is the /<org base url>/<plugin>/example route
-                  example: () => import('./ExampleOrganizationView'),
+                  example: () => import('./ExampleOrganizationView.${jsxExtension}'),
                 }
               },
           `

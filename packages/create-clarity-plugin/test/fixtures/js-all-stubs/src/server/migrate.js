@@ -1,6 +1,6 @@
-import path from "path";
+import { fileURLToPath } from "url";
 export default () => ({
   migrations: {
-    path: path.join(__dirname, "migrations"),
+    path: fileURLToPath(new URL("./migrations", import.meta.url)),
   },
 });

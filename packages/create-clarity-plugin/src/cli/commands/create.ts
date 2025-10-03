@@ -146,6 +146,7 @@ export async function handler(): Promise<void> {
     usePrettier,
     clarityPluginToolkitDir,
     stubs,
+    packageManager: getPackageManager(),
   }
 
   const packageJson = makePackageJson(templateOptions)
@@ -187,6 +188,8 @@ export async function handler(): Promise<void> {
 
   if (useToolchain) {
     await execa('tc', ['migrate'], execaOpts)
+  } else if (usePrettier) {
+    await execa(packageManager, ['run', 'format'], execaOpts)
   }
 
   await execa('git', ['init'], execaOpts)

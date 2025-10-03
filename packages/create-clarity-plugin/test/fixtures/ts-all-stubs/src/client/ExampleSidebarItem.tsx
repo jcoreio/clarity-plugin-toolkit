@@ -4,7 +4,8 @@ import {
   useOrganizationId,
   organizationUIBasePath,
 } from "@jcoreio/clarity-plugin-api/client";
-import { name as plugin } from "../../package.json";
+import pluginPackageJson from "../../package.json" with { type: "json" };
+const { name: plugin } = pluginPackageJson;
 
 export default function ExampleSidebarItem() {
   const organizationId = useOrganizationId({ optional: true });

@@ -1,7 +1,6 @@
 /* eslint-env node, es2018 */
 module.exports = {
-  cjsBabelEnv: { forceAllTransforms: true },
-  // esmBabelEnv: { targets: { node: 16 } },
+  esmBabelEnv: { targets: { node: 20 } },
   scripts: {
     clean: "clarity-plugin-toolkit clean",
     build: "clarity-plugin-toolkit build",

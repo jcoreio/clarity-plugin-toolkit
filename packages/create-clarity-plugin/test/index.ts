@@ -21,7 +21,7 @@ for (const fixture of fixtures) {
       usePrettier: false,
       stubs: ['dashboardWidget'],
       // eslint-disable-next-line @typescript-eslint/no-require-imports
-      ...require(path.join(fixtureDir, '_options.js')),
+      ...require(path.join(fixtureDir, '_options.cjs')),
     }
     const actual = await files(options)
     if (process.env.UPDATE_SNAPSHOTS) {

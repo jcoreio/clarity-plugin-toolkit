@@ -8,10 +8,12 @@ export function serverMigrate({ stubs }: TemplateOptions) {
   return {
     'src/server/migrate.ts': dedent`
       import { MigratePluginContributions } from '@jcoreio/clarity-plugin-api/server'
-      import path from 'path'
+      import { fileURLToPath } from 'url'
 
       export default (() => ({
-        migrations: { path: path.join(__dirname, 'migrations') },
+        migrations: {
+          path: fileURLToPath(new URL('./migrations', import.meta.url)),
+        },
       })) satisfies MigratePluginContributions
     `,
   }

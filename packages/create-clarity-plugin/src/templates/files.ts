@@ -52,15 +52,21 @@ export async function files(templateOptions: TemplateOptions) {
           await transformAsync(content, {
             babelrc: false,
             filename: file,
-            plugins: /\.tsx$/.test(file) ? ['@babel/plugin-syntax-jsx'] : [],
+            plugins:
+              /\.tsx$/.test(file) ?
+                [require.resolve('@babel/plugin-syntax-jsx')]
+              : [],
             presets: [
-              ['@babel/preset-env', { modules: false, targets: { node: 24 } }],
-              '@babel/preset-typescript',
+              [
+                require.resolve('@babel/preset-env'),
+                { modules: false, targets: { node: 24 } },
+              ],
+              require.resolve('@babel/preset-typescript'),
             ],
             sourceType: 'module',
           })
         )?.code || content
-      file = file.replace(/\.tsx?$/, '.js')
+      file = file.replace(/\.tsx$/, '.jsx').replace(/\.ts$/, '.js')
     }
     result[file] = await format(content, { filepath: file })
   }

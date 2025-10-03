@@ -7,6 +7,7 @@ export function makePackageJson({
   useTypescript,
   useEslint,
   usePrettier,
+  packageManager,
   stubs,
 }: TemplateOptions) {
   const checks = []
@@ -17,6 +18,13 @@ export function makePackageJson({
     name,
     version: '0.1.0',
     private: true,
+    ...(packageManager === 'pnpm' ?
+      { packageManager: 'pnpm@10.9.0' }
+    : undefined),
+    engines: {
+      node: '>=20',
+    },
+    type: 'module',
     clarity:
       (
         stubs?.includes('dashboardWidget') ||
@@ -25,7 +33,7 @@ export function makePackageJson({
       ) ?
         {
           client: {
-            entrypoints: [`./src/client/index.${useTypescript ? 'tsx' : 'js'}`],
+            entrypoints: [`./src/client/index.${useTypescript ? 'ts' : 'js'}`],
           },
         }
       : undefined,
@@ -55,16 +63,15 @@ export function makePackageJson({
       'clarity-plugin-toolkit': 'clarity-plugin-toolkit',
     },
     dependencies: sortKeys({
-      '@jcoreio/clarity-plugin-api': `^1`,
+      '@jcoreio/clarity-plugin-api': `^1.1.0`,
       react: '^18.2.0',
       ...(stubs?.includes('expressApi') ? { express: '^4.21.2' } : {}),
-      ...(stubs?.includes('dashboardWidget') ? { zod: '^3' } : {}),
+      ...(stubs?.includes('dashboardWidget') ? { zod: '^3.25.76' } : {}),
     }),
     devDependencies: sortKeys({
-      '@jcoreio/clarity-plugin-toolkit': `^1`,
-
-      webpack: '^5',
-      'webpack-cli': '^6',
+      '@jcoreio/clarity-plugin-toolkit': `^1.2.5`,
+      webpack: '^5.102.0',
+      'webpack-cli': '^6.0.1',
       '@babel/register': '^7.28.3', // needed for TS webpack config
       ...(useToolchain ?
         {
@@ -78,8 +85,8 @@ export function makePackageJson({
       ...(useTypescript ?
         {
           '@types/react': '^18.2.0',
-          '@types/node': `^20`,
-          typescript: '^5',
+          '@types/node': `^20.10.0`,
+          typescript: '^5.9.3',
           ...(stubs?.includes('expressApi') ?
             { '@types/express': '^4.17.23' }
           : {}),
@@ -89,7 +96,7 @@ export function makePackageJson({
         {
           '@eslint/compat': '^1.3.2',
           '@eslint/js': '^9.33.0',
-          eslint: '^9',
+          eslint: '^9.36.0',
           'eslint-plugin-react': '^7.37.5',
           globals: '^16.0.0',
           ...(usePrettier ? { 'eslint-config-prettier': '^9.1.0' } : {}),
