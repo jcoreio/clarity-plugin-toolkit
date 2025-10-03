@@ -3,6 +3,7 @@ import { Glob } from 'glob'
 import fs from 'fs-extra'
 import getProject from './getProject'
 import { isEqual } from 'lodash'
+import path from 'path'
 
 export default async function shouldBuild({
   env = [],
@@ -11,6 +12,7 @@ export default async function shouldBuild({
 
   const previousEnv = await fs.readJson(envFile).catch(() => undefined)
   if (!isEqual(previousEnv, env)) {
+    await fs.mkdirs(path.dirname(envFile))
     await fs.writeJson(envFile, env, { spaces: 2 })
     return true
   }
@@ -33,9 +35,10 @@ export default async function shouldBuild({
       childrenIgnored: (path) =>
         gitignore.ignoresSync(path.name.replace(/\/$/, '/')),
     },
+    stat: true,
+    withFileTypes: true,
   })) {
-    const { mtime } = await fs.stat(file)
-    if (mtime.getTime() > assetsMtime) return true
+    if (file.mtime && file.mtime.getTime() > assetsMtime) return true
   }
   return false
 }
