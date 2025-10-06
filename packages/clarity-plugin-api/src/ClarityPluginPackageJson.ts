@@ -33,7 +33,7 @@ export type ClarityPluginPackageJson = {
     /**
      * The id of the signature verification key to use
      */
-    signatureVerificationKeyId: number
+    signatureVerificationKeyId?: number
     /**
      * Properties for the client side plugin contributions
      */
@@ -60,7 +60,7 @@ export const ClarityPluginPackageJson = z
     devDependencies: z.record(z.string()).optional(),
     exports: ExportsObject.optional(),
     clarity: z.object({
-      signatureVerificationKeyId: z.number(),
+      signatureVerificationKeyId: z.number().optional(),
       client: z
         .object({
           entrypoints: z.array(z.string()),
