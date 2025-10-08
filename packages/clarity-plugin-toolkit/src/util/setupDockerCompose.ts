@@ -1,7 +1,5 @@
 import { getProjectBase } from '../getProject'
 import fs from 'fs-extra'
-import { isInteractive } from './isInteractive'
-import prompt from 'prompts'
 import dedent from 'dedent-js'
 import randomstring from 'randomstring'
 import crypto from 'crypto'
@@ -15,63 +13,6 @@ export async function setupDockerCompose({
   const { projectDir, dockerComposeFile, dotenvFile } =
     await getProjectBase(cwd)
   if (await fs.pathExists(dockerComposeFile)) return
-
-  if (!isInteractive) {
-    throw new Error('must be run in an interactive terminal')
-  }
-
-  const { repo, dbPort, redisPort, httpPort, devPort, mqttPort } = await prompt(
-    [
-      {
-        name: 'repo',
-        type: 'text',
-        message: 'Enter Clarity docker repository:',
-      },
-      {
-        name: 'devPort',
-        type: 'number',
-        min: 1000,
-        max: 65535,
-        message: 'Desired dev server port:',
-        initial: 20080,
-      },
-      {
-        name: 'httpPort',
-        type: 'number',
-        min: 1000,
-        max: 65535,
-        message: 'Desired HTTP port:',
-        initial: 20081,
-      },
-      {
-        name: 'mqttPort',
-        type: 'number',
-        min: 1000,
-        max: 65535,
-        message: 'Desired MQTT port:',
-        initial: 21883,
-      },
-      {
-        name: 'dbPort',
-        type: 'number',
-        min: 1000,
-        max: 65535,
-        message: 'Desired Postgres port:',
-        initial: 25432,
-      },
-      {
-        name: 'redisPort',
-        type: 'number',
-        min: 1000,
-        max: 65535,
-        message: 'Desired Redis port:',
-        initial: 26379,
-      },
-    ]
-  )
-  if (!repo) {
-    throw new Error('no docker repository given')
-  }
 
   const key = await promisify(crypto.generateKey)('aes', { length: 256 })
 
@@ -165,15 +106,14 @@ export async function setupDockerCompose({
   await fs.appendFile(
     dotenvFile,
     dedent`
-      CLARITY_REPO=${repo}
       REDIS_DB=0
-      REDIS_PORT=${redisPort}
+      REDIS_PORT=26379
       AWS_REGION=us-west-2
       CANARY_PASSWORD=password
       DB_NAME=clarity
       DB_USER=postgres
       DB_PASSWORD=password
-      DB_PORT=${dbPort}
+      DB_PORT=25432
       HISTORIAN_DB_NAME=historian
       HISTORIAN_DB_USER=postgres
       HISTORIAN_DB_PASSWORD="\${DB_PASSWORD}"
@@ -185,11 +125,11 @@ export async function setupDockerCompose({
       JWT_SECRET=${JSON.stringify(randomstring.generate({ length: 32 }))}
       LOGIN_MIN_RECAPTCHA_SCORE=0.15
       SIGNUP_MIN_RECAPTCHA_SCORE=0.15
-      MQTT_PORT=${mqttPort}
+      MQTT_PORT=21883
       MQTTS_PORT=
       NOTIFICATIONS_DISABLED=1
-      PORT=${httpPort}
-      DEV_PORT=${devPort}
+      PORT=20081
+      DEV_PORT=20080
       PROFILER_BASE_URL='/profiler'
       PROFILER_PORT=6676
       ROOT_URL="http://\${HOST}:\${DEV_PORT}"
@@ -210,6 +150,7 @@ export async function setupDockerCompose({
       TASKS=migrate,app,mqtt,cleanup,sync-channel-settings,ingest-sweeper,downsample-sweeper,notification-sender,tag-computer,activity-historian,device-offline-notifier,trigger-handler,historical-data-report-sender,migrate-ciphertexts
 
       # Please fill out the following fields:
+      CLARITY_REPO= # e.g. XXXXXXXXXXXX.dkr.ecr.us-west-2.amazonaws.com/jcore/clarity
       STRIPE_PUBLISHABLE_KEY=
       STRIPE_SECRET_KEY=
       RECAPTCHA_SITE_KEY=
@@ -222,7 +163,10 @@ export async function setupDockerCompose({
 
   // eslint-disable-next-line no-console
   console.error(
-    `Wrote ${path.relative(cwd, dockerComposeFile)} and ${path.relative(cwd, dotenvFile)}.  Please fill out the secrets in ${path.relative(cwd, dotenvFile)} and restart.`
+    dedent`
+      Wrote ${path.relative(cwd, dockerComposeFile)} and ${path.relative(cwd, dotenvFile)}.
+      Please fill out the secrets at the bottom of ${path.relative(cwd, dotenvFile)} and restart.
+    `
   )
   process.exit(1)
 }
