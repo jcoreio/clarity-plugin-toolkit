@@ -7,6 +7,7 @@ export const paths = (projectDir: string) => {
     '.clarity-plugin-toolkit'
   )
   const distDir = path.join(clarityPluginToolkitDir, 'dist')
+  const devDir = path.join(clarityPluginToolkitDir, 'dev')
   let clientDirName = 'client'
   let i = 0
   while (fs.pathExistsSync(path.join(projectDir, clientDirName))) {
@@ -21,5 +22,8 @@ export const paths = (projectDir: string) => {
     distDir,
     distPackageJsonFile: path.join(distDir, 'package.json'),
     distClientDir: path.join(distDir, clientDirName),
+    devDir,
+    dockerComposeFile: path.join(projectDir, 'docker-compose.yml'),
+    dotenvFile: path.join(projectDir, '.env'),
   }
 }

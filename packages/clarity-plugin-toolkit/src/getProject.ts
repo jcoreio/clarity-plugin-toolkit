@@ -14,6 +14,8 @@ export async function getProjectBase(cwd = process.cwd()): Promise<
     packageJsonFile: string
     packageJson: z.output<typeof PackageJsonSchema>
     distTarball: string
+    devOutDir: string
+    devOutClientDir: string
   } & ReturnType<typeof paths>
 > {
   const packageJsonFile = await findUp('package.json', { type: 'file', cwd })
@@ -65,6 +67,17 @@ export async function getProjectBase(cwd = process.cwd()): Promise<
     distTarball: path.join(
       pathsProps.distDir,
       `${packageJson.name.replace(/^@/, '').replace(/\//g, '-')}-${packageJson.version}.tgz`
+    ),
+    devOutDir: path.join(
+      pathsProps.devDir,
+      packageJson.name,
+      packageJson.version
+    ),
+    devOutClientDir: path.join(
+      pathsProps.devDir,
+      packageJson.name,
+      packageJson.version,
+      'client'
     ),
   }
 }

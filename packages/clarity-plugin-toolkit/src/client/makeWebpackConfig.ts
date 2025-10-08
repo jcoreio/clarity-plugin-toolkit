@@ -24,6 +24,7 @@ export async function makeWebpackConfig(
     clientAssetsFile,
     distClientDir,
     emptyEntryFile,
+    devOutClientDir,
   } = await getProject()
 
   const context = projectDir
@@ -199,7 +200,7 @@ export async function makeWebpackConfig(
       mode: env.production ? 'production' : 'development',
       output: {
         clean: true,
-        path: distClientDir,
+        path: env.CLARITY_PLUGIN_TOOLKIT_DEV ? devOutClientDir : distClientDir,
         // this has to match the route that the webapp will serve the generated
         // assets from
         publicPath: pluginAssetRoute

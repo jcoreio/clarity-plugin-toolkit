@@ -2,8 +2,9 @@ import { getProjectBase } from '../getProject'
 import { nodeFileTrace } from '@vercel/nft'
 import fs from 'fs-extra'
 import path from 'path'
-import { transformFileAsync, TransformOptions } from '@babel/core'
+import { transformFileAsync } from '@babel/core'
 import { collectExports } from './collectExports'
+import { babelOptions } from './babelOptions'
 
 export async function buildServer({
   cwd = process.cwd(),
@@ -14,23 +15,6 @@ export async function buildServer({
   if (!serverEntrypoints.size) return
 
   await fs.mkdirs(distDir)
-
-  const babelOptions = (modules: false | 'commonjs'): TransformOptions => ({
-    cwd: projectDir,
-    babelrc: false,
-    sourceMaps: true,
-    presets: [
-      [
-        require.resolve('@babel/preset-env'),
-        {
-          targets: { node: 20 },
-          modules,
-          exclude: ['proposal-dynamic-import'],
-        },
-      ],
-      [require.resolve('@babel/preset-typescript')],
-    ],
-  })
 
   const ctsOptions = babelOptions('commonjs')
   const mtsOptions = babelOptions(false)
