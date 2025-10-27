@@ -152,6 +152,7 @@ export async function buildWatchServer({
         )
       }
     } else {
+      await fs.mkdirs(path.dirname(dest))
       await fs.copyFile(src, dest)
     }
     if (wasReady) onChange?.(src)
