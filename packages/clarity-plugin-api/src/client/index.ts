@@ -13,6 +13,7 @@ export * from './Sidebar/SidebarSection'
 export * from './useOrganizationId'
 export * from './useCurrentPluginRoute'
 export * from '../pluginRoutePaths'
+export * from './useSeverityPulseStyles'
 
 // react-router-dom
 
