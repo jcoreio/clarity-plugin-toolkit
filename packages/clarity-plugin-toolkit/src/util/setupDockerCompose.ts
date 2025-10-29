@@ -105,7 +105,8 @@ export async function setupDockerCompose({
 
   await fs.appendFile(
     dotenvFile,
-    dedent`
+    '\n' +
+      dedent`
       REDIS_DB=0
       REDIS_PORT=26379
       AWS_REGION=us-west-2
