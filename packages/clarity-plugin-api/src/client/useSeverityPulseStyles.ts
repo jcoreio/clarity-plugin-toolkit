@@ -81,5 +81,9 @@ export function useSeverityPulseStyles(
     warning: '',
     alarm: '',
     critical: '',
+    INFO: '',
+    WARNING: '',
+    ALARM: '',
+    CRITICAL: '',
   }
 }
