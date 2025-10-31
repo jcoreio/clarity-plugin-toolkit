@@ -38,6 +38,10 @@ export async function setupDockerCompose({
           image: redis:3.2
           ports:
             - \${REDIS_PORT}:6379
+        s3:
+          image: adobe/s3mock:4.9.1
+          environment:
+            - initialBuckets=\${FILE_ATTACHMENT_S3_BUCKET}
         app:
           image: \${CLARITY_REPO}:45.0.7
           volumes:
@@ -51,6 +55,10 @@ export async function setupDockerCompose({
             - ADMIN_PASSWORD
             - AWS_DEFAULT_REGION
             - AWS_REGION
+            # right now these are only used for connecting to the S3 mock, so
+            # they don't need to be real credentials
+            - AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXXX
+            - AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
             - BYPASS_RECAPTCHA_TOKEN
             - CANARY_PASSWORD
             - COPYRIGHT
@@ -92,6 +100,7 @@ export async function setupDockerCompose({
             - REDIS_HOST=redis
             - REDIS_PORT=6379
             - ROOT_URL
+            - S3_ENDPOINT=http://s3:9090
             - SIGNUP_MIN_RECAPTCHA_SCORE
             - SIGNUPS_ENABLED
             - STORE_DOWNLOADS_LOCALLY
@@ -115,6 +124,7 @@ export async function setupDockerCompose({
       DB_USER=postgres
       DB_PASSWORD=password
       DB_PORT=25432
+      FILE_ATTACHMENT_S3_BUCKET=upload-dev.clarity.jcore.io
       HISTORIAN_DB_NAME=historian
       HISTORIAN_DB_USER=postgres
       HISTORIAN_DB_PASSWORD="\${DB_PASSWORD}"

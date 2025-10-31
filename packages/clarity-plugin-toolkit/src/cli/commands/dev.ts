@@ -7,6 +7,7 @@ import { createProxyServer } from 'http-proxy'
 import { withResolvers } from '../../util/withResolvers'
 import WebpackCLI, { IWebpackCLI, WebpackDevServerOptions } from 'webpack-cli'
 import webpackDevMiddleware from 'webpack-dev-middleware'
+import webpackHotMiddleware from 'webpack-hot-middleware'
 import z from 'zod'
 import assert from 'assert'
 import { buildWatchServer } from '../../server/buildWatchServer'
@@ -18,6 +19,7 @@ import path from 'path'
 import { loginToECR } from '@jcoreio/aws-ecr-utils'
 import { setupDockerCompose } from '../../util/setupDockerCompose'
 import open from 'open'
+import enableDestroy from 'server-destroy'
 
 export const command = 'dev'
 export const description = `run plugin in local dev server`
@@ -61,7 +63,7 @@ export async function handler(): Promise<void> {
 
   const startServicesPromise = execa(
     'docker',
-    ['compose', 'up', '-d', 'db', 'redis'],
+    ['compose', 'up', '-d', 'db', 'redis', 's3'],
     { stdio: 'inherit' }
   )
   startServicesPromise.catch(() => {})
@@ -101,6 +103,7 @@ export async function handler(): Promise<void> {
   const devMiddlewareConfig = devServerConfig.devMiddleware || {}
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   app.use(webpackDevMiddleware(compiler, devMiddlewareConfig))
+  app.use(webpackHotMiddleware(compiler))
 
   const proxy = createProxyServer()
   proxy.on('proxyRes', (res) => {
@@ -109,7 +112,9 @@ export async function handler(): Promise<void> {
       const parts = res.headers['content-security-policy'].split(/\s*;\s*/g)
       res.headers['content-security-policy'] = parts
         .map((part) =>
-          part.startsWith('script-src') ? `${part} 'unsafe-eval'` : part
+          part.startsWith('script-src') ? `${part} 'unsafe-eval'`
+          : part.startsWith('connect-src') ? `${part} webpack://*`
+          : part
         )
         .join('; ')
     }
@@ -137,7 +142,11 @@ export async function handler(): Promise<void> {
     })
   )
 
-  const server = app.listen(DEV_PORT)
+  const server = app.listen(DEV_PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Dev server is listening on http://0.0.0.0:${DEV_PORT}`)
+  })
+  enableDestroy(server)
 
   server.on(
     'upgrade',
@@ -146,9 +155,6 @@ export async function handler(): Promise<void> {
       proxy.ws(req, socket, head, { target })
     })
   )
-
-  // eslint-disable-next-line no-console
-  console.log(`Dev server is listening on http://0.0.0.0:${DEV_PORT}`)
 
   let openedBrowser = false
 
@@ -232,7 +238,7 @@ export async function handler(): Promise<void> {
   process.on('SIGINT', () => {
     void (async () => {
       const promise = Promise.allSettled([
-        promisify<void>((cb) => server.close(cb))(),
+        promisify<void>((cb) => server.destroy(cb))(),
         buildWatch?.close(),
         dockerApp ? emitted(dockerApp, 'close') : null,
       ]).catch(() => {})

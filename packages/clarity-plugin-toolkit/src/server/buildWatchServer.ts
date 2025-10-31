@@ -10,6 +10,7 @@ import { transformFileAsync } from '@babel/core'
 import { makeDistPackageJson } from './makeDistPackageJson'
 import { nodeFileTrace } from '@vercel/nft'
 import asyncThrottle from '@jcoreio/async-throttle'
+import { PackageJsonSchema } from '../PackageJsonSchema'
 
 export async function buildWatchServer({
   cwd = process.cwd(),
@@ -27,13 +28,16 @@ export async function buildWatchServer({
     distDir,
     devDir,
     devOutDir,
+    clientAssetsFile,
   } = await getProjectBase(cwd)
 
   const ctsOptions = babelOptions('commonjs')
   const mtsOptions = babelOptions(false)
 
   async function traceFiles() {
-    const packageJson = await fs.readJson(packageJsonFile)
+    const packageJson = PackageJsonSchema.parse(
+      await fs.readJson(packageJsonFile)
+    )
     const serverEntrypoints = new Set<string>()
     collectExports(packageJson.exports, undefined, serverEntrypoints)
 
@@ -56,6 +60,20 @@ export async function buildWatchServer({
         },
       }
     )
+    // make sure to at least build the output package.json file if there are client entrypoints
+    // even if there are no server entrypoints
+    if (
+      !fileTrace.fileList.size &&
+      packageJson.clarity?.client?.entrypoints.length
+    ) {
+      const relativePackageJsonFile = path.relative(projectDir, packageJsonFile)
+      fileTrace.fileList.add(relativePackageJsonFile)
+      fileTrace.reasons.set(relativePackageJsonFile, {
+        ignored: false,
+        parents: new Set(),
+        type: ['initial'],
+      })
+    }
     return fileTrace
   }
   let fileTracePromise = traceFiles()
@@ -159,6 +177,11 @@ export async function buildWatchServer({
   }
 
   const handle = (src: string, stat?: Stats) => {
+    if (src === clientAssetsFile) {
+      // regen output package.json file in case client entrypoint filenames have changed
+      handle(packageJsonFile)
+      return
+    }
     const dest = toOutPath(src)
     handleAsync(src, stat).catch((err: unknown) => {
       // eslint-disable-next-line no-console
