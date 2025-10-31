@@ -8,7 +8,8 @@ const TARGET_NODE_ID = 'My Node'
 
 const { URL, PUBLISH_INTERVAL } = process.env
 
-const serverUrl = URL || 'mqtt://localhost:21883'
+const PORT = process.env.PORT || '21883'
+const serverUrl = URL || `mqtt://localhost:${PORT}`
 const username = requireEnv('USERNAME')
 const password = process.env.PASSWORD || 'password'
 
