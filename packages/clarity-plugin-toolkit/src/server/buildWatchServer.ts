@@ -87,7 +87,8 @@ export async function buildWatchServer({
   const watcher = chokidar.watch(projectDir, {
     alwaysStat: true,
     ignored: (path: string, stats?: Stats) =>
-      gitignore.ignoresSync(stats?.isDirectory() ? path + '/' : path),
+      gitignore.ignoresSync(stats?.isDirectory() ? path + '/' : path) &&
+      path !== clientAssetsFile,
   })
 
   const outDir = devMode ? devOutDir : distDir
@@ -177,11 +178,6 @@ export async function buildWatchServer({
   }
 
   const handle = (src: string, stat?: Stats) => {
-    if (src === clientAssetsFile) {
-      // regen output package.json file in case client entrypoint filenames have changed
-      handle(packageJsonFile)
-      return
-    }
     const dest = toOutPath(src)
     handleAsync(src, stat).catch((err: unknown) => {
       // eslint-disable-next-line no-console

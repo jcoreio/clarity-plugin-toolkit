@@ -128,6 +128,7 @@
     "open": "^8.4.2",
     "p-event": "^4.2.0",
     "p-map": "^7.0.3",
+    "parse5-html-rewriting-stream": "^8.0.0",
     "path-browserify": "^1.0.1",
     "process": "^0.11.10",
     "prompts": "^2.4.2",
@@ -138,7 +139,6 @@
     "tar-stream": "^3.1.7",
     "validate-npm-package-name": "^5.0.0",
     "webpack-dev-middleware": "^7.4.5",
-    "webpack-hot-middleware": "^2.26.1",
     "yargs": "^17.7.2",
     "zod-route-schemas": "^2.0.0"
   },

@@ -4,7 +4,6 @@ import {
   Configuration,
   container,
   WebpackPluginInstance,
-  HotModuleReplacementPlugin,
 } from 'webpack'
 import path from 'path'
 import fs from 'fs-extra'
@@ -194,12 +193,7 @@ export async function makeWebpackConfig(
   if (client?.entrypoints) {
     configs.push({
       name: 'client',
-      entry: [
-        ...client.entrypoints,
-        ...(env.WEBPACK_WATCH ?
-          [require.resolve('webpack-hot-middleware/client')]
-        : []),
-      ],
+      entry: client.entrypoints,
       context,
       mode: env.production ? 'production' : 'development',
       output: {
@@ -232,11 +226,10 @@ export async function makeWebpackConfig(
       module: { rules: rules({ targets: '> 0.25%, not dead' }) },
       plugins: [
         writeAssetsPlugin,
-        ...(env.WEBPACK_WATCH ? [new HotModuleReplacementPlugin()] : []),
         new ModuleFederationPlugin({
           // when the entry script is run it will set window[name] to the module federation container
           name: containerName,
-          filename: `entry_[fullhash].js`,
+          filename: env.WEBPACK_WATCH ? `entry_[fullhash].js` : 'entry.js',
           // this allows the app code to get the plugin module out of the container
           exposes: {
             '.': client.entrypoints,

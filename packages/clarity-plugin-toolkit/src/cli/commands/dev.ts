@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import * as yargs from 'yargs'
 import getProject from '../../getProject'
 import execa from 'execa'
@@ -7,7 +8,6 @@ import { createProxyServer } from 'http-proxy'
 import { withResolvers } from '../../util/withResolvers'
 import WebpackCLI, { IWebpackCLI, WebpackDevServerOptions } from 'webpack-cli'
 import webpackDevMiddleware from 'webpack-dev-middleware'
-import webpackHotMiddleware from 'webpack-hot-middleware'
 import z from 'zod'
 import assert from 'assert'
 import { buildWatchServer } from '../../server/buildWatchServer'
@@ -15,11 +15,14 @@ import { debounce } from 'lodash'
 import chalk from 'chalk'
 import { FSWatcher } from 'chokidar'
 import { promisify } from 'util'
+import fs from 'fs-extra'
 import path from 'path'
 import { loginToECR } from '@jcoreio/aws-ecr-utils'
 import { setupDockerCompose } from '../../util/setupDockerCompose'
 import open from 'open'
 import enableDestroy from 'server-destroy'
+import { pluginAssetRoute } from '@jcoreio/clarity-plugin-api'
+import { AssetsSchema } from '../../client/AssetsSchema'
 
 export const command = 'dev'
 export const description = `run plugin in local dev server`
@@ -30,7 +33,8 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
   yargs.usage('$0 dev')
 
 export async function handler(): Promise<void> {
-  const { projectDir } = await getProject()
+  const { RewritingStream } = await import('parse5-html-rewriting-stream')
+  const { projectDir, packageJson, clientAssetsFile } = await getProject()
   await setupDockerCompose()
 
   const config = z
@@ -101,24 +105,20 @@ export async function handler(): Promise<void> {
     Array.isArray(webpackConfigs) ? webpackConfigs[0] : webpackConfigs
   const devServerConfig = webpackConfig.devServer || {}
   const devMiddlewareConfig = devServerConfig.devMiddleware || {}
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   app.use(webpackDevMiddleware(compiler, devMiddlewareConfig))
-  app.use(webpackHotMiddleware(compiler))
+
+  let compilePromise = withResolvers<void>()
+  compiler.hooks.watchRun.tap(
+    { name: 'clarity-plugin-toolkit dev watchRun' },
+    () => {
+      compilePromise = withResolvers<void>()
+    }
+  )
+  compiler.hooks.done.tap({ name: 'clarity-plugin-toolkit dev done' }, () => {
+    compilePromise.resolve()
+  })
 
   const proxy = createProxyServer()
-  proxy.on('proxyRes', (res) => {
-    // add unsafe-eval to CSP script-src so that the browser will load the plugin dev bundle
-    if (typeof res.headers['content-security-policy'] === 'string') {
-      const parts = res.headers['content-security-policy'].split(/\s*;\s*/g)
-      res.headers['content-security-policy'] = parts
-        .map((part) =>
-          part.startsWith('script-src') ? `${part} 'unsafe-eval'`
-          : part.startsWith('connect-src') ? `${part} webpack://*`
-          : part
-        )
-        .join('; ')
-    }
-  })
   // eslint-disable-next-line no-console
   proxy.on('error', (err) => console.error(err))
 
@@ -138,9 +138,100 @@ export async function handler(): Promise<void> {
     '*',
     asyncHandler(async (req, res) => {
       await startup?.promise
-      proxy.web(req, res, { target })
+      proxy.web(req, res, { target, selfHandleResponse: true })
     })
   )
+
+  proxy.on('proxyRes', async (proxyRes, req, res) => {
+    await compilePromise.promise
+    const rawAssets = await fs
+      .readJson(clientAssetsFile)
+      .catch((err: unknown) => {
+        res.writeHead(500).end(err instanceof Error ? err.stack : String(err))
+        return undefined
+      })
+    if (!rawAssets) return
+    for (const [header, values] of Object.entries(proxyRes.headersDistinct)) {
+      if (!values) continue
+      if (header === 'content-security-policy') {
+        const parts = values.flatMap((value) => value.split(/\s*;\s*/g))
+        res.setHeader(
+          'content-security-policy',
+          parts
+            .map((part) =>
+              part.startsWith('script-src') ? `${part} 'unsafe-eval'`
+              : part.startsWith('connect-src') ? `${part} webpack://*`
+              : part
+            )
+            .join('; ')
+        )
+        continue
+      }
+      for (const value of values) res.appendHeader(header, value)
+    }
+    res.writeHead(proxyRes.statusCode ?? 200)
+
+    const assets = AssetsSchema.parse(rawAssets)
+    if (
+      /^text\/html(;|$)/.test(proxyRes.headers['content-type'] || '') ||
+      (!proxyRes.headers['content-type'] &&
+        req.headers.accept?.split(',').includes('text/html'))
+    ) {
+      const rewriter = new RewritingStream()
+      let skipTag = false
+      let nonce = ''
+      rewriter.on('startTag', (startTag) => {
+        if (
+          startTag.tagName === 'meta' &&
+          startTag.attrs.find(
+            (a) => a.name === 'property' && a.value === 'csp-nonce'
+          )
+        ) {
+          nonce = startTag.attrs.find((a) => a.name === 'content')?.value || ''
+        }
+        if (
+          startTag.tagName === 'script' &&
+          startTag.attrs
+            .find((a) => a.name === 'src')
+            ?.value.startsWith(
+              pluginAssetRoute
+                .partialFormat({ plugin: packageJson.name })
+                .replace(/\/:.+/, '')
+            )
+        ) {
+          skipTag = true
+          return
+        }
+        skipTag = false
+        rewriter.emitStartTag(startTag)
+      })
+      rewriter.on('endTag', (endTag) => {
+        if (skipTag) {
+          skipTag = false
+          return
+        }
+        if (endTag.tagName === 'head') {
+          rewriter.emitRaw(
+            [...assets.entrypoints]
+              .map(
+                (filename) =>
+                  `<script src="${pluginAssetRoute.format({
+                    plugin: packageJson.name,
+                    version: packageJson.version,
+                    environment: 'client',
+                    filename,
+                  })}" nonce="${nonce}"></script>`
+              )
+              .join('')
+          )
+        }
+        rewriter.emitEndTag(endTag)
+      })
+      proxyRes.setEncoding('utf8').pipe(rewriter).pipe(res)
+      return
+    }
+    proxyRes.pipe(res)
+  })
 
   const server = app.listen(DEV_PORT, () => {
     // eslint-disable-next-line no-console

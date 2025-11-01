@@ -23,6 +23,10 @@ services:
       - ADMIN_PASSWORD
       - AWS_DEFAULT_REGION
       - AWS_REGION
+      # right now these are only used for connecting to the S3 mock, so
+      # they don't need to be real credentials
+      - AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXXX
+      - AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       - BYPASS_RECAPTCHA_TOKEN
       - CANARY_PASSWORD
       - COPYRIGHT
