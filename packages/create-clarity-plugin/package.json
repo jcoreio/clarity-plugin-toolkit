@@ -40,7 +40,7 @@
     "@types/yargs": "^17.0.32",
     "chai": "^4.3.7",
     "conventional-changelog-conventionalcommits": "^7.0.2",
-    "eslint": "^9.17.0",
+    "eslint": "9.36.0",
     "glob": "^10.3.12",
     "globals": "^16.0.0",
     "lint-staged": "^15.2.2",
