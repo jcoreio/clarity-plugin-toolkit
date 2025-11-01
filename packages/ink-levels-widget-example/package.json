@@ -24,6 +24,7 @@
     "@material-ui/icons": "^4.11.3",
     "@types/node": "^20",
     "@types/react": "^18.2.0",
+    "@types/webpack-hot-middleware": "^2.25.12",
     "eslint": "9.36.0",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.0.0",

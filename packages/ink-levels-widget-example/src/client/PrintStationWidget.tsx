@@ -12,7 +12,7 @@ const InkLevelSchema = z.object({
   displayPrecision: z.number().int().min(0).max(8).optional(),
 })
 
-export const PrintStationWidgetPropsSchema = z
+const PrintStationWidgetPropsSchema = z
   .object({
     loading: z.boolean().optional(),
     error: z.instanceof(Error).optional(),
@@ -29,7 +29,7 @@ export const PrintStationWidgetPropsSchema = z
   })
   .partial()
 
-export type PrintStationWidgetProps = z.output<
+type PrintStationWidgetProps = z.output<
   typeof PrintStationWidgetPropsSchema
 >
 

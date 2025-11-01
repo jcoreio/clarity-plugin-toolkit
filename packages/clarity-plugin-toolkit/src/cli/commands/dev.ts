@@ -5,9 +5,9 @@ import execa from 'execa'
 import emitted from 'p-event'
 import express from 'express'
 import { createProxyServer } from 'http-proxy'
-import { withResolvers } from '../../util/withResolvers'
 import WebpackCLI, { IWebpackCLI, WebpackDevServerOptions } from 'webpack-cli'
 import webpackDevMiddleware from 'webpack-dev-middleware'
+import webpackHotMiddleware from 'webpack-hot-middleware'
 import z from 'zod'
 import assert from 'assert'
 import { buildWatchServer } from '../../server/buildWatchServer'
@@ -23,6 +23,7 @@ import open from 'open'
 import enableDestroy from 'server-destroy'
 import { pluginAssetRoute } from '@jcoreio/clarity-plugin-api'
 import { AssetsSchema } from '../../client/AssetsSchema'
+import { withResolvers, PromiseWithResolvers } from '../../util/withResolvers'
 
 export const command = 'dev'
 export const description = `run plugin in local dev server`
@@ -106,6 +107,7 @@ export async function handler(): Promise<void> {
   const devServerConfig = webpackConfig.devServer || {}
   const devMiddlewareConfig = devServerConfig.devMiddleware || {}
   app.use(webpackDevMiddleware(compiler, devMiddlewareConfig))
+  app.use(webpackHotMiddleware(compiler))
 
   let compilePromise = withResolvers<void>()
   compiler.hooks.watchRun.tap(

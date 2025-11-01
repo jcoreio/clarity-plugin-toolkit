@@ -4,12 +4,14 @@ import {
   Configuration,
   container,
   WebpackPluginInstance,
+  HotModuleReplacementPlugin,
 } from 'webpack'
 import path from 'path'
 import fs from 'fs-extra'
 import { pluginAssetRoute } from '@jcoreio/clarity-plugin-api'
 import { AssetsSchema } from './AssetsSchema'
 import getProject from '../getProject'
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 
 const { ModuleFederationPlugin } = container
 
@@ -29,12 +31,12 @@ export async function makeWebpackConfig(
 
   const context = projectDir
 
+  type SharedOption = ConstructorParameters<typeof ModuleFederationPlugin>[0]['shared'] 
+
   function sharedVersions(
     ...modules: string[]
-  ): ConstructorParameters<typeof ModuleFederationPlugin>[0]['shared'] & any[] {
-    const result: ConstructorParameters<
-      typeof ModuleFederationPlugin
-    >[0]['shared'] & {} = {}
+  ): SharedOption & any[] {
+    const result: SharedOption & {} = {}
     for (const mod of modules) {
       const pkg = /^(@[^/]+\/)?[^@/]+/.exec(mod)?.[0] || mod
       const spec = packageJson.dependencies[pkg]
@@ -60,10 +62,15 @@ export async function makeWebpackConfig(
 
   const containerName =
     '__clarity_plugin__' +
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     packageJson.name.replace(/^@([^/]+)\//, '_$1_').replace(/[^_a-z0-9]+/g, '_')
   const client = packageJson.clarity?.client
 
   const configs: Configuration[] = []
+
+  const commonBabelPlugins = [
+            ...env.WEBPACK_WATCH ? [require.resolve('react-refresh/babel')] : [],
+          ]
 
   const rules = (options: { targets?: string | { node: number | string } }) => {
     const presetEnv = [require.resolve('@babel/preset-env'), options]
@@ -81,6 +88,7 @@ export async function makeWebpackConfig(
         exclude: /node_modules/,
         options: {
           presets: [presetEnv, require.resolve('@babel/preset-react')],
+          plugins: commonBabelPlugins,
         },
       },
       {
@@ -95,6 +103,7 @@ export async function makeWebpackConfig(
               { isTSX: false, allowDeclareFields: true },
             ],
           ],
+          plugins: commonBabelPlugins,
         },
       },
       {
@@ -114,6 +123,7 @@ export async function makeWebpackConfig(
             ],
             require.resolve('@babel/preset-react'),
           ],
+          plugins: commonBabelPlugins,
         },
       },
     ]
@@ -193,6 +203,9 @@ export async function makeWebpackConfig(
   if (client?.entrypoints) {
     configs.push({
       name: 'client',
+      optimization: {
+        runtimeChunk: env.WEBPACK_WATCH ? 'single' : undefined,
+      },
       entry: client.entrypoints,
       context,
       mode: env.production ? 'production' : 'development',
@@ -232,10 +245,11 @@ export async function makeWebpackConfig(
           filename: env.WEBPACK_WATCH ? `entry_[fullhash].js` : 'entry.js',
           // this allows the app code to get the plugin module out of the container
           exposes: {
-            '.': client.entrypoints,
+            '.': [...env.WEBPACK_WATCH ? [require.resolve('react-refresh/runtime'), require.resolve('webpack-hot-middleware/client')] : [], ...client.entrypoints],
           },
           shared: sharedVersions('react', '@jcoreio/clarity-plugin-api/client'),
         }),
+        ...env.WEBPACK_WATCH ? [new HotModuleReplacementPlugin(), new ReactRefreshWebpackPlugin({overlay: false, library: containerName})] : [],
       ],
     })
   }
