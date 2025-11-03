@@ -29,9 +29,7 @@ const PrintStationWidgetPropsSchema = z
   })
   .partial()
 
-type PrintStationWidgetProps = z.output<
-  typeof PrintStationWidgetPropsSchema
->
+type PrintStationWidgetProps = z.output<typeof PrintStationWidgetPropsSchema>
 
 export default React.forwardRef(function PrintStationWidget(
   {

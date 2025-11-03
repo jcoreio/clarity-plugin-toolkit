@@ -68,6 +68,8 @@ export async function setupDockerCompose({
             - DB_PASSWORD
             - DB_PORT=5432
             - DB_USER
+            - DISABLE_RECAPTCHA=1
+            - DISABLE_STRIPE=1
             - ENABLE_DEV_LOGIN
             - FILE_ATTACHMENT_S3_BUCKET
             - HISTORIAN_DB_HOST=db
@@ -84,28 +86,18 @@ export async function setupDockerCompose({
             - JWT_SECRET
             - LETSENCRYPT_EMAIL
             - LIVECHAT_LICENSE
-            - LOGIN_MIN_RECAPTCHA_SCORE
             - MQTT_PORT
             - MQTTS_PORT
-            - NOTIFICATIONS_API_TOKEN
-            - NOTIFICATIONS_API_URL
+            - NOTIFICATIONS_DISABLED=1
             - PROFILER_BASE_URL
             - PROFILER_PORT
-            - RECAPTCHA_SITE_KEY
-            - RECAPTCHA_SECRET_KEY
-            - RECAPTCHA_V2_SITE_KEY
-            - RECAPTCHA_V2_SECRET_KEY
-            - RECAPTCHA_BYPASS_TOKEN
             - REDIS_DB
             - REDIS_HOST=redis
             - REDIS_PORT=6379
             - ROOT_URL
             - S3_ENDPOINT=http://s3:9090
-            - SIGNUP_MIN_RECAPTCHA_SCORE
             - SIGNUPS_ENABLED
             - STORE_DOWNLOADS_LOCALLY
-            - STRIPE_PUBLISHABLE_KEY
-            - STRIPE_SECRET_KEY
             - SECRETS
             - TASK
             - TASKS
@@ -134,11 +126,8 @@ export async function setupDockerCompose({
       HOST=localhost
       HTTPS_PORT=
       JWT_SECRET=${JSON.stringify(randomstring.generate({ length: 32 }))}
-      LOGIN_MIN_RECAPTCHA_SCORE=0.15
-      SIGNUP_MIN_RECAPTCHA_SCORE=0.15
       MQTT_PORT=21883
       MQTTS_PORT=
-      NOTIFICATIONS_DISABLED=1
       PORT=20081
       DEV_PORT=20080
       PROFILER_BASE_URL='/profiler'
@@ -161,13 +150,7 @@ export async function setupDockerCompose({
       TASKS=migrate,app,mqtt,cleanup,sync-channel-settings,ingest-sweeper,downsample-sweeper,notification-sender,tag-computer,activity-historian,device-offline-notifier,trigger-handler,historical-data-report-sender,migrate-ciphertexts
 
       # Please fill out the following fields:
-      CLARITY_REPO= # e.g. XXXXXXXXXXXX.dkr.ecr.us-west-2.amazonaws.com/jcore/clarity
-      STRIPE_PUBLISHABLE_KEY=
-      STRIPE_SECRET_KEY=
-      RECAPTCHA_SITE_KEY=
-      RECAPTCHA_SECRET_KEY=
-      RECAPTCHA_V2_SITE_KEY=
-      RECAPTCHA_V2_SECRET_KEY=
+      CLARITY_REPO= # e.g. XXXXXXXXXXXX.dkr.ecr.us-west-2.amazonaws.com/jcore/clarity-dev
     `,
     'utf8'
   )

@@ -245,11 +245,11 @@ export async function makeWebpackConfig(
           filename: env.WEBPACK_WATCH ? `entry_[fullhash].js` : 'entry.js',
           // this allows the app code to get the plugin module out of the container
           exposes: {
-            '.': [...env.WEBPACK_WATCH ? [require.resolve('react-refresh/runtime'), require.resolve('webpack-hot-middleware/client')] : [], ...client.entrypoints],
+            '.': [...env.WEBPACK_WATCH ? [require.resolve('webpack-hot-middleware/client')] : [], ...client.entrypoints],
           },
-          shared: sharedVersions('react', '@jcoreio/clarity-plugin-api/client'),
+          shared: sharedVersions('react-refresh/runtime', 'react', '@jcoreio/clarity-plugin-api/client'),
         }),
-        ...env.WEBPACK_WATCH ? [new HotModuleReplacementPlugin(), new ReactRefreshWebpackPlugin({overlay: false, library: containerName})] : [],
+        ...env.WEBPACK_WATCH ? [new HotModuleReplacementPlugin(), new ReactRefreshWebpackPlugin({overlay: false, library: 'ClarityCore'})] : [],
       ],
     })
   }

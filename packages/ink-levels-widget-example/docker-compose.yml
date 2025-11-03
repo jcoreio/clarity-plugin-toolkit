@@ -15,7 +15,8 @@ services:
     environment:
       - initialBuckets=${FILE_ATTACHMENT_S3_BUCKET}
   app:
-    image: ${CLARITY_REPO}:master
+    # image: ${CLARITY_REPO}:master
+    image: ${CLARITY_REPO}:dev-container-build
     volumes:
       - ./.clarity-plugin-toolkit/dev:/usr/app/build/bundled-plugins
       - ./node_modules:/usr/app/build/bundled-plugins/external_node_modules
@@ -40,6 +41,8 @@ services:
       - DB_PASSWORD
       - DB_PORT=5432
       - DB_USER
+      - DISABLE_RECAPTCHA=1
+      - DISABLE_STRIPE=1
       - ENABLE_DEV_LOGIN
       - FILE_ATTACHMENT_S3_BUCKET
       - HISTORIAN_DB_HOST=db
@@ -56,28 +59,18 @@ services:
       - JWT_SECRET
       - LETSENCRYPT_EMAIL
       - LIVECHAT_LICENSE
-      - LOGIN_MIN_RECAPTCHA_SCORE
       - MQTT_PORT
       - MQTTS_PORT
-      - NOTIFICATIONS_API_TOKEN
-      - NOTIFICATIONS_API_URL
+      - NOTIFICATIONS_DISABLED=1
       - PROFILER_BASE_URL
       - PROFILER_PORT
-      - RECAPTCHA_SITE_KEY
-      - RECAPTCHA_SECRET_KEY
-      - RECAPTCHA_V2_SITE_KEY
-      - RECAPTCHA_V2_SECRET_KEY
-      - RECAPTCHA_BYPASS_TOKEN
       - REDIS_DB
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - ROOT_URL
       - S3_ENDPOINT=http://s3:9090
-      - SIGNUP_MIN_RECAPTCHA_SCORE
       - SIGNUPS_ENABLED
       - STORE_DOWNLOADS_LOCALLY
-      - STRIPE_PUBLISHABLE_KEY
-      - STRIPE_SECRET_KEY
       - SECRETS
       - TASK
       - TASKS
