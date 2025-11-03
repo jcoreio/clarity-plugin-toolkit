@@ -31,11 +31,11 @@ export async function makeWebpackConfig(
 
   const context = projectDir
 
-  type SharedOption = ConstructorParameters<typeof ModuleFederationPlugin>[0]['shared'] 
+  type SharedOption = ConstructorParameters<
+    typeof ModuleFederationPlugin
+  >[0]['shared']
 
-  function sharedVersions(
-    ...modules: string[]
-  ): SharedOption & any[] {
+  function sharedVersions(...modules: string[]): SharedOption & any[] {
     const result: SharedOption & {} = {}
     for (const mod of modules) {
       const pkg = /^(@[^/]+\/)?[^@/]+/.exec(mod)?.[0] || mod
@@ -69,8 +69,8 @@ export async function makeWebpackConfig(
   const configs: Configuration[] = []
 
   const commonBabelPlugins = [
-            ...env.WEBPACK_WATCH ? [require.resolve('react-refresh/babel')] : [],
-          ]
+    ...(env.WEBPACK_WATCH ? [require.resolve('react-refresh/babel')] : []),
+  ]
 
   const rules = (options: { targets?: string | { node: number | string } }) => {
     const presetEnv = [require.resolve('@babel/preset-env'), options]
@@ -245,11 +245,28 @@ export async function makeWebpackConfig(
           filename: env.WEBPACK_WATCH ? `entry_[fullhash].js` : 'entry.js',
           // this allows the app code to get the plugin module out of the container
           exposes: {
-            '.': [...env.WEBPACK_WATCH ? [require.resolve('webpack-hot-middleware/client')] : [], ...client.entrypoints],
+            '.': [
+              ...(env.WEBPACK_WATCH ?
+                [require.resolve('webpack-hot-middleware/client')]
+              : []),
+              ...client.entrypoints,
+            ],
           },
-          shared: sharedVersions('react-refresh/runtime', 'react', '@jcoreio/clarity-plugin-api/client'),
+          shared: sharedVersions(
+            'react-refresh/runtime',
+            'react',
+            '@jcoreio/clarity-plugin-api/client'
+          ),
         }),
-        ...env.WEBPACK_WATCH ? [new HotModuleReplacementPlugin(), new ReactRefreshWebpackPlugin({overlay: false, library: 'ClarityCore'})] : [],
+        ...(env.WEBPACK_WATCH ?
+          [
+            new HotModuleReplacementPlugin(),
+            new ReactRefreshWebpackPlugin({
+              overlay: false,
+              library: 'ClarityCore',
+            }),
+          ]
+        : []),
       ],
     })
   }
