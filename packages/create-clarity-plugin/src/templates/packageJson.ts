@@ -96,7 +96,7 @@ export function makePackageJson({
         {
           '@eslint/compat': '^1.3.2',
           '@eslint/js': '^9.33.0',
-          eslint: '^9.36.0',
+          eslint: '9.36.0',
           'eslint-plugin-react': '^7.37.5',
           globals: '^16.0.0',
           ...(usePrettier ? { 'eslint-config-prettier': '^9.1.0' } : {}),
