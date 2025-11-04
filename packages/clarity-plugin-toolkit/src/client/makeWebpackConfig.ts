@@ -55,6 +55,7 @@ export async function makeWebpackConfig(
       result[mod] = {
         requiredVersion,
         singleton: true,
+        import: false,
       }
     }
     return [result]
@@ -252,11 +253,7 @@ export async function makeWebpackConfig(
               ...client.entrypoints,
             ],
           },
-          shared: sharedVersions(
-            'react-refresh/runtime',
-            'react',
-            '@jcoreio/clarity-plugin-api/client'
-          ),
+          shared: sharedVersions('react', '@jcoreio/clarity-plugin-api/client'),
         }),
         ...(env.WEBPACK_WATCH ?
           [
