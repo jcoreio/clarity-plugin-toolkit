@@ -341,6 +341,19 @@ export async function handler(): Promise<void> {
     })()
   })
 
+  // wait for webpack to compile successfully once before starting
+  // the build watch server, because the output package.json will be wrong
+  // if the client assets file hasn't been written by webpack
+  let compiling = true
+  while (compiling) {
+    try {
+      await compilePromise.promise
+      compiling = false
+    } catch {
+      continue
+    }
+  }
+
   buildWatch = await buildWatchServer({
     devMode: true,
     onChange: (file) => {
