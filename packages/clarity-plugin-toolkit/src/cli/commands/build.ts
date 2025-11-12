@@ -1,11 +1,11 @@
 import * as yargs from 'yargs'
-import { buildClient } from '../../client/buildClient'
-import { buildServer } from '../../server/buildServer'
-import { getProjectBase } from '../../getProject'
+import { buildClient } from '../../client/buildClient.ts'
+import { buildServer } from '../../server/buildServer.ts'
+import { getProjectBase } from '../../getProject.ts'
 import path from 'path'
 import fs from 'fs-extra'
-import { defaultWebpackEnv } from '../../util/defaultWebapckEnv'
-import { makeDistPackageJson } from '../../server/makeDistPackageJson'
+import { defaultWebpackEnv } from '../../util/defaultWebapckEnv.ts'
+import { makeDistPackageJson } from '../../server/makeDistPackageJson.ts'
 
 export const command = 'build'
 export const description = `transpile/bundle code for deployment`

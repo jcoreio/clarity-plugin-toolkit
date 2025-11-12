@@ -26,11 +26,11 @@
     "clarity"
   ],
   "devDependencies": {
-    "@jcoreio/toolchain": "^5.5.7",
-    "@jcoreio/toolchain-esnext": "^5.5.7",
-    "@jcoreio/toolchain-mocha": "^5.5.7",
-    "@jcoreio/toolchain-semantic-release": "^5.5.7",
-    "@jcoreio/toolchain-typescript": "^5.5.7",
+    "@jcoreio/toolchain": "^5.7.0",
+    "@jcoreio/toolchain-esnext": "^5.7.0",
+    "@jcoreio/toolchain-mocha": "^5.7.0",
+    "@jcoreio/toolchain-semantic-release": "^5.7.0",
+    "@jcoreio/toolchain-typescript": "^5.7.0",
     "@types/babel__core": "^7.20.5",
     "@types/chai": "^4.3.5",
     "@types/fs-extra": "^11.0.4",
@@ -80,6 +80,6 @@
     }
   },
   "@jcoreio/toolchain": {
-    "migratedVersion": "5.5.7"
+    "migratedVersion": "5.7.0"
   }
 }

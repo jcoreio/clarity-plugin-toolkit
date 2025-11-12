@@ -1,6 +1,6 @@
 import { it } from 'mocha'
 import { expect } from 'chai'
-import { collectExports } from '../../src/server/collectExports'
+import { collectExports } from '../../src/server/collectExports.ts'
 
 it(`collectExports`, function () {
   expect(

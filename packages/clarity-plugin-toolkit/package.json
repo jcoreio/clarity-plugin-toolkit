@@ -19,32 +19,45 @@
     "url": "https://github.com/jcoreio/clarity-plugin-toolkit/issues"
   },
   "homepage": "https://github.com/jcoreio/clarity-plugin-toolkit/tree/master/packages/clarity-plugin-toolkit",
+  "type": "module",
   "bin": {
-    "clarity-plugin-toolkit": "./dist/cli/index.js"
+    "clarity-plugin-toolkit": "./src/cli/index.ts"
   },
   "exports": {
     "./package.json": "./dist/package.json",
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "types": {
+        "import": "./dist/index.d.ts",
+        "default": "./dist/index.d.cts"
+      },
+      "import": "./dist/index.js",
+      "default": "./dist/index.cjs"
     },
     "./client": {
-      "types": "./dist/client/index.d.ts",
-      "default": "./dist/client/index.js"
+      "types": {
+        "import": "./dist/client/index.d.ts",
+        "default": "./dist/client/index.d.cts"
+      },
+      "import": "./dist/client/index.js",
+      "default": "./dist/client/index.cjs"
     },
     "./*": {
-      "types": "./dist/*.d.ts",
-      "default": "./dist/*.js"
+      "types": {
+        "import": "./dist/*.d.ts",
+        "default": "./dist/*.d.cts"
+      },
+      "import": "./dist/*.js",
+      "default": "./dist/*.cjs"
     }
   },
   "devDependencies": {
     "@jcoreio/clarity-plugin-api": "workspace:*",
-    "@jcoreio/toolchain": "^5.5.7",
-    "@jcoreio/toolchain-esnext": "^5.5.7",
-    "@jcoreio/toolchain-mocha": "^5.5.7",
-    "@jcoreio/toolchain-react": "^5.5.7",
-    "@jcoreio/toolchain-semantic-release": "^5.5.7",
-    "@jcoreio/toolchain-typescript": "^5.5.7",
+    "@jcoreio/toolchain": "^5.7.0",
+    "@jcoreio/toolchain-esnext": "^5.7.0",
+    "@jcoreio/toolchain-mocha": "^5.7.0",
+    "@jcoreio/toolchain-react": "^5.7.0",
+    "@jcoreio/toolchain-semantic-release": "^5.7.0",
+    "@jcoreio/toolchain-typescript": "^5.7.0",
     "@types/archiver": "^6.0.3",
     "@types/babel__core": "^7.20.5",
     "@types/chai": "^4.3.5",
@@ -121,7 +134,7 @@
     "express": "^4",
     "find-up": "^5.0.0",
     "fs-extra": "^11.2.0",
-    "gitignore-fs": "^2.2.2",
+    "gitignore-fs": "^2.2.3",
     "glob": "^10.3.12",
     "http-proxy": "^1.18.1",
     "json-loader": "^0.5.7",
@@ -146,6 +159,6 @@
     "zod-route-schemas": "^2.0.0"
   },
   "@jcoreio/toolchain": {
-    "migratedVersion": "5.5.7"
+    "migratedVersion": "5.7.0"
   }
 }

@@ -1,4 +1,4 @@
-import { ExportsObject } from '@jcoreio/clarity-plugin-api'
+import type { ExportsObject } from '@jcoreio/clarity-plugin-api'
 
 export function collectExports(
   exports?: string | ExportsObject,

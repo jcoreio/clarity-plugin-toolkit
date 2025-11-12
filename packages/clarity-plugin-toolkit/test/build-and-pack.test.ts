@@ -2,16 +2,17 @@ import { describe, it, beforeEach, afterEach } from 'mocha'
 import execa from 'execa'
 import fs from 'fs-extra'
 import path from 'path'
-import * as build from '../src/cli/commands/build'
-import * as pack from '../src/cli/commands/pack'
+import * as build from '../src/cli/commands/build.ts'
+import * as pack from '../src/cli/commands/pack.ts'
 import { expect } from 'chai'
-import { getProjectBase } from '../src/getProject'
-import setSigningKey from '../src/setSigningKey'
+import { getProjectBase } from '../src/getProject.ts'
+import setSigningKey from '../src/setSigningKey.ts'
 import crypto from 'crypto'
 import { pipeline } from 'stream/promises'
 import { makeSignaturesFilename } from '@jcoreio/clarity-plugin-api'
+import { testDir } from './testDir.cjs'
 
-const fixturesDir = path.resolve(__dirname, '..', '..', '..', 'fixtures')
+const fixturesDir = path.resolve(testDir, '..', '..', '..', 'fixtures')
 const fixtureDir = path.resolve(fixturesDir, 'test-plugin')
 
 describe(`build and pack`, function () {

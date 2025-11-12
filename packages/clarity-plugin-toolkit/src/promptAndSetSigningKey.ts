@@ -1,7 +1,7 @@
 import prompt from 'prompts'
 import crypto from 'crypto'
-import { parseSigningKey } from './getSigningKey'
-import setSigningKey from './setSigningKey'
+import { parseSigningKey } from './getSigningKey.ts'
+import setSigningKey from './setSigningKey.ts'
 
 export default async function promptAndSetSigningKey(): Promise<{
   id: number

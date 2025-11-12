@@ -1,12 +1,12 @@
-import { once } from 'lodash'
+import once from 'lodash/once.js'
 import fs from 'fs-extra'
 import crypto from 'crypto'
-import getProject from './getProject'
+import getProject from './getProject.ts'
 import prompt from 'prompts'
-import { getClarityUrl } from './getClarityUrl'
+import { getClarityUrl } from './getClarityUrl.ts'
 import dedent from 'dedent-js'
 import open from 'open'
-import promptAndSetSigningKey from './promptAndSetSigningKey'
+import promptAndSetSigningKey from './promptAndSetSigningKey.ts'
 import chalk from 'chalk'
 
 export const getSigningKey = once(

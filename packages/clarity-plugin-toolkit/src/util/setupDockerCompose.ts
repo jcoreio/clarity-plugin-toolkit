@@ -1,4 +1,4 @@
-import { getProjectBase } from '../getProject'
+import { getProjectBase } from '../getProject.ts'
 import fs from 'fs-extra'
 import dedent from 'dedent-js'
 import randomstring from 'randomstring'

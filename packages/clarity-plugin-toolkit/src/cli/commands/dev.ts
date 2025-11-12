@@ -1,29 +1,35 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import * as yargs from 'yargs'
-import getProject from '../../getProject'
+import getProject from '../../getProject.ts'
 import execa from 'execa'
 import emitted from 'p-event'
 import express from 'express'
-import { createProxyServer } from 'http-proxy'
-import WebpackCLI, { IWebpackCLI, WebpackDevServerOptions } from 'webpack-cli'
+import httpProxy from 'http-proxy'
+import WebpackCLI, {
+  type IWebpackCLI,
+  type WebpackDevServerOptions,
+} from 'webpack-cli'
 import webpackDevMiddleware from 'webpack-dev-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
 import z from 'zod'
 import assert from 'assert'
-import { buildWatchServer } from '../../server/buildWatchServer'
-import { debounce } from 'lodash'
+import { buildWatchServer } from '../../server/buildWatchServer.ts'
+import debounce from 'lodash/debounce.js'
 import chalk from 'chalk'
 import { FSWatcher } from 'chokidar'
 import { promisify } from 'util'
 import fs from 'fs-extra'
 import path from 'path'
 import { loginToECR } from '@jcoreio/aws-ecr-utils'
-import { setupDockerCompose } from '../../util/setupDockerCompose'
+import { setupDockerCompose } from '../../util/setupDockerCompose.ts'
 import open from 'open'
 import enableDestroy from 'server-destroy'
 import { pluginAssetRoute } from '@jcoreio/clarity-plugin-api'
-import { AssetsSchema } from '../../client/AssetsSchema'
-import { withResolvers, PromiseWithResolvers } from '../../util/withResolvers'
+import { AssetsSchema } from '../../client/AssetsSchema.ts'
+import {
+  withResolvers,
+  type PromiseWithResolvers,
+} from '../../util/withResolvers.ts'
 
 export const command = 'dev'
 export const description = `run plugin in local dev server`
@@ -120,7 +126,7 @@ export async function handler(): Promise<void> {
     compilePromise.resolve()
   })
 
-  const proxy = createProxyServer()
+  const proxy = httpProxy.createProxyServer()
   // eslint-disable-next-line no-console
   proxy.on('error', (err) => console.error(err))
 

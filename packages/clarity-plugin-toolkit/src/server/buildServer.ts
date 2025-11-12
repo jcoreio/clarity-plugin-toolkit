@@ -1,10 +1,10 @@
-import { getProjectBase } from '../getProject'
+import { getProjectBase } from '../getProject.ts'
 import { nodeFileTrace } from '@vercel/nft'
 import fs from 'fs-extra'
 import path from 'path'
 import { transformFileAsync } from '@babel/core'
-import { collectExports } from './collectExports'
-import { babelOptions } from './babelOptions'
+import { collectExports } from './collectExports.ts'
+import { babelOptions } from './babelOptions.ts'
 
 export async function buildServer({
   cwd = process.cwd(),

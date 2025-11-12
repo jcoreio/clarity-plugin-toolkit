@@ -1,5 +1,5 @@
 import semver from 'semver'
-import packageJson from './ownPackageJson'
+import packageJson from './ownPackageJson.ts'
 
 if (!semver.satisfies(process.version, packageJson.engines.node)) {
   // eslint-disable-next-line no-console

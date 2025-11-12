@@ -1,16 +1,16 @@
 import chokidar from 'chokidar'
 import { Stats } from 'fs'
 import Gitignore from 'gitignore-fs'
-import { getProjectBase } from '../getProject'
-import { collectExports } from './collectExports'
+import { getProjectBase } from '../getProject.ts'
+import { collectExports } from './collectExports.ts'
 import path from 'path'
 import fs from 'fs-extra'
-import { babelOptions } from './babelOptions'
+import { babelOptions } from './babelOptions.ts'
 import { transformFileAsync } from '@babel/core'
-import { makeDistPackageJson } from './makeDistPackageJson'
+import { makeDistPackageJson } from './makeDistPackageJson.ts'
 import { nodeFileTrace } from '@vercel/nft'
 import asyncThrottle from '@jcoreio/async-throttle'
-import { PackageJsonSchema } from '../PackageJsonSchema'
+import { PackageJsonSchema } from '../PackageJsonSchema.ts'
 
 export async function buildWatchServer({
   cwd = process.cwd(),
@@ -78,6 +78,7 @@ export async function buildWatchServer({
   }
   let fileTracePromise = traceFiles()
 
+  // @ts-expect-error ESM type defs need to be fixed
   const retrace = asyncThrottle(async () => {
     fileTracePromise = traceFiles()
     await fileTracePromise

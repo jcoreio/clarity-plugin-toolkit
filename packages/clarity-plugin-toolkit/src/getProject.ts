@@ -1,12 +1,12 @@
 import findUp from 'find-up'
 import path from 'path'
 import fs from 'fs-extra'
-import { once } from 'lodash'
+import once from 'lodash/once.js'
 import z from 'zod'
-import { PackageJsonSchema } from './PackageJsonSchema'
+import { PackageJsonSchema } from './PackageJsonSchema.ts'
 import dedent from 'dedent-js'
-import stringifyPath from './stringifyPath'
-import { paths } from './paths'
+import stringifyPath from './stringifyPath.ts'
+import { paths } from './paths.ts'
 
 export async function getProjectBase(cwd = process.cwd()): Promise<
   {

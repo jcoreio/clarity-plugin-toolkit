@@ -1,4 +1,4 @@
-import getProject from '../getProject'
+import getProject from '../getProject.ts'
 
 export type PackageManager = 'npm' | 'pnpm' | 'yarn' | 'bun'
 

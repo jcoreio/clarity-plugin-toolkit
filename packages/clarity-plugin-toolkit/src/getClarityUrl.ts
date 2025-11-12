@@ -1,8 +1,8 @@
 import fs from 'fs-extra'
-import { once } from 'lodash'
+import once from 'lodash/once.js'
 import path from 'path'
 import prompt from 'prompts'
-import getProject from './getProject'
+import getProject from './getProject.ts'
 
 export const getClarityUrl = once(async (): Promise<string> => {
   const { packageJsonFile, packageJson } = await getProject()

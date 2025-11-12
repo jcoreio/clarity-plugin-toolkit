@@ -1,17 +1,14 @@
-import '../checkNodeVersion'
-import {
-  Compilation,
-  Configuration,
-  container,
-  WebpackPluginInstance,
-  HotModuleReplacementPlugin,
-} from 'webpack'
+import '../checkNodeVersion.ts'
+import webpack from 'webpack'
+import type { Compilation, Configuration, WebpackPluginInstance } from 'webpack'
+const { container, HotModuleReplacementPlugin } = webpack
 import path from 'path'
 import fs from 'fs-extra'
 import { pluginAssetRoute } from '@jcoreio/clarity-plugin-api'
-import { AssetsSchema } from './AssetsSchema'
-import getProject from '../getProject'
+import { AssetsSchema } from './AssetsSchema.ts'
+import getProject from '../getProject.ts'
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
+import { requireResolve } from '../util/requireResolve.cjs'
 
 const { ModuleFederationPlugin } = container
 
@@ -63,44 +60,43 @@ export async function makeWebpackConfig(
 
   const containerName =
     '__clarity_plugin__' +
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     packageJson.name.replace(/^@([^/]+)\//, '_$1_').replace(/[^_a-z0-9]+/g, '_')
   const client = packageJson.clarity?.client
 
   const configs: Configuration[] = []
 
   const commonBabelPlugins = [
-    ...(env.WEBPACK_WATCH ? [require.resolve('react-refresh/babel')] : []),
+    ...(env.WEBPACK_WATCH ? [requireResolve('react-refresh/babel')] : []),
   ]
 
   const rules = (options: { targets?: string | { node: number | string } }) => {
-    const presetEnv = [require.resolve('@babel/preset-env'), options]
+    const presetEnv = [requireResolve('@babel/preset-env'), options]
     return [
       { test: /\.txt$/, type: 'asset/source' },
       { test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, type: 'asset' },
       { test: /\.(eot|ttf|wav|mp3)$/, type: 'asset/resource' },
       {
         test: /\.css$/,
-        use: [require.resolve('style-loader'), require.resolve('css-loader')],
+        use: [requireResolve('style-loader'), requireResolve('css-loader')],
       },
       {
         test: /\.[cm]?jsx?$/,
-        loader: require.resolve('babel-loader'),
+        loader: requireResolve('babel-loader'),
         exclude: /node_modules/,
         options: {
-          presets: [presetEnv, require.resolve('@babel/preset-react')],
+          presets: [presetEnv, requireResolve('@babel/preset-react')],
           plugins: commonBabelPlugins,
         },
       },
       {
         test: /\.[cm]?ts$/,
-        loader: require.resolve('babel-loader'),
+        loader: requireResolve('babel-loader'),
         exclude: /node_modules/,
         options: {
           presets: [
             presetEnv,
             [
-              require.resolve('@babel/preset-typescript'),
+              requireResolve('@babel/preset-typescript'),
               { isTSX: false, allowDeclareFields: true },
             ],
           ],
@@ -109,20 +105,20 @@ export async function makeWebpackConfig(
       },
       {
         test: /\.[cm]?tsx$/,
-        loader: require.resolve('babel-loader'),
+        loader: requireResolve('babel-loader'),
         exclude: /node_modules/,
         options: {
           presets: [
             presetEnv,
             [
-              require.resolve('@babel/preset-typescript'),
+              requireResolve('@babel/preset-typescript'),
               {
                 isTSX: true,
                 allExtensions: true,
                 allowDeclareFields: true,
               },
             ],
-            require.resolve('@babel/preset-react'),
+            requireResolve('@babel/preset-react'),
           ],
           plugins: commonBabelPlugins,
         },
@@ -227,9 +223,9 @@ export async function makeWebpackConfig(
       },
       resolve: {
         fallback: {
-          assert: require.resolve('assert/'),
-          path: require.resolve('path-browserify'),
-          process: require.resolve('process/browser'),
+          assert: requireResolve('assert/'),
+          path: requireResolve('path-browserify'),
+          process: requireResolve('process/browser'),
         },
         extensions,
         extensionAlias: {
@@ -248,7 +244,7 @@ export async function makeWebpackConfig(
           exposes: {
             '.': [
               ...(env.WEBPACK_WATCH ?
-                [require.resolve('webpack-hot-middleware/client')]
+                [requireResolve('webpack-hot-middleware/client')]
               : []),
               ...client.entrypoints,
             ],

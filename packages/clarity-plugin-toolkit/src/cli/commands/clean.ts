@@ -1,6 +1,6 @@
 import * as yargs from 'yargs'
 import path from 'path'
-import getProject from '../../getProject'
+import getProject from '../../getProject.ts'
 import fs from 'fs-extra'
 
 export const command = 'clean'

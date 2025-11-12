@@ -1,7 +1,7 @@
 import execa from 'execa'
-import getProject from '../getProject'
-import { getPackageManager } from '../util/getPackageManager'
-import { isInteractive } from '../util/isInteractive'
+import getProject from '../getProject.ts'
+import { getPackageManager } from '../util/getPackageManager.ts'
+import { isInteractive } from '../util/isInteractive.ts'
 
 export async function buildClient(options?: { args?: string[] }) {
   const { projectDir, packageJson } = await getProject()

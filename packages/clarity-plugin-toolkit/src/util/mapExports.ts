@@ -1,5 +1,5 @@
-import { ExportsObject } from '@jcoreio/clarity-plugin-api'
-import { mapValues } from 'lodash'
+import type { ExportsObject } from '@jcoreio/clarity-plugin-api'
+import mapValues from 'lodash/mapValues.js'
 
 export function mapExports(
   exports: string | ExportsObject | undefined,

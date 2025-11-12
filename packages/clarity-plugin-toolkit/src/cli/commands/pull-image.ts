@@ -1,6 +1,6 @@
 import { loginToECR } from '@jcoreio/aws-ecr-utils'
 import z from 'zod'
-import getProject from '../../getProject'
+import getProject from '../../getProject.ts'
 import execa from 'execa'
 
 export const command = 'pull-image'

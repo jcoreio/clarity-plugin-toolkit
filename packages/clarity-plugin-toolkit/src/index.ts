@@ -1,1 +1,1 @@
-export { makeWebpackConfig } from './client/makeWebpackConfig'
+export { makeWebpackConfig } from './client/makeWebpackConfig.ts'

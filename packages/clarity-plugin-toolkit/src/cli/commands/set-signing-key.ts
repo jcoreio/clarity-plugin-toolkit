@@ -1,6 +1,6 @@
 import * as yargs from 'yargs'
-import setSigningKey from '../../setSigningKey'
-import promptAndSetSigningKey from '../../promptAndSetSigningKey'
+import setSigningKey from '../../setSigningKey.ts'
+import promptAndSetSigningKey from '../../promptAndSetSigningKey.ts'
 
 export const command = 'set-signing-key [key]'
 export const description = `set the key for signing code`

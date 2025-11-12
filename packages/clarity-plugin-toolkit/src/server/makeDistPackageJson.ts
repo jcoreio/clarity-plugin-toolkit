@@ -1,10 +1,10 @@
-import { cloneDeep } from 'lodash'
-import { getProjectBase } from '../getProject'
-import { AssetsSchema } from '../client/AssetsSchema'
+import cloneDeep from 'lodash/cloneDeep.js'
+import { getProjectBase } from '../getProject.ts'
+import { AssetsSchema } from '../client/AssetsSchema.ts'
 import fs from 'fs-extra'
 import semver from 'semver'
 import path from 'path'
-import { mapExports } from '../util/mapExports'
+import { mapExports } from '../util/mapExports.ts'
 
 export async function makeDistPackageJson({
   cwd = process.cwd(),

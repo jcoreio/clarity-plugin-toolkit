@@ -1,9 +1,16 @@
 #!/usr/bin/env node
 
 import chalk from 'chalk'
-import '../checkNodeVersion'
+import '../checkNodeVersion.ts'
 import * as dotenv from 'dotenv'
-import path from 'path'
+import * as build from './commands/build.ts'
+import * as clean from './commands/clean.ts'
+import * as clearSigningKey from './commands/clear-signing-key.ts'
+import * as deploy from './commands/deploy.ts'
+import * as dev from './commands/dev.ts'
+import * as pack from './commands/pack.ts'
+import * as pullImage from './commands/pull-image.ts'
+import * as setSigningKey from './commands/set-signing-key.ts'
 
 const envValues: typeof process.env = {}
 dotenv.config({
@@ -37,9 +44,14 @@ import yargs from 'yargs/yargs'
 
 void yargs(process.argv.slice(2))
   .scriptName('clarity-plugin-toolkit')
-  .commandDir('commands', {
-    extensions: [path.extname(__filename).replace(/^\./, '')],
-  })
+  .command(clean)
+  .command(build)
+  .command(clearSigningKey)
+  .command(deploy)
+  .command(dev)
+  .command(pack)
+  .command(pullImage)
+  .command(setSigningKey)
   .strict()
   .demandCommand()
   .help().argv

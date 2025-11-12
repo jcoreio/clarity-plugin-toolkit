@@ -1,5 +1,5 @@
 import * as yargs from 'yargs'
-import getProject from '../../getProject'
+import getProject from '../../getProject.ts'
 import fs from 'fs-extra'
 
 export const command = 'clear-signing-key'

@@ -1,8 +1,8 @@
 import Gitignore from 'gitignore-fs'
 import { Glob } from 'glob'
 import fs from 'fs-extra'
-import getProject from './getProject'
-import { isEqual } from 'lodash'
+import getProject from './getProject.ts'
+import isEqual from 'lodash/isEqual.js'
 import path from 'path'
 
 export default async function shouldBuild({

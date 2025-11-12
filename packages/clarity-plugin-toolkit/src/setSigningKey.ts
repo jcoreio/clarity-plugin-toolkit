@@ -1,8 +1,8 @@
-import getProject from './getProject'
+import getProject from './getProject.ts'
 import path from 'path'
 import fs from 'fs-extra'
 import crypto from 'crypto'
-import { parseSigningKey } from './getSigningKey'
+import { parseSigningKey } from './getSigningKey.ts'
 
 export default async function setSigningKey(key: string): Promise<{
   id: number

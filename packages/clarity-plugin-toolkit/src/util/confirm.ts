@@ -1,5 +1,5 @@
 import prompt from 'prompts'
-import { isInteractive } from './isInteractive'
+import { isInteractive } from './isInteractive.ts'
 
 export async function confirm(
   message: string,

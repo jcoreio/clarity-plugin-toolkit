@@ -4,8 +4,10 @@
   "exclude": ["node_modules"],
   "compilerOptions": {
     "resolveJsonModule": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "isolatedModules": true
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true
   }
 }
