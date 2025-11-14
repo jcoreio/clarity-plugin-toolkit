@@ -20,6 +20,7 @@ for (const fixture of fixtures) {
       useEslint: false,
       usePrettier: false,
       stubs: ['dashboardWidget'],
+      packageManager: 'pnpm',
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       ...require(path.join(fixtureDir, '_options.cjs')),
     }

@@ -60,6 +60,7 @@ export function makePackageJson({
       clean: 'clarity-plugin-toolkit clean',
       build: 'clarity-plugin-toolkit build',
       deploy: 'clarity-plugin-toolkit deploy',
+      dev: 'clarity-plugin-toolkit dev',
       'clarity-plugin-toolkit': 'clarity-plugin-toolkit',
     },
     dependencies: sortKeys({

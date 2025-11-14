@@ -1,82 +1,37 @@
 import dedent from 'dedent-js'
 import { TemplateOptions } from './TemplateOptions'
 
-export function readme({ useTypescript }: TemplateOptions) {
+export function readme({ packageManager }: TemplateOptions) {
   return {
     'README.md': dedent`
-    This is a [Clarity](https://www.jcore.io/clarity) plugin project bootstrapped with [\`create-clarity-plugin\`](https://github.com/jcoreio/clarity-plugin-toolkit/tree/master/packages/create-clarity-plugin).
+      This is a [Clarity](https://www.jcore.io/clarity) plugin project bootstrapped with [\`create-clarity-plugin\`](https://github.com/jcoreio/clarity-plugin-toolkit/tree/master/packages/create-clarity-plugin).
 
-    ## Creating a Dashboard widget
+      # Getting started
 
-    In \`src/client/index.${useTypescript ? 'tsx' : 'js'}\`:
+      Make sure we have added policies to grant you access to our private AWS Elastic Container Repository where the Docker
+      images for Clarity are stored.
 
-    \`\`\`${useTypescript ? 'tsx' : 'js'}
-    ${
-      useTypescript ?
-        dedent`
-          import { type ClientPluginContributions } from '@jcoreio/clarity-plugin-toolkit/client'
-        ` + '\n'
-      : ''
-    }export default {
-      dashboardWidgets: {
-        MyWidget: {
-          displayName: 'MyWidget',
-          component: () => import('./MyWidget')
-        }
-      }
-    }${useTypescript ? ' satisfies ClientPluginContributions' : ''}
-    \`\`\`
+      Run \`${packageManager} ${packageManager === 'npm' ? 'run dev' : 'dev'}\` to start the plugin dev server.
+      On the first run it will create \`.env\` and \`docker-compose.yml\` files and ask you to fill out some fields in \`.env\`
+      (currently, you only need to set the hostname of our private AWS Elastic Container Repository).
 
-    Then create the widget file:
+      Thereafter running \`${packageManager} ${packageManager === 'npm' ? 'run dev' : 'dev'}\` will automatically start up
+      build watch processes and the Clarity docker container with your plugin from this project mounted into it.  It will
+      automatically open Clarity in your browser once it's up and running!
 
-    \`\`\`${useTypescript ? 'tsx' : 'js'}
-    import * as React from 'react'
-    import {
-      useTagState,
-      useDrop,
-      DashboardWidgetProps,
-    } from '@jcoreio/clarity-plugin-api/client'
+      # Dev mode
 
-    ${
-      useTypescript ?
-        dedent`
-          type MyWidgetConfig = {
-            tag?: string
-          }
+      The dev server supports Webpack [Hot Module Replacement](https://webpack.js.org/concepts/hot-module-replacement/) and
+      whenever you change client modules the changes should theoretically show up in the browser.  However \`react-refresh\`
+      hasn't seemed reliable, at least not with the version of \`react\` Clarity is on.  But changes should at least show up
+      after you refresh the page.
 
-          export type MyWidgetProps = DashboardWidgetProps<
-            MyWidgetConfig | undefined
-          >
-        ` + '\n'
-      : ''
-    }
-    export default function MyWidget({
-      config,
-      setConfig,
-    }${useTypescript ? ': MyWidgetProps' : ''}) {
-      const tag = config?.tag
-      const tagState = useTagState(tag)
-      const [, connectDropTarget] = useDrop({
-        canDrop: ({ tag }) => tag != null,
-        drop: ({ tag }) => {
-          if (tag) setConfig({ tag })
-          return undefined
-        },
-      })
-      return (
-        <div ref={connectDropTarget}>
-          <h1>My Widget</h1>
-          <pre>{JSON.stringify(config, null, 2)}</pre>
-          <pre>{JSON.stringify(tagState, null, 2)}</pre>
-        </div>
-      )
-    }
-    \`\`\`
+      If you change backend modules, the dev server will restart the docker container as soon as possible with the new code.
 
-    ## Deploying
+      # Deploying
 
-    Run \`npm run deploy\`, and \`clarity-plugin-toolkit\` will run through the process of deploying to
-    Clarity in an interactive CLI.
-  `,
+      Run \`${packageManager} run deploy\`, and \`clarity-plugin-toolkit\` will run through the process of deploying to
+      Clarity in an interactive CLI.
+    `,
   }
 }

@@ -2,6 +2,7 @@
   "name": "testpkg",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.9.0",
   "engines": {
     "node": ">=20"
   },
@@ -20,6 +21,7 @@
     "clean": "clarity-plugin-toolkit clean",
     "build": "clarity-plugin-toolkit build",
     "deploy": "clarity-plugin-toolkit deploy",
+    "dev": "clarity-plugin-toolkit dev",
     "clarity-plugin-toolkit": "clarity-plugin-toolkit"
   },
   "dependencies": {
