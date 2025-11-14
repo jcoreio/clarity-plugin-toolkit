@@ -6,7 +6,25 @@ export function serverMigrationsExampleTs({ name, stubs }: TemplateOptions) {
     return {}
   }
   return {
-    'src/server/migrations/01-example.ts': dedent`
+    'src/server/migrations/01-example.ts':
+      stubs.includes('sqlMigrations') ? undefined : (
+        dedent`
+      import { AppContext } from '@jcoreio/clarity-plugin-api/server'
+
+      export async function up(appContext: AppContext) {
+        await appContext.postgresPool.query(\`
+          CREATE SCHEMA "${name}";
+        \`)
+      }
+
+      export async function down(appContext: AppContext) {
+        await appContext.postgresPool.query(\`
+          DROP SCHEMA "${name}" CASCADE;
+        \`)
+      }
+    `
+      ),
+    'src/server/migrations/02-example.ts': dedent`
       import { AppContext } from '@jcoreio/clarity-plugin-api/server'
 
       export async function up(appContext: AppContext) {
