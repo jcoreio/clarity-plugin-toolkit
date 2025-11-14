@@ -16,23 +16,15 @@ export function serverMigrationsExampleSql({ name, stubs }: TemplateOptions) {
     'src/server/migrations/02-example.sql':
       stubs.includes('jsMigrations') ? undefined : (
         dedent`
-      import { AppContext } from '@jcoreio/clarity-plugin-api/server'
-
-      export async function up(appContext: AppContext) {
-        await appContext.postgresPool.query(\`
           CREATE TABLE "${name}".example (
             key text NOT NULL PRIMARY KEY,
             value jsonb
           );
-        \`)
-      }
 
-      export async function down(appContext: AppContext) {
-        await appContext.postgresPool.query(\`
+          -- down
+
           DROP TABLE "${name}".example;
-        \`)
-      }
-    `
+        `
       ),
   }
 }
