@@ -11,7 +11,7 @@ export function toolchainConfig({ useToolchain }: TemplateOptions) {
         scripts: {
           'clean': 'clarity-plugin-toolkit clean',
           'build': 'clarity-plugin-toolkit build',
-          'deploy': 'clarity-plugin-toolkit deploy'
+          'deploy': 'clarity-plugin-toolkit deploy',
           'dev': 'clarity-plugin-toolkit dev'
         }
       }

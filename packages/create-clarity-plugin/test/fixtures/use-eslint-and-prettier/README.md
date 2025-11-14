@@ -1,5 +1,12 @@
 This is a [Clarity](https://www.jcore.io/clarity) plugin project bootstrapped with [`create-clarity-plugin`](https://github.com/jcoreio/clarity-plugin-toolkit/tree/master/packages/create-clarity-plugin).
 
+Clarity plugins contribute functionality to Clarity by providing client- and/or server-side modules that use the
+[`@jcoreio/clarity-plugin-api`](https://github.com/jcoreio/clarity-plugin-toolkit/tree/master/packages/clarity-plugin-api) package
+as an interface. See that package for API documentation.
+
+[`@jcoreio/clarity-plugin-toolkit`](https://github.com/jcoreio/clarity-plugin-toolkit/tree/master/packages/clarity-plugin-toolkit)
+provides a CLI for running the plugin in dev mode and bundling/deploying it to Clarity.
+
 # Getting started
 
 Make sure we have added policies to grant you access to our private AWS Elastic Container Repository where the Docker
