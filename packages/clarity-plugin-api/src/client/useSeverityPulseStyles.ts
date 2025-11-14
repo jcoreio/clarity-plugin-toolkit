@@ -61,12 +61,12 @@ type Variant = 'pale' | 'bright'
  * Creates CSS classes to apply a color pulse animation for a warning, alarm, or critical condition
  * to the given CSS property.
  * @param {Object} options
- * @param {string} options.property - the CSS property to animate
+ * @param {string} options.property - the camel-cased CSS property to animate (e.g. `backgroundColor`)
  * @param {string} options.variant - which set of colors to use:
  *   - 'pale' - light, less saturated colors (used for gauge backgrounds)
  *   - 'bright' - fully saturated colors
- * @returns an object with `info`, `warning`, `alarm`, and `critical` properties, which are
- * CSS class names.  The `info` class doesn't apply an animation, but is provided for convenience
+ * @returns an object with `info`, `warning`, `alarm`, and `critical` properties (as well as upper case variants),
+ * which are CSS class names.  The `info` class doesn't apply an animation, but is provided for convenience
  * since `info` is one of the severity enum constants.
  */
 export function useSeverityPulseStyles(
