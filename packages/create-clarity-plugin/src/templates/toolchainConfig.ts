@@ -12,6 +12,7 @@ export function toolchainConfig({ useToolchain }: TemplateOptions) {
           'clean': 'clarity-plugin-toolkit clean',
           'build': 'clarity-plugin-toolkit build',
           'deploy': 'clarity-plugin-toolkit deploy'
+          'dev': 'clarity-plugin-toolkit dev'
         }
       }
     `,
