@@ -18,7 +18,7 @@ services:
     image: ${CLARITY_REPO}:46.5.1
     volumes:
       - ./.clarity-plugin-toolkit/dev:/usr/app/build/bundled-plugins
-      - ./node_modules:/usr/app/build/bundled-plugins/external_node_modules
+      - ./node_modules:/usr/app/build/bundled-plugins/node_modules/.external
     ports:
       - '${PORT}:80'
       - '${MQTT_PORT}:${MQTT_PORT}'

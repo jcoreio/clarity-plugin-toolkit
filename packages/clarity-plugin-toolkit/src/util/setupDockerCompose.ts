@@ -6,13 +6,25 @@ import crypto from 'crypto'
 import { promisify } from 'util'
 import path from 'path'
 import Gitignore from 'gitignore-fs'
+import { migrateDockerCompose } from './migrateDockerCompose.ts'
 
 export async function setupDockerCompose({
   cwd = process.cwd(),
 }: { cwd?: string } = {}) {
   const { projectDir, dockerComposeFile, dotenvFile } =
     await getProjectBase(cwd)
-  if (await fs.pathExists(dockerComposeFile)) return
+  if (await fs.pathExists(dockerComposeFile)) {
+    const dockerComposeSource = await fs.readFile(dockerComposeFile, 'utf8')
+    const migrated = migrateDockerCompose(dockerComposeSource)
+    if (migrated !== dockerComposeSource) {
+      await fs.writeFile(dockerComposeFile, migrated, 'utf8')
+      // eslint-disable-next-line no-console
+      console.error(
+        `migrated ${path.relative(process.cwd(), dockerComposeFile)}`
+      )
+    }
+    return
+  }
 
   const key = await promisify(crypto.generateKey)('aes', { length: 256 })
 
@@ -46,7 +58,7 @@ export async function setupDockerCompose({
           image: \${CLARITY_REPO}:46.5.0
           volumes:
             - ./.clarity-plugin-toolkit/dev:/usr/app/build/bundled-plugins
-            - ./node_modules:/usr/app/build/bundled-plugins/external_node_modules
+            - ./node_modules:/usr/app/build/bundled-plugins/node_modules/.external
           ports:
             - '\${PORT}:80'
             - '\${MQTT_PORT}:\${MQTT_PORT}'

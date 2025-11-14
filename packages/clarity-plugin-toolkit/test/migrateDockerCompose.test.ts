@@ -1,0 +1,172 @@
+import { describe, it } from 'mocha'
+import { expect } from 'chai'
+import dedent from 'dedent-js'
+import { migrateDockerCompose } from '../src/util/migrateDockerCompose.ts'
+
+describe(`migrateDockerCompose`, function () {
+  it(`migrates app volumes`, function () {
+    const init = dedent`
+      services:
+        db:
+          image: timescale/timescaledb:2.15.1-pg16
+          ports:
+            - \${DB_PORT}:5432
+          environment:
+            - POSTGRES_PASSWORD=\${DB_PASSWORD}
+          command: postgres -c max_connections=200 -c log_min_duration_statement=1000
+        redis:
+          image: redis:3.2
+          ports:
+            - \${REDIS_PORT}:6379
+        s3:
+          image: adobe/s3mock:4.9.1
+          environment:
+            - initialBuckets=\${FILE_ATTACHMENT_S3_BUCKET}
+        app:
+          image: \${CLARITY_REPO}:46.5.1
+          volumes:
+            - ./.clarity-plugin-toolkit/dev:/usr/app/build/bundled-plugins
+            - ./node_modules:/usr/app/build/bundled-plugins/external_node_modules
+          ports:
+            - '\${PORT}:80'
+            - '\${MQTT_PORT}:\${MQTT_PORT}'
+          environment:
+            - ADMIN_EMAIL
+            - ADMIN_PASSWORD
+            - AWS_DEFAULT_REGION
+            - AWS_REGION
+            # right now these are only used for connecting to the S3 mock, so
+            # they don't need to be real credentials
+            - AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXXX
+            - AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            - BYPASS_RECAPTCHA_TOKEN
+            - CANARY_PASSWORD
+            - COPYRIGHT
+            - DB_HOST=db
+            - DB_MIGRATE
+            - DB_NAME
+            - DB_PASSWORD
+            - DB_PORT=5432
+            - DB_USER
+            - DISABLE_RECAPTCHA=1
+            - DISABLE_STRIPE=1
+            - ENABLE_DEV_LOGIN
+            - FILE_ATTACHMENT_S3_BUCKET
+            - HISTORIAN_DB_HOST=db
+            - HISTORIAN_DB_NAME
+            - HISTORIAN_DB_PASSWORD
+            - HISTORIAN_DB_PORT=5432
+            - HISTORIAN_DB_USER
+            - HISTORIAN_DB_PASSWORD
+            - HISTORIAN_REDIS_HOST=redis
+            - HISTORIAN_REDIS_PORT=6379
+            - HOST
+            - HTTPS_PORT
+            - JCOREIO_LINK
+            - JWT_SECRET
+            - LETSENCRYPT_EMAIL
+            - LIVECHAT_LICENSE
+            - MQTT_PORT
+            - MQTTS_PORT
+            - NOTIFICATIONS_DISABLED=1
+            - PROFILER_BASE_URL
+            - PROFILER_PORT
+            - REDIS_DB
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+            - ROOT_URL
+            - S3_ENDPOINT=http://s3:9090
+            - SIGNUPS_ENABLED
+            - STORE_DOWNLOADS_LOCALLY
+            - SECRETS
+            - TASK
+            - TASKS
+
+    `
+
+    const migrated = migrateDockerCompose(init)
+    expect(migrated, 'migrateDockerCompose(init)').to.equal(dedent`
+      services:
+        db:
+          image: timescale/timescaledb:2.15.1-pg16
+          ports:
+            - \${DB_PORT}:5432
+          environment:
+            - POSTGRES_PASSWORD=\${DB_PASSWORD}
+          command: postgres -c max_connections=200 -c log_min_duration_statement=1000
+        redis:
+          image: redis:3.2
+          ports:
+            - \${REDIS_PORT}:6379
+        s3:
+          image: adobe/s3mock:4.9.1
+          environment:
+            - initialBuckets=\${FILE_ATTACHMENT_S3_BUCKET}
+        app:
+          image: \${CLARITY_REPO}:46.5.1
+          volumes:
+            - ./.clarity-plugin-toolkit/dev:/usr/app/build/bundled-plugins
+            - ./node_modules:/usr/app/build/bundled-plugins/node_modules/.external
+          ports:
+            - '\${PORT}:80'
+            - '\${MQTT_PORT}:\${MQTT_PORT}'
+          environment:
+            - ADMIN_EMAIL
+            - ADMIN_PASSWORD
+            - AWS_DEFAULT_REGION
+            - AWS_REGION
+            # right now these are only used for connecting to the S3 mock, so
+            # they don't need to be real credentials
+            - AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXXX
+            - AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            - BYPASS_RECAPTCHA_TOKEN
+            - CANARY_PASSWORD
+            - COPYRIGHT
+            - DB_HOST=db
+            - DB_MIGRATE
+            - DB_NAME
+            - DB_PASSWORD
+            - DB_PORT=5432
+            - DB_USER
+            - DISABLE_RECAPTCHA=1
+            - DISABLE_STRIPE=1
+            - ENABLE_DEV_LOGIN
+            - FILE_ATTACHMENT_S3_BUCKET
+            - HISTORIAN_DB_HOST=db
+            - HISTORIAN_DB_NAME
+            - HISTORIAN_DB_PASSWORD
+            - HISTORIAN_DB_PORT=5432
+            - HISTORIAN_DB_USER
+            - HISTORIAN_DB_PASSWORD
+            - HISTORIAN_REDIS_HOST=redis
+            - HISTORIAN_REDIS_PORT=6379
+            - HOST
+            - HTTPS_PORT
+            - JCOREIO_LINK
+            - JWT_SECRET
+            - LETSENCRYPT_EMAIL
+            - LIVECHAT_LICENSE
+            - MQTT_PORT
+            - MQTTS_PORT
+            - NOTIFICATIONS_DISABLED=1
+            - PROFILER_BASE_URL
+            - PROFILER_PORT
+            - REDIS_DB
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+            - ROOT_URL
+            - S3_ENDPOINT=http://s3:9090
+            - SIGNUPS_ENABLED
+            - STORE_DOWNLOADS_LOCALLY
+            - SECRETS
+            - TASK
+            - TASKS
+
+    `)
+
+    expect(
+      migrateDockerCompose(migrated),
+      'migrateDockerCompose(migrated)'
+    ).to.equal(migrated)
+  })
+})

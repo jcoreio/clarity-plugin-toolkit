@@ -155,6 +155,7 @@
     "validate-npm-package-name": "^5.0.0",
     "webpack-dev-middleware": "^7.4.5",
     "webpack-hot-middleware": "^2.26.1",
+    "yaml": "^2.8.1",
     "yargs": "^17.7.2",
     "zod-route-schemas": "^2.0.0"
   },

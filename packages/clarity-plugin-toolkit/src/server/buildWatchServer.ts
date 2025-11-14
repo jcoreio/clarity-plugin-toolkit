@@ -170,7 +170,7 @@ export async function buildWatchServer({
         for (const dep in distPackageJson.dependencies) {
           if (dep === '@jcoreio/clarity-plugin-api') continue
           const symlinkPath = path.join(nodeModulesDir, dep)
-          const symlinkTarget = path.join(devDir, 'external_node_modules', dep)
+          const symlinkTarget = path.join(devDir, 'node_modules/.external', dep)
           await fs.mkdirs(path.dirname(symlinkPath))
           await fs.symlink(
             path.relative(path.dirname(symlinkPath), symlinkTarget),
