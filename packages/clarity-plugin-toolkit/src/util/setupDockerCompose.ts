@@ -7,6 +7,7 @@ import { promisify } from 'util'
 import path from 'path'
 import Gitignore from 'gitignore-fs'
 import { migrateDockerCompose } from './migrateDockerCompose.ts'
+import { migrateDotenv } from './migrateDotenv.ts'
 
 export async function setupDockerCompose({
   cwd = process.cwd(),
@@ -15,14 +16,23 @@ export async function setupDockerCompose({
     await getProjectBase(cwd)
   if (await fs.pathExists(dockerComposeFile)) {
     const dockerComposeSource = await fs.readFile(dockerComposeFile, 'utf8')
-    const migrated = migrateDockerCompose(dockerComposeSource)
-    if (migrated !== dockerComposeSource) {
-      await fs.writeFile(dockerComposeFile, migrated, 'utf8')
+    const dockerComposeMigrated = migrateDockerCompose(dockerComposeSource)
+    if (dockerComposeMigrated !== dockerComposeSource) {
+      await fs.writeFile(dockerComposeFile, dockerComposeMigrated, 'utf8')
       // eslint-disable-next-line no-console
       console.error(
         `migrated ${path.relative(process.cwd(), dockerComposeFile)}`
       )
     }
+
+    const dotenvSource = await fs.readFile(dotenvFile, 'utf8')
+    const dotenvMigrated = migrateDotenv(dotenvSource)
+    if (dotenvMigrated !== dotenvSource) {
+      await fs.writeFile(dotenvFile, dotenvMigrated, 'utf8')
+      // eslint-disable-next-line no-console
+      console.error(`migrated ${path.relative(process.cwd(), dotenvFile)}`)
+    }
+
     return
   }
 
@@ -122,6 +132,7 @@ export async function setupDockerCompose({
       dedent`
       REDIS_DB=0
       REDIS_PORT=26379
+      AWS_SDK_LOAD_CONFIG=1
       AWS_REGION=us-west-2
       CANARY_PASSWORD=password
       DB_NAME=clarity
