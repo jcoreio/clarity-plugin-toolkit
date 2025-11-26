@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import yargs from 'yargs'
+import * as yargs from 'yargs'
 import prompt from 'prompts'
 import execa from 'execa'
 import path from 'path'
@@ -113,7 +113,7 @@ export async function handler(): Promise<void> {
             title: `${useTypescript ? 'TS' : 'JS'} Migrations`,
             selected: false,
           },
-        ] satisfies (prompt.Choice & { value: Stub })[],
+        ] satisfies (Omit<prompt.Choice, 'value'> & { value: Stub })[],
       },
     ])
   ).stubs

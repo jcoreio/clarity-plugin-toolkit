@@ -4,8 +4,8 @@ import path from 'path'
 import fs from 'fs-extra'
 import { TemplateOptions } from '../src/templates/TemplateOptions'
 import { files } from '../src/templates/files'
+import { fixturesDir } from './fixturesDir'
 
-const fixturesDir = path.join(__dirname, 'fixtures')
 const fixtures = fs.readdirSync(fixturesDir)
 
 for (const fixture of fixtures) {
@@ -21,8 +21,8 @@ for (const fixture of fixtures) {
       usePrettier: false,
       stubs: ['dashboardWidget'],
       packageManager: 'pnpm',
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      ...require(path.join(fixtureDir, '_options.cjs')),
+
+      ...(await import(path.join(fixtureDir, '_options.cjs'))).default,
     }
     const actual = await files(options)
     if (process.env.UPDATE_SNAPSHOTS) {

@@ -7,9 +7,9 @@
   "author": "Andy Edwards",
   "license": "MIT",
   "devDependencies": {
-    "@jcoreio/toolchain": "^5.7.0",
-    "@jcoreio/toolchain-circle": "^5.7.0",
-    "@jcoreio/toolchain-mocha": "^5.7.0",
+    "@jcoreio/toolchain": "^5.8.4",
+    "@jcoreio/toolchain-circle": "^5.8.4",
+    "@jcoreio/toolchain-mocha": "^5.8.4",
     "eslint": "9.36.0",
     "glob": "^10.3.12",
     "globals": "^16.0.0",

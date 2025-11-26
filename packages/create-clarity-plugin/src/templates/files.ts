@@ -8,6 +8,7 @@ import { gitignore } from './gitignore'
 import { makePackageJson } from './packageJson'
 import { prettierIgnore } from './prettierIgnore'
 import { readme } from './readme'
+import { resolve } from './resolve'
 import { serverMigrate } from './serverMigrate'
 import { serverMigrationsExampleSql } from './serverMigrationsExampleSql'
 import { serverMigrationsExampleTs } from './serverMigrationsExampleTs'
@@ -53,15 +54,13 @@ export async function files(templateOptions: TemplateOptions) {
             babelrc: false,
             filename: file,
             plugins:
-              /\.tsx$/.test(file) ?
-                [require.resolve('@babel/plugin-syntax-jsx')]
-              : [],
+              /\.tsx$/.test(file) ? [resolve('@babel/plugin-syntax-jsx')] : [],
             presets: [
               [
-                require.resolve('@babel/preset-env'),
+                resolve('@babel/preset-env'),
                 { modules: false, targets: { node: 24 } },
               ],
-              require.resolve('@babel/preset-typescript'),
+              resolve('@babel/preset-typescript'),
             ],
             sourceType: 'module',
           })

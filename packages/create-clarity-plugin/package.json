@@ -26,11 +26,11 @@
     "clarity"
   ],
   "devDependencies": {
-    "@jcoreio/toolchain": "^5.7.0",
-    "@jcoreio/toolchain-esnext": "^5.7.0",
-    "@jcoreio/toolchain-mocha": "^5.7.0",
-    "@jcoreio/toolchain-semantic-release": "^5.7.0",
-    "@jcoreio/toolchain-typescript": "^5.7.0",
+    "@jcoreio/toolchain": "^5.8.4",
+    "@jcoreio/toolchain-esnext": "^5.8.4",
+    "@jcoreio/toolchain-mocha": "^5.8.4",
+    "@jcoreio/toolchain-semantic-release": "^5.8.4",
+    "@jcoreio/toolchain-typescript": "^5.8.4",
     "@types/babel__core": "^7.20.5",
     "@types/chai": "^4.3.5",
     "@types/fs-extra": "^11.0.4",
@@ -69,17 +69,22 @@
     "validate-npm-package-name": "^5.0.0",
     "yargs": "^17.7.2"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "module",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": {
+        "require": "./dist/index.d.cts",
+        "default": "./dist/index.d.ts"
+      },
+      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     }
   },
   "@jcoreio/toolchain": {
-    "migratedVersion": "5.7.0"
+    "migratedVersion": "5.8.4"
   }
 }

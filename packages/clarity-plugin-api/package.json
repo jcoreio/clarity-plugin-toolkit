@@ -26,13 +26,13 @@
   },
   "homepage": "https://github.com/jcoreio/clarity-plugin-toolkit/tree/master/packages/clarity-plugin-api",
   "devDependencies": {
-    "@jcoreio/toolchain": "^5.7.0",
-    "@jcoreio/toolchain-circle": "^5.7.0",
-    "@jcoreio/toolchain-esnext": "^5.7.0",
-    "@jcoreio/toolchain-mocha": "^5.7.0",
-    "@jcoreio/toolchain-react": "^5.7.0",
-    "@jcoreio/toolchain-semantic-release": "^5.7.0",
-    "@jcoreio/toolchain-typescript": "^5.7.0",
+    "@jcoreio/toolchain": "^5.8.4",
+    "@jcoreio/toolchain-circle": "^5.8.4",
+    "@jcoreio/toolchain-esnext": "^5.8.4",
+    "@jcoreio/toolchain-mocha": "^5.8.4",
+    "@jcoreio/toolchain-react": "^5.8.4",
+    "@jcoreio/toolchain-semantic-release": "^5.8.4",
+    "@jcoreio/toolchain-typescript": "^5.8.4",
     "@types/chai": "^4.3.5",
     "@types/chai-as-promised": "^7.1.5",
     "@types/mocha": "^10.0.1",
@@ -103,6 +103,6 @@
     }
   },
   "@jcoreio/toolchain": {
-    "migratedVersion": "5.7.0"
+    "migratedVersion": "5.8.4"
   }
 }

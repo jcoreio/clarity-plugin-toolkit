@@ -52,12 +52,12 @@
   },
   "devDependencies": {
     "@jcoreio/clarity-plugin-api": "workspace:*",
-    "@jcoreio/toolchain": "^5.7.0",
-    "@jcoreio/toolchain-esnext": "^5.7.0",
-    "@jcoreio/toolchain-mocha": "^5.7.0",
-    "@jcoreio/toolchain-react": "^5.7.0",
-    "@jcoreio/toolchain-semantic-release": "^5.7.0",
-    "@jcoreio/toolchain-typescript": "^5.7.0",
+    "@jcoreio/toolchain": "^5.8.4",
+    "@jcoreio/toolchain-esnext": "^5.8.4",
+    "@jcoreio/toolchain-mocha": "^5.8.4",
+    "@jcoreio/toolchain-react": "^5.8.4",
+    "@jcoreio/toolchain-semantic-release": "^5.8.4",
+    "@jcoreio/toolchain-typescript": "^5.8.4",
     "@types/archiver": "^6.0.3",
     "@types/babel__core": "^7.20.5",
     "@types/chai": "^4.3.5",
@@ -160,6 +160,6 @@
     "zod-route-schemas": "^2.0.0"
   },
   "@jcoreio/toolchain": {
-    "migratedVersion": "5.7.0"
+    "migratedVersion": "5.8.4"
   }
 }
