@@ -1,4 +1,3 @@
-import { loginToECR } from '@jcoreio/aws-ecr-utils'
 import z from 'zod'
 import getProject from '../../getProject.ts'
 import execa from 'execa'
@@ -7,6 +6,7 @@ export const command = 'pull-image'
 export const description = `pull Clarity docker image`
 
 export async function handler(): Promise<void> {
+  const { loginToECR } = await import('@jcoreio/aws-ecr-utils')
   const { projectDir } = await getProject()
   const config = z
     .object({

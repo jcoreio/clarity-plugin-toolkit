@@ -10,7 +10,7 @@ import setSigningKey from '../src/setSigningKey.ts'
 import crypto from 'crypto'
 import { pipeline } from 'stream/promises'
 import { makeSignaturesFilename } from '@jcoreio/clarity-plugin-api'
-import { testDir } from './testDir.cjs'
+import { testDir } from './testDir.ts'
 
 const fixturesDir = path.resolve(testDir, '..', '..', '..', 'fixtures')
 const fixtureDir = path.resolve(fixturesDir, 'test-plugin')

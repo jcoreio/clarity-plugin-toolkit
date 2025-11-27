@@ -1,4 +1,4 @@
-import * as yargs from 'yargs'
+import type * as yargs from 'yargs'
 import setSigningKey from '../../setSigningKey.ts'
 import promptAndSetSigningKey from '../../promptAndSetSigningKey.ts'
 

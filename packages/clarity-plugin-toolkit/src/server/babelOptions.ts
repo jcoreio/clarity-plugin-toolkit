@@ -1,5 +1,5 @@
 import type { TransformOptions } from '@babel/core'
-import { requireResolve } from '../util/requireResolve.cjs'
+import { requireResolve } from '../util/requireResolve.ts'
 
 export function babelOptions(modules: false | 'commonjs'): TransformOptions {
   return {

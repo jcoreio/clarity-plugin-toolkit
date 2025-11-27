@@ -1,6 +1,6 @@
 import fs from 'fs-extra'
 import findUp from 'find-up'
-import { utilDir } from './util/utilDir.cjs'
+import { utilDir } from './util/utilDir.ts'
 
 const packageJsonFile = findUp.sync('package.json', {
   type: 'file',
