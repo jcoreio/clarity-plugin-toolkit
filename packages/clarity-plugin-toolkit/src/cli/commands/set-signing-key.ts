@@ -1,11 +1,9 @@
 import type * as yargs from 'yargs'
-import setSigningKey from '../../setSigningKey.ts'
-import promptAndSetSigningKey from '../../promptAndSetSigningKey.ts'
 
 export const command = 'set-signing-key [key]'
 export const description = `set the key for signing code`
 
-type Options = {
+export type Options = {
   key?: string
 }
 
@@ -16,9 +14,8 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
     demandOption: false,
   })
 
-export async function handler({
-  key,
-}: yargs.Arguments<Options>): Promise<void> {
-  if (key) await setSigningKey(key)
-  else await promptAndSetSigningKey()
+export async function handler(
+  options: yargs.Arguments<Options>
+): Promise<void> {
+  await (await import('./set-signing-key.lazy.ts')).handler(options)
 }

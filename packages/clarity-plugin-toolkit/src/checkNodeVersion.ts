@@ -1,10 +1,9 @@
-import semver from 'semver'
-import packageJson from './ownPackageJson.ts'
+const required = 16
 
-if (!semver.satisfies(process.version, packageJson.engines.node)) {
+const parts = process.version.replace(/^v/, '').split('.')
+
+if (parseInt(parts[0]) < required) {
   // eslint-disable-next-line no-console
-  console.error(
-    `@jcoreio/clarity-plugin-toolkit requires Node ${packageJson.engines.node}`
-  )
+  console.error(`@jcoreio/clarity-plugin-toolkit requires Node >= ${required}`)
   process.exit(1)
 }
