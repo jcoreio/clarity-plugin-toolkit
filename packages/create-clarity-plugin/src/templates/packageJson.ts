@@ -64,13 +64,13 @@ export function makePackageJson({
       'clarity-plugin-toolkit': 'clarity-plugin-toolkit',
     },
     dependencies: sortKeys({
-      '@jcoreio/clarity-plugin-api': `^1.1.0`,
+      '@jcoreio/clarity-plugin-api': `^1.4.0`,
       react: '^18.2.0',
       ...(stubs?.includes('expressApi') ? { express: '^4.21.2' } : {}),
       ...(stubs?.includes('dashboardWidget') ? { zod: '^3.25.76' } : {}),
     }),
     devDependencies: sortKeys({
-      '@jcoreio/clarity-plugin-toolkit': `^1.2.5`,
+      '@jcoreio/clarity-plugin-toolkit': `^1.3.7`,
       webpack: '^5.102.0',
       'webpack-cli': '^6.0.1',
       '@babel/register': '^7.28.3', // needed for TS webpack config

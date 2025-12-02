@@ -27,14 +27,14 @@
     "clarity-plugin-toolkit": "clarity-plugin-toolkit"
   },
   "dependencies": {
-    "@jcoreio/clarity-plugin-api": "^1.1.0",
+    "@jcoreio/clarity-plugin-api": "^1.4.0",
     "express": "^4.21.2",
     "react": "^18.2.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@babel/register": "^7.28.3",
-    "@jcoreio/clarity-plugin-toolkit": "^1.2.5",
+    "@jcoreio/clarity-plugin-toolkit": "^1.3.7",
     "@types/express": "^4.17.23",
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.0",
