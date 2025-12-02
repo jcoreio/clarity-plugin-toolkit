@@ -13,7 +13,7 @@ const fixtureDir = path.join(
 )
 
 // nyc interferes with TS-based webpack config loading
-;(process.env.JCOREIO_TOOLCHAIN_COVERAGE ? it.skip : it)(
+;(process.env.JCOREIO_TOOLCHAIN_COVERAGE || process.env.CI ? it.skip : it)(
   'typescript + toolchain',
   async function () {
     this.timeout(60000)

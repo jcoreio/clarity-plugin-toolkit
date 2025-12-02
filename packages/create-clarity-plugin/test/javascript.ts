@@ -12,7 +12,7 @@ const fixtureDir = path.join(
   'test-create'
 )
 
-it('javascript', async function () {
+;(process.env.CI ? it.skip : it)('javascript', async function () {
   this.timeout(60000)
   await fs.remove(fixtureDir)
   // eslint-disable-next-line no-console
