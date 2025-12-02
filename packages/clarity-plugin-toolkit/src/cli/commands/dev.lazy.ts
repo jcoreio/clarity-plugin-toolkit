@@ -29,6 +29,7 @@ import {
   withResolvers,
   type PromiseWithResolvers,
 } from '../../util/withResolvers.ts'
+import { dockerImageExistsLocally } from '../../util/dockerImageExistsLocally.ts'
 
 export async function handler(): Promise<void> {
   const { RewritingStream } = await import('parse5-html-rewriting-stream')
@@ -39,6 +40,7 @@ export async function handler(): Promise<void> {
     .object({
       services: z.object({
         app: z.object({
+          image: z.string(),
           environment: z.record(z.string(), z.string().nullable()),
           ports: z.array(
             z.object({
@@ -63,14 +65,18 @@ export async function handler(): Promise<void> {
       )
     )
 
+  const appConfig = config.services.app
+
+  if (!(await dockerImageExistsLocally(appConfig.image))) {
+    await loginToECR({})
+  }
+
   const startServicesPromise = execa(
     'docker',
     ['compose', 'up', '-d', 'db', 'redis', 's3'],
     { stdio: 'inherit' }
   )
   startServicesPromise.catch(() => {})
-
-  const appConfig = config.services.app
 
   const rawPort = appConfig.ports.find(
     (p) => p.mode === 'ingress' && p.protocol === 'tcp' && p.target === 80
@@ -251,10 +257,9 @@ export async function handler(): Promise<void> {
   let dockerApp: execa.ExecaChildProcess | undefined
 
   let lastChangedFile: string | undefined
-  async function restartDocker({ login = false }: { login?: boolean } = {}) {
+  async function restartDocker() {
     const restarting = dockerApp != null
     try {
-      if (login) await loginToECR({})
       // eslint-disable-next-line no-console
       console.error(
         `${
@@ -303,9 +308,6 @@ export async function handler(): Promise<void> {
               })
               .catch(() => {})
           }
-        }
-        if (output.includes('pull access denied') && !login) {
-          void restartDocker({ login: true })
         }
       }
 
