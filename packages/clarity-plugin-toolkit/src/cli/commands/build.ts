@@ -1,5 +1,5 @@
 import type * as yargs from 'yargs'
-import { defaultWebpackEnv } from '../../util/defaultWebapckEnv.ts'
+import { defaultWebpackEnv } from '../../util/defaultWebpackEnv.ts'
 
 export const command = 'build'
 export const description = `transpile/bundle code for deployment`
