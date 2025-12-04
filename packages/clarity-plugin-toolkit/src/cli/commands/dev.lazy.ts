@@ -19,7 +19,6 @@ import { FSWatcher } from 'chokidar'
 import { promisify } from 'util'
 import fs from 'fs-extra'
 import path from 'path'
-import { loginToECR } from '@jcoreio/aws-ecr-utils'
 import { setupDockerCompose } from '../../util/setupDockerCompose.ts'
 import open from 'open'
 import enableDestroy from 'server-destroy'
@@ -30,6 +29,7 @@ import {
   type PromiseWithResolvers,
 } from '../../util/withResolvers.ts'
 import { dockerImageExistsLocally } from '../../util/dockerImageExistsLocally.ts'
+import { loginToECR } from '../../util/loginToECR.ts'
 
 export async function handler(): Promise<void> {
   const { RewritingStream } = await import('parse5-html-rewriting-stream')
@@ -68,7 +68,7 @@ export async function handler(): Promise<void> {
   const appConfig = config.services.app
 
   if (!(await dockerImageExistsLocally(appConfig.image))) {
-    await loginToECR({})
+    await loginToECR()
   }
 
   const startServicesPromise = execa(
