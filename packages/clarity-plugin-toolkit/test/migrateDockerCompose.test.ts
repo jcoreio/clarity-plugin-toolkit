@@ -54,7 +54,6 @@ describe(`migrateDockerCompose`, function () {
             - FILE_ATTACHMENT_S3_BUCKET
             - HISTORIAN_DB_HOST=db
             - HISTORIAN_DB_NAME
-            - HISTORIAN_DB_PASSWORD
             - HISTORIAN_DB_PORT=5432
             - HISTORIAN_DB_USER
             - HISTORIAN_DB_PASSWORD
@@ -134,7 +133,6 @@ describe(`migrateDockerCompose`, function () {
             - FILE_ATTACHMENT_S3_BUCKET
             - HISTORIAN_DB_HOST=db
             - HISTORIAN_DB_NAME
-            - HISTORIAN_DB_PASSWORD
             - HISTORIAN_DB_PORT=5432
             - HISTORIAN_DB_USER
             - HISTORIAN_DB_PASSWORD
