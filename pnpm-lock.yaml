@@ -13,14 +13,14 @@ importers:
         version: 7.28.4
     devDependencies:
       '@jcoreio/toolchain':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-circle':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-mocha':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       eslint:
         specifier: 9.36.0
         version: 9.36.0
@@ -160,26 +160,26 @@ importers:
         version: 2.1.1(zod@3.25.76)
     devDependencies:
       '@jcoreio/toolchain':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-circle':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-esnext':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-mocha':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-react':
-        specifier: ^5.8.4
-        version: 5.8.4(react@18.3.1)
+        specifier: ^5.8.5
+        version: 5.8.5(react@18.3.1)
       '@jcoreio/toolchain-semantic-release':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-typescript':
-        specifier: ^5.8.4
-        version: 5.8.4(typescript@5.9.3)
+        specifier: ^5.8.5
+        version: 5.8.5(typescript@5.9.3)
       '@types/chai':
         specifier: ^4.3.5
         version: 4.3.20
@@ -374,23 +374,23 @@ importers:
         specifier: workspace:*
         version: link:../clarity-plugin-api
       '@jcoreio/toolchain':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-esnext':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-mocha':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-react':
-        specifier: ^5.8.4
-        version: 5.8.4(react@18.3.1)
+        specifier: ^5.8.5
+        version: 5.8.5(react@18.3.1)
       '@jcoreio/toolchain-semantic-release':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-typescript':
-        specifier: ^5.8.4
-        version: 5.8.4(typescript@5.9.3)
+        specifier: ^5.8.5
+        version: 5.8.5(typescript@5.9.3)
       '@types/archiver':
         specifier: ^6.0.3
         version: 6.0.4
@@ -528,20 +528,20 @@ importers:
         version: 17.7.2
     devDependencies:
       '@jcoreio/toolchain':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-esnext':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-mocha':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-semantic-release':
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.8.5
+        version: 5.8.5
       '@jcoreio/toolchain-typescript':
-        specifier: ^5.8.4
-        version: 5.8.4(typescript@5.9.3)
+        specifier: ^5.8.5
+        version: 5.8.5(typescript@5.9.3)
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -1504,31 +1504,31 @@ packages:
     resolution: {integrity: sha512-L8Nf/2afQslDvEhrvredtx4OdnUD2KaZ6Q7T5k/JLKmBW9k8JvKMokaEeK3gEL9YaobFNJlXO9yYxIduRPt0Xg==}
     engines: {node: '>=16'}
 
-  '@jcoreio/toolchain-circle@5.8.4':
-    resolution: {integrity: sha512-gdyGbm0YQLHCpNqlQj+9pg5y+inrFlAPowYYKim6dO/pDINem0xsnlxUH29Ddyj32BTrb8oeVdvhWHId0yTJfw==}
+  '@jcoreio/toolchain-circle@5.8.5':
+    resolution: {integrity: sha512-DOb6GE/jL9syLQlO69ShmkWZaRMRlRlNrMwj5zWJ4SwqZEjU5MJ3vq+i1MQ7XkpjWuTqXVjy9xXFu9X4F/rbtg==}
 
-  '@jcoreio/toolchain-esnext@5.8.4':
-    resolution: {integrity: sha512-JwPn9SeFquWL9zbdpJakpeNq8noZSsKhrASXXB4TxfxEUq7HOPX4/Y/yuhB7KGIupTc2Np+uPmNTetgoJuOB5w==}
+  '@jcoreio/toolchain-esnext@5.8.5':
+    resolution: {integrity: sha512-CMiDrEuiHOS0Bqi/4o+CmreYvdF2LzDmhEdxYX/BXeQ4/Uh9zle+O1PnVRtWvkF5Es4nk/UBdkvlRwXeZ+5Knw==}
     hasBin: true
 
-  '@jcoreio/toolchain-mocha@5.8.4':
-    resolution: {integrity: sha512-zlnczi/LFgmumkDWebjLIrYYb7chA2Yuk3qzMDImm1CjHNY979O/Q2jYSTsLzYwsOS0svy5JW/SRrKSB3lUe1w==}
+  '@jcoreio/toolchain-mocha@5.8.5':
+    resolution: {integrity: sha512-lHftUwrt0x/tyebFwAiWLn+itjES6hvnNEeLXEZ2Jc3W6IOnfWxlRS1FMm1KTophTvNt+xUVTcxPOm41iZxjKA==}
 
-  '@jcoreio/toolchain-react@5.8.4':
-    resolution: {integrity: sha512-GNEBUB5ICbjQnzKw598XurrkRCmOT2/eHNqPWiupNrq3W5rCnsngTWcXZtjSb5O3S+iTuLtH23qQ31YZXqSbyQ==}
+  '@jcoreio/toolchain-react@5.8.5':
+    resolution: {integrity: sha512-6EEhQqSKJlz3RaF7Kvl/SVAgnpeZDOqTdx9RLEqvexGt78sEnrx/Xst1wp2oXCBvbRp+FHHtKl/9kd1ZDYvW0Q==}
     peerDependencies:
       react: '*'
 
-  '@jcoreio/toolchain-semantic-release@5.8.4':
-    resolution: {integrity: sha512-U6NuZkYUPSxOwrRez/WpNdXX8F6cD4iZb83zqwX0wKygKMinBRMzxlgP+y82NTZRV+yvKeoCGTLD/q/RiTLxlg==}
+  '@jcoreio/toolchain-semantic-release@5.8.5':
+    resolution: {integrity: sha512-Zm+Sad2udYiF8xfCIjeCYwcI8OXZU7Pd6WIMrp4l57Q1F07Qlgay82nB541tVoaE5EVzO7Hw1DtBFth/d6DxBA==}
 
-  '@jcoreio/toolchain-typescript@5.8.4':
-    resolution: {integrity: sha512-PCqoBqJTT437mI12x04o7Xjdav7ANqfJrBDRHduBh0ShkDJ3ADhQvtxHv5BgRpuovBzjSl/1Mqwj/3l24V+VUg==}
+  '@jcoreio/toolchain-typescript@5.8.5':
+    resolution: {integrity: sha512-8Ga6yY80A5QF6GayJ2nTRE2xtI8hAWxbgpjg9j5TlfWdPuCZkC5Y6v6561cmf31s+zIGRKnKusagae4UIcFctA==}
     peerDependencies:
       typescript: ^5.1.0
 
-  '@jcoreio/toolchain@5.8.4':
-    resolution: {integrity: sha512-ygHFMPHM2otsl0sabTTS9zFg1kgcIWVCUVkbqJxFtBWoPFZLUmavFI5iu//q5NC86r1uh0V6yu4Ktq2R1I6RHg==}
+  '@jcoreio/toolchain@5.8.5':
+    resolution: {integrity: sha512-74umA9wuOHjY1bMgksiXzyh1KCH6QSD38oY5bHzsP8CxJNAX5MZZfdMbBgcLHsDbOtMpiGS+BtiLQ0YBQsuCWw==}
     hasBin: true
 
   '@jridgewell/gen-mapping@0.3.13':
@@ -1594,7 +1594,6 @@ packages:
   '@material-ui/core@4.12.4':
     resolution: {integrity: sha512-tr7xekNlM9LjA6pagJmL8QCgZXaubWUwkJnoYcMKd4gw/t4XiyvnTkjdGrUVicyB2BsdaAv1tvow45bPM4sSwQ==}
     engines: {node: '>=8.0.0'}
-    deprecated: Material UI v4 doesn't receive active development since September 2021. See the guide https://mui.com/material-ui/migration/migration-v4/ to upgrade to v5.
     peerDependencies:
       '@types/react': ^16.8.6 || ^17.0.0
       react: ^16.8.0 || ^17.0.0
@@ -1618,7 +1617,6 @@ packages:
   '@material-ui/styles@4.11.5':
     resolution: {integrity: sha512-o/41ot5JJiUsIETME9wVLAJrmIWL3j0R0Bj2kCOLbSfqEkKf0fmaPt+5vtblUh5eXr2S+J/8J3DaCb10+CzPGA==}
     engines: {node: '>=8.0.0'}
-    deprecated: Material UI v4 doesn't receive active development since September 2021. See the guide https://mui.com/material-ui/migration/migration-v4/ to upgrade to v5.
     peerDependencies:
       '@types/react': ^16.8.6 || ^17.0.0
       react: ^16.8.0 || ^17.0.0
@@ -2600,7 +2598,6 @@ packages:
   chai-subset@1.6.0:
     resolution: {integrity: sha512-K3d+KmqdS5XKW5DWPd5sgNffL3uxdDe+6GdnJh3AYPhwnBGRY5urfvfcbRtWIvvpz+KxkL9FeBB6MZewLUNwug==}
     engines: {node: '>=4'}
-    deprecated: 'functionality of this lib is built-in to chai now. see more details here: https://github.com/debitoor/chai-subset/pull/85'
 
   chai@4.5.0:
     resolution: {integrity: sha512-RITGBfijLkBddZvnn8jdqoTypxvqbOLYQkGGxXzeFjVHvudaPw0HNFD9x928/eUwYWd2dPCugVqspGALTZZQKw==}
@@ -3367,12 +3364,10 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
 
   glob@8.1.0:
     resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
     engines: {node: '>=12'}
-    deprecated: Glob versions prior to v9 are no longer supported
 
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
@@ -3518,7 +3513,6 @@ packages:
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
-    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
@@ -3936,8 +3930,8 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
-  lru-cache@11.2.2:
-    resolution: {integrity: sha512-F9ODfyqML2coTIsQpSkRHnLSZMtkU8Q+mSfcaIyKwy58u+8k5nvAYeiNhsyMARvzNcXJ9QfWVrcPsC9e9rAxtg==}
+  lru-cache@11.2.4:
+    resolution: {integrity: sha512-B5Y16Jr9LB9dHVkh6ZevG+vAbOsNOYCX+sXvFWFu7B3Iz5mijW3zdbMyhsh8ANd2mSWBYdJgnqi+mL7/LrOPYg==}
     engines: {node: 20 || >=22}
 
   lru-cache@5.1.1:
@@ -4675,7 +4669,6 @@ packages:
 
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
-    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   run-async@2.4.1:
@@ -5307,6 +5300,11 @@ packages:
 
   yaml@2.8.1:
     resolution: {integrity: sha512-lcYcMxX2PO9XMGvAJkJ3OsNMw+/7FKes7/hgerGUYWIoWu5j/+YQqcZr5JnPZWzOsEBgMbSbiSTn/dv/69Mkpw==}
+    engines: {node: '>= 14.6'}
+    hasBin: true
+
+  yaml@2.8.2:
+    resolution: {integrity: sha512-mplynKqc1C2hTVYxd0PU2xQAc22TI1vShAYGksCCfxbn/dFwnHTNi1bvYsBTkhdUNtGIf5xNOg938rrSSYvS9A==}
     engines: {node: '>= 14.6'}
     hasBin: true
 
@@ -6706,9 +6704,9 @@ snapshots:
       long: 4.0.0
       protobufjs: 6.11.4
 
-  '@jcoreio/toolchain-circle@5.8.4':
+  '@jcoreio/toolchain-circle@5.8.5':
     dependencies:
-      '@jcoreio/toolchain': 5.8.4
+      '@jcoreio/toolchain': 5.8.5
       dedent-js: 1.0.1
       open: 8.4.2
       semver: 7.7.3
@@ -6716,7 +6714,7 @@ snapshots:
       - jiti
       - supports-color
 
-  '@jcoreio/toolchain-esnext@5.8.4':
+  '@jcoreio/toolchain-esnext@5.8.5':
     dependencies:
       '@babel/cli': 7.28.3(@babel/core@7.28.5)
       '@babel/core': 7.28.5
@@ -6726,7 +6724,7 @@ snapshots:
       '@babel/register': 7.28.3(@babel/core@7.28.5)
       '@babel/runtime': 7.28.4
       '@babel/traverse': 7.28.5
-      '@jcoreio/toolchain': 5.8.4
+      '@jcoreio/toolchain': 5.8.5
       babel-parse-wild-code: 2.1.5
       babel-plugin-add-module-exports: 1.0.4
       babel-plugin-istanbul: 7.0.1
@@ -6742,9 +6740,9 @@ snapshots:
       - jiti
       - supports-color
 
-  '@jcoreio/toolchain-mocha@5.8.4':
+  '@jcoreio/toolchain-mocha@5.8.5':
     dependencies:
-      '@jcoreio/toolchain': 5.8.4
+      '@jcoreio/toolchain': 5.8.5
       babel-plugin-istanbul: 7.0.1
       dedent-js: 1.0.1
       eslint: 9.36.0
@@ -6757,13 +6755,13 @@ snapshots:
       - jiti
       - supports-color
 
-  '@jcoreio/toolchain-react@5.8.4(react@18.3.1)':
+  '@jcoreio/toolchain-react@5.8.5(react@18.3.1)':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/eslint-parser': 7.28.5(@babel/core@7.28.5)(eslint@9.36.0)
       '@babel/preset-react': 7.28.5(@babel/core@7.28.5)
-      '@jcoreio/toolchain': 5.8.4
-      '@jcoreio/toolchain-esnext': 5.8.4
+      '@jcoreio/toolchain': 5.8.5
+      '@jcoreio/toolchain-esnext': 5.8.5
       eslint: 9.36.0
       eslint-plugin-react: 7.37.5(eslint@9.36.0)
       react: 18.3.1
@@ -6771,21 +6769,21 @@ snapshots:
       - jiti
       - supports-color
 
-  '@jcoreio/toolchain-semantic-release@5.8.4':
+  '@jcoreio/toolchain-semantic-release@5.8.5':
     dependencies:
-      '@jcoreio/toolchain': 5.8.4
+      '@jcoreio/toolchain': 5.8.5
       dedent-js: 1.0.1
       resolve-bin: 1.0.1
     transitivePeerDependencies:
       - jiti
       - supports-color
 
-  '@jcoreio/toolchain-typescript@5.8.4(typescript@5.9.3)':
+  '@jcoreio/toolchain-typescript@5.8.5(typescript@5.9.3)':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/preset-typescript': 7.28.5(@babel/core@7.28.5)
-      '@jcoreio/toolchain': 5.8.4
-      '@jcoreio/toolchain-esnext': 5.8.4
+      '@jcoreio/toolchain': 5.8.5
+      '@jcoreio/toolchain-esnext': 5.8.5
       '@typescript-eslint/eslint-plugin': 8.48.0(@typescript-eslint/parser@8.48.0(eslint@9.36.0)(typescript@5.9.3))(eslint@9.36.0)(typescript@5.9.3)
       '@typescript-eslint/parser': 8.48.0(eslint@9.36.0)(typescript@5.9.3)
       eslint: 9.36.0
@@ -6796,7 +6794,7 @@ snapshots:
       - jiti
       - supports-color
 
-  '@jcoreio/toolchain@5.8.4':
+  '@jcoreio/toolchain@5.8.5':
     dependencies:
       '@babel/generator': 7.28.5
       '@babel/parser': 7.28.5
@@ -6825,7 +6823,7 @@ snapshots:
       resolve-bin: 1.0.1
       semver: 7.7.3
       toposort: 2.0.2
-      yaml: 2.8.1
+      yaml: 2.8.2
       zod: 3.25.76
     transitivePeerDependencies:
       - jiti
@@ -9693,7 +9691,7 @@ snapshots:
 
   lru-cache@10.4.3: {}
 
-  lru-cache@11.2.2: {}
+  lru-cache@11.2.4: {}
 
   lru-cache@5.1.1:
     dependencies:
@@ -10116,7 +10114,7 @@ snapshots:
 
   path-scurry@2.0.1:
     dependencies:
-      lru-cache: 11.2.2
+      lru-cache: 11.2.4
       minipass: 7.1.2
 
   path-to-regexp@0.1.12: {}
@@ -11214,6 +11212,8 @@ snapshots:
   yallist@5.0.0: {}
 
   yaml@2.8.1: {}
+
+  yaml@2.8.2: {}
 
   yargs-parser@18.1.3:
     dependencies:
