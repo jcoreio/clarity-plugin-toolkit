@@ -116,7 +116,7 @@
     "@babel/register": "^7.28.3",
     "@babel/runtime": "^7.26.0",
     "@jcoreio/async-throttle": "^1.6.1",
-    "@jcoreio/aws-ecr-utils": "^2.0.0",
+    "@jcoreio/aws-ecr-utils": "^2.1.0",
     "@jcoreio/poll": "^3.0.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.6.1",
     "@types/http-proxy": "^1.17.16",

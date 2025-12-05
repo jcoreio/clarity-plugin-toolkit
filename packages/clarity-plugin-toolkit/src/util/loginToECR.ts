@@ -6,7 +6,5 @@ export async function loginToECR() {
   const appConfig = config.services.app
   const { image } = appConfig
 
-  const region = /ecr\.([^.]+)\.amazonaws\.com/.exec(image)?.[1] || 'us-west-2'
-
-  await baseLogin({ awsConfig: { region } })
+  await baseLogin({ forImages: [image] })
 }

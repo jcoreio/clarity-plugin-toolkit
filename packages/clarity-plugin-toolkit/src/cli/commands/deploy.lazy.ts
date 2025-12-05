@@ -13,6 +13,7 @@ import open from 'open'
 import { isInteractive } from '../../util/isInteractive.ts'
 import type { Options } from './deploy.ts'
 import z from 'zod'
+import { inspect } from 'util'
 
 const ErrorResponseSchema = z.object({
   code: z.string(),
@@ -80,7 +81,16 @@ export async function handler({
           .get('content-type')
           ?.startsWith('application/json')
       ) {
-        const body = await uploadResponse.json()
+        let body: unknown
+        try {
+          body = await uploadResponse.json()
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(
+            chalk`{redBright ✘} {red Upload failed with status ${uploadResponse.status}, failed to parse JSON response body from Clarity: ${inspect(error)}}`
+          )
+          process.exit(1)
+        }
         const parsed = ErrorResponseSchema.safeParse(body)
         if (parsed.success && parsed.data.code === 'API_ERROR_ALREADY_EXISTS') {
           const overwrite = await confirm(
@@ -101,7 +111,9 @@ export async function handler({
           process.exit(1)
         }
         // eslint-disable-next-line no-console
-        console.error(body)
+        console.error(
+          chalk`{redBright ✘} {red Upload failed with status ${uploadResponse.status}, error response from Clarity: ${inspect(body)}}`
+        )
         process.exit(1)
       }
       // eslint-disable-next-line no-console
