@@ -23,12 +23,20 @@ export const builder = (yargs: yargs.Argv<Options>): any =>
   yargs.usage('$0 create')
 
 export async function handler(): Promise<void> {
+  const { directory } = await prompt([
+    {
+      type: 'text',
+      name: 'directory',
+      message: 'Project directory:',
+      initial: 'my-plugin',
+    },
+  ])
   const { name, useTypescript, useToolchain } = await prompt([
     {
       type: 'text',
       name: 'name',
       message: 'Package name:',
-      initial: 'my-plugin',
+      initial: path.basename(directory),
       validate: (name: string) => {
         name = name.trim()
         if (!name) return 'is required'
@@ -117,8 +125,6 @@ export async function handler(): Promise<void> {
       },
     ])
   ).stubs
-
-  const directory = path.basename(name)
 
   const cwd = path.resolve(directory)
 
