@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "clean": "clarity-plugin clean",
-    "build": "clarity-plugin build",
-    "deploy": "clarity-plugin deploy",
-    "clarity-plugin": "clarity-plugin"
+    "clean": "clarity-plugin-toolkit clean",
+    "build": "clarity-plugin-toolkit build",
+    "deploy": "clarity-plugin-toolkit deploy",
+    "dev": "clarity-plugin-toolkit dev",
+    "clarity-plugin-toolkit": "clarity-plugin-toolkit"
   },
   "dependencies": {
     "@jcoreio/clarity-plugin-api": "^1.3.0",

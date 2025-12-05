@@ -15,7 +15,7 @@ services:
     environment:
       - initialBuckets=${FILE_ATTACHMENT_S3_BUCKET}
   app:
-    image: ${CLARITY_REPO}:46.13.2
+    image: ${CLARITY_REPO}:46.13.3
     volumes:
       - ./.clarity-plugin-toolkit/dev:/usr/app/build/bundled-plugins
       - ./node_modules:/usr/app/build/bundled-plugins/node_modules/.external
