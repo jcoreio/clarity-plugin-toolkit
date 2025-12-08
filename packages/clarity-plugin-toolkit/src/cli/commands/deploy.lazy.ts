@@ -36,9 +36,21 @@ export async function handler({
   overwrite,
 }: yargs.Arguments<Options>): Promise<void> {
   const { packageJson, distTarball } = await getProject()
+  const clarityUrl = await getClarityUrl()
+  if (
+    env?.includes('development') &&
+    !/^(0\.0\.0\.0|localhost|192\.168\.\d+\.\d+)$/.test(
+      new URL(clarityUrl).hostname
+    ) &&
+    !(await confirm(
+      chalk`{yellow ⚠️  Development mode build was requested (via {bold --env development} or {bold CLARITY_PLUGIN_TOOLKIT_ENV=development} in {bold .env}) but you appear to be deploying to production!  Do you want to continue?}`,
+      { initial: false, valueIfNotInteractive: false }
+    ))
+  ) {
+    process.exit(1)
+  }
   if (await shouldBuild({ env })) await build.handler({ env })
 
-  const clarityUrl = await getClarityUrl()
   await getSigningKey()
 
   await pack.handler()
@@ -133,7 +145,7 @@ export async function handler({
           parsed.data.code === 'API_ERROR_ALREADY_EXISTS'
         ) {
           const overwrite = await confirm(
-            chalk.yellow`⚠️ Plugin {bold ${packageJson.name}@${packageJson.version}} already exists.  Overwrite?`,
+            chalk.yellow`⚠️  Plugin {bold ${packageJson.name}@${packageJson.version}} already exists.  Overwrite?`,
             { initial: false, valueIfNotInteractive: false }
           )
           if (overwrite) {
