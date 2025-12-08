@@ -16,7 +16,7 @@ import { buildWatchServer } from '../../server/buildWatchServer.ts'
 import debounce from 'lodash/debounce.js'
 import chalk from 'chalk'
 import { FSWatcher } from 'chokidar'
-import { promisify } from 'util'
+import { inspect, promisify } from 'util'
 import fs from 'fs-extra'
 import path from 'path'
 import { setupDockerCompose } from '../../util/setupDockerCompose.ts'
@@ -71,11 +71,33 @@ export async function handler(): Promise<void> {
     await loginToECR()
   }
 
+  // if the app container was left running by a previous dev command invocation, stop it
+  const stopPrevAppPromise = execa('docker', ['compose', 'stop', 'app'], {
+    stdio: 'inherit',
+  }).catch(() => {})
   const startServicesPromise = execa(
     'docker',
     ['compose', 'up', '-d', 'db', 'redis', 's3'],
     { stdio: 'inherit' }
-  )
+  ).then(async () => {
+    let lastError: unknown
+    // eslint-disable-next-line no-console
+    console.error('waiting for database to be ready...')
+    const timeout = Date.now() + 30000
+    do {
+      try {
+        await execa('docker', ['compose', 'exec', 'db', 'pg_isready', '-q'])
+        // eslint-disable-next-line no-console
+        console.error('database is ready!')
+        return
+      } catch (error) {
+        lastError = error
+      }
+    } while (Date.now() < timeout)
+    throw new Error(
+      `timed out waiting for database to be ready, last error: ${inspect(lastError)}`
+    )
+  })
   startServicesPromise.catch(() => {})
 
   const rawPort = appConfig.ports.find(
@@ -280,6 +302,7 @@ export async function handler(): Promise<void> {
       }
 
       await startServicesPromise
+      await stopPrevAppPromise
       dockerApp = execa('docker', ['compose', 'up', 'app'], {
         stdio: 'pipe',
         cwd: projectDir,
@@ -332,9 +355,9 @@ export async function handler(): Promise<void> {
       const promise = Promise.allSettled([
         promisify<void>((cb) => server.destroy(cb))(),
         buildWatch?.close(),
+        // execa's default cleanup behavior will kill the dockerApp process
         dockerApp ? emitted(dockerApp, 'close') : null,
       ]).catch(() => {})
-      dockerApp?.kill()
       await promise
       process.exit(128 + 2)
     })()
