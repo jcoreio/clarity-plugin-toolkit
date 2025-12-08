@@ -1,4 +1,3 @@
-import once from 'lodash/once.js'
 import fs from 'fs-extra'
 import crypto from 'crypto'
 import getProject from './getProject.ts'
@@ -9,21 +8,23 @@ import open from 'open'
 import promptAndSetSigningKey from './promptAndSetSigningKey.ts'
 import chalk from 'chalk'
 
-export const getSigningKey = once(
-  async (): Promise<{ id: number; privateKey: crypto.KeyObject }> => {
-    const { signingKeyFile } = await getProject()
-    const clarityUrl = await getClarityUrl()
-    const signingUrl = new URL('login', clarityUrl)
-    signingUrl.searchParams.set(
-      'nextLocation',
-      '/superadmin/signingKeys?create=true'
-    )
+export async function getSigningKey(): Promise<{
+  id: number
+  privateKey: crypto.KeyObject
+}> {
+  const { signingKeyFile } = await getProject()
+  const clarityUrl = await getClarityUrl()
+  const signingUrl = new URL('login', clarityUrl)
+  signingUrl.searchParams.set(
+    'nextLocation',
+    '/superadmin/signingKeys?create=true'
+  )
 
-    if (await fs.pathExists(signingKeyFile)) {
-      return parseSigningKey(await fs.readFile(signingKeyFile, 'utf8'))
-    }
-    // eslint-disable-next-line no-console
-    console.error(dedent`
+  if (await fs.pathExists(signingKeyFile)) {
+    return parseSigningKey(await fs.readFile(signingKeyFile, 'utf8'))
+  }
+  // eslint-disable-next-line no-console
+  console.error(dedent`
 
       To deploy, you will need to create a signing key in Clarity.
       Press enter to open ${chalk.underline(signingUrl)} in your default browser;
@@ -35,20 +36,19 @@ export const getSigningKey = once(
       someone who does create the signing key for you.
 
     `)
-    const { go } = await prompt({
-      name: 'go',
-      type: 'confirm',
-      initial: true,
-      message: `Open ${signingUrl}?`,
-    })
-    if (go) {
-      await open(signingUrl.toString(), { wait: false }).then((child) =>
-        child.unref()
-      )
-    }
-    return await promptAndSetSigningKey()
+  const { go } = await prompt({
+    name: 'go',
+    type: 'confirm',
+    initial: true,
+    message: `Open ${signingUrl}?`,
+  })
+  if (go) {
+    await open(signingUrl.toString(), { wait: false }).then((child) =>
+      child.unref()
+    )
   }
-)
+  return await promptAndSetSigningKey()
+}
 
 export function parseSigningKey(input: string | Buffer): {
   id: number

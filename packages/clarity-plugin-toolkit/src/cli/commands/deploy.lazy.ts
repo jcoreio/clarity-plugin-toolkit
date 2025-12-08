@@ -4,6 +4,7 @@ import fs from 'fs-extra'
 import getProject from '../../getProject.ts'
 import * as build from './build.ts'
 import * as pack from './pack.ts'
+import * as clearSigningKey from './clear-signing-key.ts'
 import shouldBuild from '../../shouldBuild.ts'
 import { getSigningKey } from '../../getSigningKey.ts'
 import chalk from 'chalk'
@@ -16,7 +17,18 @@ import z from 'zod'
 import { inspect } from 'util'
 
 const ErrorResponseSchema = z.object({
-  code: z.string(),
+  error: z.string().optional(),
+  code: z.string().optional(),
+})
+
+const NotFoundResponseSchema = z.object({
+  code: z.literal('NOT_FOUND'),
+  extensions: z
+    .object({
+      entity: z.string(),
+      primaryKey: z.union([z.string(), z.number()]),
+    })
+    .optional(),
 })
 
 export async function handler({
@@ -33,12 +45,13 @@ export async function handler({
 
   // eslint-disable-next-line no-console
   console.error(
-    `🚀 Deploying ${packageJson.name}@${packageJson.version} to ${clarityUrl}...`
+    chalk`🚀 Deploying {bold ${packageJson.name}@${packageJson.version}} to {bold ${clarityUrl}}...`
   )
 
-  const doUpload = async ({
-    overwrite,
-  }: { overwrite?: boolean } = {}): Promise<void> => {
+  const doUpload = async (
+    options: { overwrite?: boolean } = {}
+  ): Promise<void> => {
+    const { overwrite } = options
     const url = new URL('/api/plugins/upload', clarityUrl)
     if (overwrite) url.searchParams.set('overwrite', 'true')
 
@@ -73,7 +86,7 @@ export async function handler({
     if (uploadResponse.ok) {
       // eslint-disable-next-line no-console
       console.error(
-        chalk`{greenBright ✔ Deployed ${packageJson.name}@${packageJson.version}!}`
+        chalk`{greenBright ✔ Deployed {bold ${packageJson.name}@${packageJson.version}}!}`
       )
     } else {
       if (
@@ -91,12 +104,36 @@ export async function handler({
           )
           process.exit(1)
         }
+        const notFound = NotFoundResponseSchema.safeParse(body)
         const parsed = ErrorResponseSchema.safeParse(body)
-        if (parsed.success && parsed.data.code === 'API_ERROR_ALREADY_EXISTS') {
+        if (
+          notFound.success &&
+          notFound.data.extensions?.entity === 'SignatureVerificationKey'
+        ) {
+          // eslint-disable-next-line no-console
+          console.error(
+            chalk`{redBright ✘} {red Upload failed: the signing key in this project was not found in Clarity.}`
+          )
+          if (
+            await confirm('Do you want to delete it and create a new one?', {
+              initial: true,
+              valueIfNotInteractive: false,
+            })
+          ) {
+            await clearSigningKey.handler()
+            await getSigningKey()
+            await pack.handler()
+            await doUpload(options)
+          } else {
+            process.exit(1)
+          }
+          return
+        } else if (
+          parsed.success &&
+          parsed.data.code === 'API_ERROR_ALREADY_EXISTS'
+        ) {
           const overwrite = await confirm(
-            chalk.yellow(
-              `⚠️ Plugin ${packageJson.name}@${packageJson.version} already exists.  Overwrite?`
-            ),
+            chalk.yellow`⚠️ Plugin {bold ${packageJson.name}@${packageJson.version}} already exists.  Overwrite?`,
             { initial: false, valueIfNotInteractive: false }
           )
           if (overwrite) {
@@ -108,6 +145,38 @@ export async function handler({
               chalk`{redBright ✘} {red Plugin ${packageJson.name}@${packageJson.version} already exists}`
             )
           }
+          process.exit(1)
+        } else if (
+          parsed.success &&
+          parsed.data.error
+            ?.toLowerCase()
+            .includes('creating plugins is not enabled')
+        ) {
+          // eslint-disable-next-line no-console
+          console.error(
+            chalk`{redBright ✘} {red Upload failed: creating plugins is disabled in Clarity.}`
+          )
+          // eslint-disable-next-line no-console
+          console.error(
+            chalk.cyan(dedent`
+              ℹ️  To enable creating plugins, set ${chalk.bold('ENABLE_CREATE_PLUGINS=1')}, preferrably via the ${chalk.bold('"ConfigValues"')} table.
+              After you are done deploying, you should disable it again for maximum security.
+            `)
+          )
+          process.exit(1)
+        } else if (
+          parsed.success &&
+          parsed.data.error &&
+          /missing.*PLUGINS_DIR/.test(parsed.data.error)
+        ) {
+          // eslint-disable-next-line no-console
+          console.error(
+            chalk`{redBright ✘} {red Upload failed: the {bold PLUGINS_DIR} environment variable is not set in Clarity.}`
+          )
+          // eslint-disable-next-line no-console
+          console.error(
+            chalk`ℹ️  {cyan You may need to deploy an update with {bold UseEFSPluginsDir: true}.}`
+          )
           process.exit(1)
         }
         // eslint-disable-next-line no-console
