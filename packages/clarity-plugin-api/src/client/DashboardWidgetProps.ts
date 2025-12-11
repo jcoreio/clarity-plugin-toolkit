@@ -5,8 +5,10 @@ export type DashboardWidgetProps<Config = any> = {
   /**
    * The config for this widget, which may take any form the plugin wants
    * as long as it's JSON serializable.
+   *
+   * When a widget is first created, the `config` will be `undefined`.
    */
-  config: Config
+  config: Config | undefined
   /**
    * Callback to set the config for this widget.  The plugin may set the config
    * to any value it wants as long as it's JSON serializable.
