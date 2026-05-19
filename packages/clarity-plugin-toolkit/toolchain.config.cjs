@@ -1,6 +1,3 @@
-/* eslint-env node, es2018 */
-/* global process */
-
 const execa = require('@jcoreio/toolchain/util/execa.cjs')
 
 module.exports = {

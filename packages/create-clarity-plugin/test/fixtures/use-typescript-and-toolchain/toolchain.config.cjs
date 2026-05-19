@@ -1,4 +1,4 @@
-/* eslint-env node, es2018 */
+
 module.exports = {
   esmBabelEnv: { targets: { node: 20 } },
   scripts: {
