@@ -1,6 +1,5 @@
-
 module.exports = {
-  esmBabelEnv: { targets: { node: 20 } },
+  esmBabelEnv: { targets: { node: 24 } },
   scripts: {
     clean: "clarity-plugin-toolkit clean",
     build: "clarity-plugin-toolkit build",
