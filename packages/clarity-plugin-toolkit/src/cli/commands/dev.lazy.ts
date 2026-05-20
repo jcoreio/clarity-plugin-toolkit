@@ -162,7 +162,7 @@ export async function handler(): Promise<void> {
       })
 
   app.all(
-    '*',
+    '{*splat}',
     asyncHandler(async (req, res) => {
       await startup?.promise
       proxy.web(req, res, { target, selfHandleResponse: true })

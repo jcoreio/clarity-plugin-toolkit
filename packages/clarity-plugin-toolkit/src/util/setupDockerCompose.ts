@@ -66,6 +66,7 @@ export async function setupDockerCompose({
             - initialBuckets=\${FILE_ATTACHMENT_S3_BUCKET}
         app:
           image: \${CLARITY_REPO}:46.13.2
+          init: true
           volumes:
             - ./.clarity-plugin-toolkit/dev:/usr/app/build/bundled-plugins
             - ./node_modules:/usr/app/build/bundled-plugins/node_modules/.external

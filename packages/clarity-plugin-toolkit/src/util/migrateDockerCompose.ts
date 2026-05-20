@@ -6,6 +6,30 @@ export function migrateDockerCompose(source: string): string {
 
   const replacements: { start: number; end: number; value: string }[] = []
 
+  const app = parsed.getIn(['services', 'app'])
+  if (app instanceof YAML.YAMLMap) {
+    if (
+      !app.items.find(
+        (i) =>
+          i instanceof YAML.Pair &&
+          i.key instanceof YAML.Scalar &&
+          typeof i.key.value === 'string' &&
+          i.key.value === 'init'
+      )
+    ) {
+      if (app.range) {
+        let lineStart = source.lastIndexOf('\r\n', app.range[0])
+        if (lineStart < 0) lineStart = source.lastIndexOf('\r', app.range[0])
+        if (lineStart < 0) lineStart = source.lastIndexOf('\n', app.range[0])
+        replacements.push({
+          start: app.range[0],
+          end: app.range[0],
+          value: `init: true${lineStart < 0 ? '\n' : source.substring(lineStart, app.range[0])}`,
+        })
+      }
+    }
+  }
+
   const appVolumes = parsed.getIn(['services', 'app', 'volumes'])
   if (appVolumes instanceof YAML.YAMLSeq) {
     const nodeModulesVolume = appVolumes.items.find(
