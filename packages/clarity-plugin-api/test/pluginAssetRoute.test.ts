@@ -20,7 +20,7 @@ describe(`pluginAssetRoute`, function () {
       pluginAssetRoute.parse(
         `/pluginassets/${encodeURIComponent(
           '@jcoreio/my-plugin'
-        )}/1.0.0-beta.1/client/foo%2Fentry.js`
+        )}/1.0.0-beta.1/client/${encodeURIComponent('foo/entry.js')}`
       )
     ).to.deep.equal({
       plugin: '@jcoreio/my-plugin',
@@ -28,6 +28,46 @@ describe(`pluginAssetRoute`, function () {
       environment: 'client',
       filename: 'foo/entry.js',
     })
+    expect(
+      pluginAssetRoute.parse(
+        `/pluginassets/${encodeURIComponent(
+          '@jcoreio/my-plugin'
+        )}/1.0.0-beta.1/client/${encodeURIComponent('./foo/entry.js')}`
+      )
+    ).to.deep.equal({
+      plugin: '@jcoreio/my-plugin',
+      version: '1.0.0-beta.1',
+      environment: 'client',
+      filename: 'foo/entry.js',
+    })
+    expect(() =>
+      pluginAssetRoute.parse(
+        `/pluginassets/${encodeURIComponent(
+          '@jcoreio/my-plugin'
+        )}/1.0.0-beta.1/${encodeURIComponent('../test.js')}`
+      )
+    ).to.throw()
+    expect(() =>
+      pluginAssetRoute.parse(
+        `/pluginassets/${encodeURIComponent(
+          '@jcoreio/my-plugin'
+        )}/1.0.0-beta.1/${encodeURIComponent('foo/../test.js')}`
+      )
+    ).to.throw()
+    expect(() =>
+      pluginAssetRoute.parse(
+        `/pluginassets/${encodeURIComponent(
+          '@jcoreio/my-plugin'
+        )}/1.0.0-beta.1/${encodeURIComponent('foo/..')}`
+      )
+    ).to.throw()
+    expect(() =>
+      pluginAssetRoute.parse(
+        `/pluginassets/${encodeURIComponent(
+          '@jcoreio/my-plugin'
+        )}/1.0.0-beta.1/${encodeURIComponent('/etc/hosts')}`
+      )
+    ).to.throw()
   })
   it(`format`, function () {
     expect(
